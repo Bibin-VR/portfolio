@@ -80,10 +80,7 @@ const Navigation = () => {
                 <Github className="w-5 h-5" />
               </a>
               <a 
-                href="https://www.linkedin.com/in/bibin-vr/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all"
+                href="https://www.linkedin.com/in/bibin-v-r-5a6762271/"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
@@ -142,7 +139,7 @@ const Navigation = () => {
                 <Github className="w-5 h-5" />
               </a>
               <a 
-                href="https://www.linkedin.com/in/bibin-vr/" 
+                href="https://www.linkedin.com/in/bibin-v-r-5a6762271/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"

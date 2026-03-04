@@ -98,7 +98,7 @@ const Contact = () => {
 
   const socialLinks = [
     { icon: Github, label: 'GitHub', href: 'https://github.com/Bibin-VR', color: '#E6EDF3' },
-    { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/bibin-vr/', color: '#00F0FF' },
+    { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/', color: '#00F0FF' },
   ];
 
   return (
