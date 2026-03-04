@@ -4,7 +4,6 @@ import {
   GitFork, 
   ExternalLink, 
   Brain, 
-  Factory, 
   Flame, 
   Watch,
   ShoppingBag,
@@ -54,6 +53,29 @@ const Projects = () => {
 
   const projects: Project[] = [
     {
+      id: 'trendora',
+      name: 'Trendora',
+      description: 'Fashion Aggregator & E-Commerce Platform',
+      fullDescription: `A cinematic fashion e-commerce web app with an immersive loading experience. Built with React 19 and a Python/FastAPI backend, deployed on GitHub Pages.
+
+Features:
+• 🔐 User Authentication with JWT
+• 🛒 Shopping Cart & Checkout flow
+• 🎨 Dark / Light theme toggle
+• 🔊 Ambient Audio Manager
+• 🏷️ Collections & Featured Products
+• 💳 Razorpay Payment Integration
+• 🔍 Gender filter & product search
+• 📱 Fully responsive — mobile to desktop`,
+      liveUrl: 'https://Bibin-VR.github.io/Trendora',
+      githubUrl: 'https://github.com/Bibin-VR/Trendora',
+      tags: ['Web', 'E-Commerce', 'React'],
+      techStack: ['React 19', 'Tailwind CSS', 'FastAPI', 'MongoDB', 'Razorpay'],
+      stats: { stars: 0, forks: 0 },
+      color: '#FF6B9D',
+      icon: ShoppingBag,
+    },
+    {
       id: 'trex-ai',
       name: 'trex-ai',
       description: 'Local LLM Personal Assistant',
@@ -71,25 +93,6 @@ Key Features:
       stats: { stars: 47, forks: 12 },
       color: '#BC13FE',
       icon: Brain,
-    },
-    {
-      id: 'industry-4.0',
-      name: 'industry-4.0-automation',
-      description: 'Human-less Industrial Setup',
-      fullDescription: `A fully automated industrial environment prototype aligning with Industry 4.0 principles. Utilizes robotic arms and autonomous mobile robots to replace human labor in key factory operations.
-
-System Architecture:
-• ROS2-based distributed control system
-• Collaborative robotic arms for assembly
-• AMR fleet for material transport
-• Real-time monitoring and quality control
-• 40% improvement in operational efficiency`,
-      image: '/project-industry.jpg',
-      tags: ['Robotics', 'ROS2', 'Automation'],
-      techStack: ['ROS2', 'Python', 'C++', 'MoveIt'],
-      stats: { stars: 38, forks: 8 },
-      color: '#00FF9D',
-      icon: Factory,
     },
     {
       id: 'fire-safety',
@@ -129,29 +132,6 @@ Features:
       color: '#00F0FF',
       icon: Watch,
       githubUrl: 'https://github.com/Bibin-VR/smart-band-athletics',
-    },
-    {
-      id: 'trendora',
-      name: 'Trendora',
-      description: 'Fashion Aggregator & E-Commerce Platform',
-      fullDescription: `A cinematic fashion e-commerce web app with an immersive loading experience. Built with React 19 and a Python/FastAPI backend, deployed on GitHub Pages.
-
-Features:
-• 🔐 User Authentication with JWT
-• 🛒 Shopping Cart & Checkout flow
-• 🎨 Dark / Light theme toggle
-• 🔊 Ambient Audio Manager
-• 🏷️ Collections & Featured Products
-• 💳 Razorpay Payment Integration
-• 🔍 Gender filter & product search
-• 📱 Fully responsive — mobile to desktop`,
-      liveUrl: 'https://Bibin-VR.github.io/Trendora',
-      githubUrl: 'https://github.com/Bibin-VR/Trendora',
-      tags: ['Web', 'E-Commerce', 'React'],
-      techStack: ['React 19', 'Tailwind CSS', 'FastAPI', 'MongoDB', 'Razorpay'],
-      stats: { stars: 0, forks: 0 },
-      color: '#FF6B9D',
-      icon: ShoppingBag,
     },
   ];
 
