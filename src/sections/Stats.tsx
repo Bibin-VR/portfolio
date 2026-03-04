@@ -246,6 +246,10 @@ const Stats = () => {
               { name: 'Machine Learning / TensorFlow', level: 85, color: '#BC13FE' },
               { name: 'Embedded Systems', level: 82, color: '#F85149' },
               { name: 'LLMs / NLP', level: 78, color: '#FFA657' },
+              { name: 'React / TypeScript', level: 88, color: '#00F0FF' },
+              { name: 'Tailwind CSS', level: 90, color: '#00FF9D' },
+              { name: 'Three.js / OpenGL / WebGL', level: 75, color: '#BC13FE' },
+              { name: 'Vite / Node.js / Vercel', level: 83, color: '#FFA657' },
             ].map((skill, index) => (
               <div key={skill.name} className="flex items-center gap-4">
                 <span className="mono text-sm text-[#8B949E] w-48 truncate">{skill.name}</span>
