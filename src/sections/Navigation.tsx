@@ -72,7 +72,7 @@ const Navigation = () => {
             {/* Social Links */}
             <div className="hidden md:flex items-center gap-3">
               <a 
-                href="https://github.com" 
+                href="https://github.com/Bibin-VR" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all"
@@ -80,7 +80,7 @@ const Navigation = () => {
                 <Github className="w-5 h-5" />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/bibin-vr/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all"
@@ -107,13 +107,20 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <div className="absolute top-16 left-0 right-0 bg-[#161B22] border-b border-[#30363D] p-4">
+      <div
+        className={`fixed inset-0 z-40 md:hidden transition-opacity duration-200 ${
+          isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div 
+          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+        <div
+          className={`absolute top-16 left-0 right-0 bg-[#161B22] border-b border-[#30363D] p-4 transition-transform duration-200 ${
+            isMobileMenuOpen ? 'translate-y-0' : '-translate-y-4'
+          }`}
+        >
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <button
@@ -127,7 +134,7 @@ const Navigation = () => {
             </div>
             <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#30363D]">
               <a 
-                href="https://github.com" 
+                href="https://github.com/Bibin-VR" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"
@@ -135,7 +142,7 @@ const Navigation = () => {
                 <Github className="w-5 h-5" />
               </a>
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/in/bibin-vr/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"
@@ -149,9 +156,8 @@ const Navigation = () => {
                 <Mail className="w-5 h-5" />
               </a>
             </div>
-          </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

@@ -58,23 +58,6 @@ const Hero = () => {
     return () => clearInterval(nameInterval);
   }, []);
 
-  // Mouse parallax effect for background
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      const x = (clientX / innerWidth - 0.5) * 20;
-      const y = (clientY / innerHeight - 0.5) * 20;
-      
-      containerRef.current.style.setProperty('--mouse-x', `${x}px`);
-      containerRef.current.style.setProperty('--mouse-y', `${y}px`);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   const statusItems = [
     { icon: Brain, label: 'AI Systems', status: 'ONLINE', color: '#BC13FE' },
     { icon: Bot, label: 'Robotics', status: 'ACTIVE', color: '#00F0FF' },
@@ -214,8 +197,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 animate-bounce">
+      {/* Scroll Indicator — sits above terminal bar */}
+      <div className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 animate-bounce z-20">
         <ChevronDown className="w-6 h-6 text-[#8B949E]" />
       </div>
     </section>

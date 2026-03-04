@@ -15,6 +15,7 @@ const Stats = () => {
   const [counts, setCounts] = useState({ repos: 0, contributions: 0, commits: 0, followers: 0 });
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Fetch real GitHub data
@@ -26,7 +27,10 @@ const Stats = () => {
         setGithubStats(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setLoading(false);
+        setApiError(true);
+      });
   }, []);
 
   useEffect(() => {
@@ -161,6 +165,11 @@ const Stats = () => {
             {!loading && githubStats && (
               <span className="mono text-xs px-2 py-1 rounded-full bg-[#00FF9D]/10 text-[#00FF9D] border border-[#00FF9D]/30">
                 {githubStats.totalContributions} this year
+              </span>
+            )}
+            {apiError && (
+              <span className="mono text-xs px-2 py-1 rounded-full bg-[#F85149]/10 text-[#F85149] border border-[#F85149]/30">
+                GitHub API unavailable — showing placeholder
               </span>
             )}
           </div>

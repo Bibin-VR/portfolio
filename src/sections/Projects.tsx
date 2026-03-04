@@ -31,6 +31,7 @@ interface Project {
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [iframeErrors, setIframeErrors] = useState<Record<string, boolean>>({});
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -179,7 +180,7 @@ Features:
             >
               {/* Project Preview */}
               <div className="relative h-48 overflow-hidden bg-[#0D1117]">
-                {project.liveUrl ? (
+                {project.liveUrl && !iframeErrors[project.id] ? (
                   <>
                     <iframe
                       src={project.liveUrl}
@@ -193,6 +194,7 @@ Features:
                         border: 'none',
                         pointerEvents: 'none',
                       }}
+                      onError={() => setIframeErrors(prev => ({ ...prev, [project.id]: true }))}
                     />
                     {/* Live badge */}
                     <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full backdrop-blur-sm" style={{ backgroundColor: '#0D1117cc', border: `1px solid ${project.color}40` }}>
@@ -200,6 +202,17 @@ Features:
                       <span className="mono text-xs" style={{ color: project.color }}>LIVE</span>
                     </div>
                   </>
+                ) : project.liveUrl && iframeErrors[project.id] ? (
+                  /* Fallback when iframe is blocked by X-Frame-Options */
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-3 hover:bg-[#21262D]/40 transition-colors"
+                  >
+                    <project.icon className="w-10 h-10" style={{ color: project.color }} />
+                    <span className="mono text-xs" style={{ color: project.color }}>Click to visit live site</span>
+                  </a>
                 ) : (
                   <img
                     src={project.image}

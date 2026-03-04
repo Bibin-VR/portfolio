@@ -22,6 +22,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isError, setIsError] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,7 +78,8 @@ const Contact = () => {
     } catch (error) {
       console.error('Error sending email:', error);
       setIsSubmitting(false);
-      alert('Failed to send email. Please try again.');
+      setIsError(true);
+      setTimeout(() => setIsError(false), 4000);
     }
   };
 
@@ -95,8 +97,8 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, label: 'GitHub', href: 'https://github.com', color: '#E6EDF3' },
-    { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com', color: '#00F0FF' },
+    { icon: Github, label: 'GitHub', href: 'https://github.com/Bibin-VR', color: '#E6EDF3' },
+    { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/bibin-vr/', color: '#00F0FF' },
   ];
 
   return (
@@ -150,7 +152,7 @@ const Contact = () => {
 
               {/* Form Body */}
               <form onSubmit={handleSubmit} className="p-6">
-                {isSubmitted ? (
+              {isSubmitted ? (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="w-16 h-16 rounded-full bg-[#00FF9D]/10 flex items-center justify-center mb-4">
                       <CheckCircle className="w-8 h-8 text-[#00FF9D]" />
@@ -161,6 +163,25 @@ const Contact = () => {
                     <p className="text-[#8B949E] text-center">
                       Thank you for reaching out. I'll get back to you soon.
                     </p>
+                  </div>
+                ) : isError ? (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="w-16 h-16 rounded-full bg-[#F85149]/10 flex items-center justify-center mb-4">
+                      <AlertCircle className="w-8 h-8 text-[#F85149]" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-[#E6EDF3] mb-2">
+                      Transmission Failed
+                    </h3>
+                    <p className="text-[#8B949E] text-center mb-6">
+                      Something went wrong. Please try again or email directly at{' '}
+                      <a href="mailto:bibin.blp@gmail.com" className="text-[#00F0FF] hover:underline">bibin.blp@gmail.com</a>.
+                    </p>
+                    <button
+                      onClick={() => setIsError(false)}
+                      className="px-4 py-2 border border-[#30363D] rounded-lg text-[#E6EDF3] hover:bg-[#21262D] transition-all mono text-sm"
+                    >
+                      Try Again
+                    </button>
                   </div>
                 ) : (
                   <>
@@ -364,7 +385,7 @@ const Contact = () => {
                 <span className="text-[#0D1117] font-bold text-sm">B</span>
               </div>
               <span className="mono text-sm text-[#8B949E]">
-                Bibin V R <span className="text-[#484F58]">© 2025</span>
+                Bibin V R <span className="text-[#484F58]">© 2026</span>
               </span>
             </div>
             <div className="flex items-center gap-6">
