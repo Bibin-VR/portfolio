@@ -4,6 +4,7 @@ import {
   Brain, 
   Code, 
   Microchip,
+  Globe,
   ChevronRight,
   Check,
   type LucideIcon
@@ -100,6 +101,21 @@ const Skills = () => {
         { name: 'LiDAR / Camera', level: 85 },
         { name: 'IMU / GPS', level: 82 },
         { name: 'CAN / Serial', level: 78 },
+      ],
+    },
+    {
+      id: 'web',
+      name: 'Web Development',
+      icon: Globe,
+      color: '#FFA657',
+      description: 'Frontend, UI frameworks, 3D graphics, and full-stack tooling.',
+      skills: [
+        { name: 'React / TypeScript', level: 88 },
+        { name: 'Tailwind CSS', level: 90 },
+        { name: 'Three.js / WebGL', level: 78 },
+        { name: 'OpenGL / GLSL', level: 72 },
+        { name: 'Vite / Node.js', level: 82 },
+        { name: 'Vercel / CI-CD', level: 85 },
       ],
     },
   ];
@@ -292,6 +308,14 @@ const Skills = () => {
               { name: 'LLaMA', color: '#FFA657' },
               { name: 'YOLO', color: '#00F0FF' },
               { name: 'Gazebo', color: '#F85149' },
+              { name: 'React', color: '#00F0FF' },
+              { name: 'TypeScript', color: '#00FF9D' },
+              { name: 'Tailwind CSS', color: '#FFA657' },
+              { name: 'Three.js', color: '#BC13FE' },
+              { name: 'OpenGL', color: '#F85149' },
+              { name: 'Vite', color: '#00FF9D' },
+              { name: 'Vercel', color: '#E6EDF3' },
+              { name: 'Node.js', color: '#00FF9D' },
             ].map((tech, index) => (
               <div
                 key={tech.name}
