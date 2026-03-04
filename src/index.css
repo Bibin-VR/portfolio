@@ -176,14 +176,14 @@
   
   /* Contribution Grid Cell */
   .contrib-cell {
-    width: 10px;
-    height: 10px;
+    aspect-ratio: 1;
+    width: 100%;
     border-radius: 2px;
     transition: all 0.2s ease;
   }
   
   .contrib-cell:hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
   
   /* Scrollbar Styling */

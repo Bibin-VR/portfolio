@@ -176,9 +176,16 @@ const Stats = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <div className="flex gap-1 min-w-max pb-2">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
+                gap: '3px',
+                minWidth: `${grid.length * 10 + (grid.length - 1) * 3}px`,
+              }}
+            >
               {grid.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-1">
+                <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                   {week.map((level, dayIndex) => (
                     <div
                       key={`${weekIndex}-${dayIndex}`}
