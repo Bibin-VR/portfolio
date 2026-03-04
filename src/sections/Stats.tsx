@@ -155,14 +155,50 @@ const Stats = () => {
           }`}
           style={{ transitionDelay: '400ms' }}
         >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <h3 className="text-lg font-semibold text-[#E6EDF3] mono">Contribution Activity</h3>
-              {!loading && githubStats && (
-                <span className="mono text-xs px-2 py-1 rounded-full bg-[#00FF9D]/10 text-[#00FF9D] border border-[#00FF9D]/30">
-                  {githubStats.totalContributions} this year
-                </span>
-              )}
+          {/* Header: title + badge — legend moves below on mobile */}
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <h3 className="text-lg font-semibold text-[#E6EDF3] mono">Contribution Activity</h3>
+            {!loading && githubStats && (
+              <span className="mono text-xs px-2 py-1 rounded-full bg-[#00FF9D]/10 text-[#00FF9D] border border-[#00FF9D]/30">
+                {githubStats.totalContributions} this year
+              </span>
+            )}
+          </div>
+
+          {/* Grid — fully fluid, no horizontal scroll */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
+              gap: 'clamp(1px, 0.4vw, 4px)',
+              width: '100%',
+            }}
+          >
+            {grid.map((week, weekIndex) => (
+              <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1px, 0.4vw, 4px)' }}>
+                {week.map((level, dayIndex) => (
+                  <div
+                    key={`${weekIndex}-${dayIndex}`}
+                    className={`contrib-cell ${getContributionColor(level)} ${
+                      isVisible ? 'scale-100' : 'scale-0'
+                    } transition-transform`}
+                    style={{
+                      transitionDelay: `${(weekIndex * 7 + dayIndex) * 5}ms`,
+                      transitionDuration: '200ms',
+                    }}
+                    title={`${level > 0 ? level : 'No'} contributions`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* Footer: month labels left, legend right — stacks on mobile */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 px-1">
+            <div className="flex justify-between sm:justify-start sm:gap-6">
+              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(month => (
+                <span key={month} className="mono text-xs text-[#8B949E]">{month}</span>
+              ))}
             </div>
             <div className="flex items-center gap-2">
               <span className="mono text-xs text-[#8B949E]">Less</span>
@@ -173,41 +209,6 @@ const Stats = () => {
               </div>
               <span className="mono text-xs text-[#8B949E]">More</span>
             </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-                gap: '3px',
-                minWidth: `${grid.length * 10 + (grid.length - 1) * 3}px`,
-              }}
-            >
-              {grid.map((week, weekIndex) => (
-                <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  {week.map((level, dayIndex) => (
-                    <div
-                      key={`${weekIndex}-${dayIndex}`}
-                      className={`contrib-cell ${getContributionColor(level)} ${
-                        isVisible ? 'scale-100' : 'scale-0'
-                      } transition-transform`}
-                      style={{
-                        transitionDelay: `${(weekIndex * 7 + dayIndex) * 5}ms`,
-                        transitionDuration: '200ms',
-                      }}
-                      title={`${level > 0 ? level : 'No'} contributions`}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex justify-between mt-2 px-1">
-            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(month => (
-              <span key={month} className="mono text-xs text-[#8B949E]">{month}</span>
-            ))}
           </div>
         </div>
 
