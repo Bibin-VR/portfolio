@@ -100,10 +100,26 @@ const Hero = () => {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-          {/* LEFT — Text */}
-          <div className="flex-1 flex flex-col items-start order-2 lg:order-1">
+          {/* LEFT — Image */}
+          <div className="flex-shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg order-1">
+            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border border-[#30363D] shadow-2xl shadow-[#00F0FF]/10">
+              <img
+                src="/profile-hero.png"
+                alt="Bibin V R"
+                className="w-full h-full object-cover object-top"
+              />
+              {/* Subtle overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117]/60 via-transparent to-transparent" />
+              {/* Scanline */}
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00F0FF]/5 to-transparent animate-pulse"
+                style={{ animationDuration: '3s' }}
+              />
+            </div>
+          </div>
 
-            {/* Status badge */}
+          {/* RIGHT — Text */}
+          <div className="flex-1 flex flex-col items-start order-2">
             <div className="flex items-center gap-2 px-4 py-2 bg-[#161B22] border border-[#30363D] rounded-full mb-6 shadow-lg">
               <div className="w-2 h-2 rounded-full bg-[#00FF9D] status-pulse" />
               <span className="mono text-xs text-[#00FF9D]">SYSTEM ONLINE</span>
@@ -169,24 +185,6 @@ const Hero = () => {
               >
                 <span className="mono text-sm">Open Issue</span>
               </a>
-            </div>
-          </div>
-
-          {/* RIGHT — Image */}
-          <div className="flex-shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg order-1 lg:order-2">
-            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border border-[#30363D] shadow-2xl shadow-[#00F0FF]/10">
-              <img
-                src="/profile-hero.png"
-                alt="Bibin V R"
-                className="w-full h-full object-cover object-top"
-              />
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117]/60 via-transparent to-transparent" />
-              {/* Scanline */}
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00F0FF]/5 to-transparent animate-pulse"
-                style={{ animationDuration: '3s' }}
-              />
             </div>
           </div>
 
