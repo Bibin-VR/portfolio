@@ -154,6 +154,9 @@ const Hero = () => {
               <span className="text-[#BC13FE]">AI</span>, and{' '}
               <span className="text-[#00FF9D]">embedded systems</span>.
               Specializing in ROS/ROS2, computer vision, and LLM-powered applications.
+              Customizable Web interfaces with{' '}
+              <span className="text-[#BC13FE]">React and Tailwind CSS</span>,
+              Always exploring new frontiers in technology and innovation.
             </p>
 
             {/* Status Indicators */}
