@@ -8,7 +8,7 @@ const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const name = 'Bibin V R';
-  const title = 'Robotics & AI Engineer';
+  const title = 'Robotics, AI Engineer & Web Developer';
   const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   // Text scramble effect
