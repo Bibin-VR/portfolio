@@ -84,98 +84,68 @@ const Hero = () => {
   return (
     <section 
       ref={containerRef}
-      className="relative h-screen w-screen flex items-center justify-center overflow-hidden"
-      style={{ padding: '20mm 5mm 55mm 5mm' }}
+      className="relative min-h-screen w-full flex items-center overflow-hidden"
       id="hero"
     >
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0D1117]" />
+      <div className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, #00F0FF 1px, transparent 0)`,
+          backgroundSize: '40px 40px',
+        }}
+      />
+
       {/* Content */}
-      <div className="relative z-10 w-full h-full">
-        <div className="flex flex-col items-center h-full">
-          
-          {/* Profile Card with Text Overlay */}
-          <div className="relative w-full h-full">
-            <div className="relative h-full rounded-lg overflow-hidden">
-              <div className="relative w-full h-full">
-                <img 
-                  src="/profile-hero.png" 
-                  alt="Bibin V R"
-                  className="w-full h-full object-cover"
-                />
-                {/* Gradient Overlay for better text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] via-[#0D1117]/80 via-40% to-transparent" />
-                {/* Additional bottom fade effect */}
-                <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
-                
-                {/* Scanline Effect */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00F0FF]/10 to-transparent animate-pulse" 
-                  style={{ animationDuration: '3s' }}
-                />
-                
-                {/* Text Content Overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 lg:p-12">
-                  {/* Name with Scramble Effect */}
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-3">
-                    <span 
-                      className={`mono ${isScrambling ? 'text-[#00F0FF]' : 'text-[#E6EDF3]'}`}
-                      style={{ 
-                        textShadow: isScrambling 
-                          ? '0 0 30px rgba(0, 240, 255, 0.8), 0 0 60px rgba(0, 240, 255, 0.4), 0 4px 8px rgba(0, 0, 0, 0.8)' 
-                          : '0 0 30px rgba(230, 237, 243, 0.3), 0 4px 12px rgba(0, 0, 0, 0.9)',
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      {displayText || '\u00A0'}
-                    </span>
-                  </h1>
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-                  {/* Title */}
-                  <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-4 mono" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)' }}>
-                    <span className={isScrambling ? 'text-[#BC13FE]' : 'text-[#C9D1D9]'}>
-                      {subText || '\u00A0'}
-                    </span>
-                  </p>
+          {/* LEFT — Text */}
+          <div className="flex-1 flex flex-col items-start order-2 lg:order-1">
 
-                  {/* Description */}
-                  <p className="text-sm sm:text-base lg:text-lg text-[#C9D1D9] leading-relaxed max-w-3xl mono uppercase tracking-wider font-light mb-6" style={{ textShadow: '0 2px 6px rgba(0, 0, 0, 0.9)', letterSpacing: '0.1em' }}>
-                    Building intelligent autonomous systems at the intersection of 
-                    <span className="text-[#00F0FF]"> robotics</span>, 
-                    <span className="text-[#BC13FE]"> AI</span>, and 
-                    <span className="text-[#00FF9D]"> embedded systems</span>.
-                    Specializing in ROS/ROS2, computer vision, and LLM-powered applications.
-                  </p>
-
-                  {/* CTA Buttons */}
-                  <div className="flex flex-wrap gap-3">
-                    <a 
-                      href="#projects"
-                      className="px-5 py-2.5 bg-[#00F0FF] text-[#0D1117] font-semibold rounded-lg hover:bg-[#00F0FF]/90 transition-all flex items-center gap-2 shadow-lg shadow-[#00F0FF]/30"
-                    >
-                      <span className="mono text-sm">Explore Repositories</span>
-                    </a>
-                    <a 
-                      href="#contact"
-                      className="px-5 py-2.5 border border-[#30363D] text-[#E6EDF3] bg-[#0D1117]/80 backdrop-blur-md rounded-lg hover:bg-[#21262D] hover:border-[#00F0FF] transition-all flex items-center gap-2 shadow-lg"
-                    >
-                      <span className="mono text-sm">Open Issue</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Status Badge */}
-              <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 bg-[#0D1117]/95 backdrop-blur-md border border-[#30363D] rounded-full shadow-lg">
-                <div className="w-2 h-2 rounded-full bg-[#00FF9D] status-pulse" />
-                <span className="mono text-xs text-[#00FF9D]">SYSTEM ONLINE</span>
-              </div>
+            {/* Status badge */}
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#161B22] border border-[#30363D] rounded-full mb-6 shadow-lg">
+              <div className="w-2 h-2 rounded-full bg-[#00FF9D] status-pulse" />
+              <span className="mono text-xs text-[#00FF9D]">SYSTEM ONLINE</span>
             </div>
-          </div>
 
-          {/* Status Indicators */}
-          <div className="flex flex-wrap justify-center gap-4 mt-8 mb-8">
+            {/* Name */}
+            <h1 className="text-4xl sm:text-5xl xl:text-7xl font-bold mb-3">
+              <span
+                className={`mono ${isScrambling ? 'text-[#00F0FF]' : 'text-[#E6EDF3]'}`}
+                style={{
+                  textShadow: isScrambling
+                    ? '0 0 30px rgba(0, 240, 255, 0.8), 0 0 60px rgba(0, 240, 255, 0.4)'
+                    : '0 0 30px rgba(230, 237, 243, 0.3)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {displayText || '\u00A0'}
+              </span>
+            </h1>
+
+            {/* Title */}
+            <p className="text-lg sm:text-xl xl:text-2xl mb-4 mono">
+              <span className={isScrambling ? 'text-[#BC13FE]' : 'text-[#C9D1D9]'}>
+                {subText || '\u00A0'}
+              </span>
+            </p>
+
+            {/* Description */}
+            <p className="text-sm sm:text-base text-[#8B949E] leading-relaxed max-w-xl mono mb-8">
+              Building intelligent autonomous systems at the intersection of{' '}
+              <span className="text-[#00F0FF]">robotics</span>,{' '}
+              <span className="text-[#BC13FE]">AI</span>, and{' '}
+              <span className="text-[#00FF9D]">embedded systems</span>.
+              Specializing in ROS/ROS2, computer vision, and LLM-powered applications.
+            </p>
+
+            {/* Status Indicators */}
+            <div className="flex flex-wrap gap-3 mb-8">
               {statusItems.map((item, index) => (
-                <div 
+                <div
                   key={item.label}
-                  className="flex items-center gap-2 px-4 py-2 bg-[#0D1117]/90 backdrop-blur-md border border-[#30363D] rounded-lg hover:border-[#30363D]/80 transition-all shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#161B22] border border-[#30363D] rounded-lg transition-all shadow-lg"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <item.icon className="w-4 h-4" style={{ color: item.color }} />
@@ -184,6 +154,42 @@ const Hero = () => {
                 </div>
               ))}
             </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#projects"
+                className="px-5 py-2.5 bg-[#00F0FF] text-[#0D1117] font-semibold rounded-lg hover:bg-[#00F0FF]/90 transition-all flex items-center gap-2 shadow-lg shadow-[#00F0FF]/30"
+              >
+                <span className="mono text-sm">Explore Repositories</span>
+              </a>
+              <a
+                href="#contact"
+                className="px-5 py-2.5 border border-[#30363D] text-[#E6EDF3] bg-[#161B22] rounded-lg hover:bg-[#21262D] hover:border-[#00F0FF] transition-all flex items-center gap-2 shadow-lg"
+              >
+                <span className="mono text-sm">Open Issue</span>
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT — Image */}
+          <div className="flex-shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg order-1 lg:order-2">
+            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border border-[#30363D] shadow-2xl shadow-[#00F0FF]/10">
+              <img
+                src="/profile-hero.png"
+                alt="Bibin V R"
+                className="w-full h-full object-cover object-top"
+              />
+              {/* Subtle overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117]/60 via-transparent to-transparent" />
+              {/* Scanline */}
+              <div
+                className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00F0FF]/5 to-transparent animate-pulse"
+                style={{ animationDuration: '3s' }}
+              />
+            </div>
+          </div>
+
         </div>
       </div>
 
