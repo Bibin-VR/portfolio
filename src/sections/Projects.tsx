@@ -93,6 +93,7 @@ Supported Commands:
 • Walk, turn left/right, move back, stop/halt
 • Pose, sing, talk, answer, sad expression
 • Stand up / sit down / lie down / balance`,
+      image: '/project-go2w.png',
       githubUrl: 'https://github.com/Bibin-VR/Go2W_ws',
       tags: ['Robotics', 'Voice AI', 'C++'],
       techStack: ['C++', 'Python', 'Vosk', 'Gemini AI', 'Unitree SDK'],
