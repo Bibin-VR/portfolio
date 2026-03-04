@@ -1,10 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { GitCommit, FolderGit, Clock, TrendingUp } from 'lucide-react';
+import { GitCommit, FolderGit, TrendingUp, Users } from 'lucide-react';
+
+interface GitHubStats {
+  repos: number;
+  totalContributions: number;
+  totalCommits: number;
+  yearsExperience: number;
+  followers: number;
+  contributionGrid: number[][];
+}
 
 const Stats = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [counts, setCounts] = useState({ projects: 0, commits: 0, experience: 0, contributions: 0 });
+  const [counts, setCounts] = useState({ repos: 0, contributions: 0, commits: 0, followers: 0 });
+  const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
+  const [loading, setLoading] = useState(true);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Fetch real GitHub data
+  useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    fetch(`${apiBase}/api/github-stats`)
+      .then(r => r.json())
+      .then(data => {
+        setGithubStats(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -16,119 +39,64 @@ const Stats = () => {
       },
       { threshold: 0.2 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Counter animation
+  // Animated counters — triggered when visible and data is ready
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !githubStats) return;
 
-    const targets = { projects: 12, commits: 500, experience: 4, contributions: 1200 };
+    const targets = {
+      repos: githubStats.repos,
+      contributions: githubStats.totalContributions,
+      commits: githubStats.totalCommits,
+      followers: githubStats.followers,
+    };
     const duration = 2000;
     const steps = 60;
-    const interval = duration / steps;
-
     let step = 0;
+
     const timer = setInterval(() => {
       step++;
-      const progress = step / steps;
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-
+      const easeOut = 1 - Math.pow(1 - step / steps, 3);
       setCounts({
-        projects: Math.floor(targets.projects * easeOut),
-        commits: Math.floor(targets.commits * easeOut),
-        experience: Math.floor(targets.experience * easeOut),
+        repos: Math.floor(targets.repos * easeOut),
         contributions: Math.floor(targets.contributions * easeOut),
+        commits: Math.floor(targets.commits * easeOut),
+        followers: Math.floor(targets.followers * easeOut),
       });
-
       if (step >= steps) {
         clearInterval(timer);
         setCounts(targets);
       }
-    }, interval);
+    }, duration / steps);
 
     return () => clearInterval(timer);
-  }, [isVisible]);
-
-  // Generate contribution grid data
-  const generateContributionData = () => {
-    const weeks = 26;
-    const days = 7;
-    const data = [];
-    
-    for (let w = 0; w < weeks; w++) {
-      const week = [];
-      for (let d = 0; d < days; d++) {
-        // Simulate realistic contribution pattern
-        const baseIntensity = Math.random();
-        const dayOfWeek = d;
-        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-        const intensity = isWeekend ? baseIntensity * 0.5 : baseIntensity;
-        
-        let level = 0;
-        if (intensity > 0.8) level = 4;
-        else if (intensity > 0.6) level = 3;
-        else if (intensity > 0.3) level = 2;
-        else if (intensity > 0.1) level = 1;
-        
-        week.push(level);
-      }
-      data.push(week);
-    }
-    return data;
-  };
-
-  const contributionData = generateContributionData();
+  }, [isVisible, githubStats]);
 
   const getContributionColor = (level: number) => {
-    const colors = [
+    return [
       'bg-[#21262D]',
       'bg-[#0E4429]',
       'bg-[#006D32]',
       'bg-[#26A641]',
       'bg-[#39D353]',
-    ];
-    return colors[level];
+    ][level] ?? 'bg-[#21262D]';
   };
 
   const statCards = [
-    { 
-      icon: FolderGit, 
-      label: 'Repositories', 
-      value: counts.projects,
-      suffix: '+',
-      color: '#00F0FF'
-    },
-    { 
-      icon: GitCommit, 
-      label: 'Commits', 
-      value: counts.commits,
-      suffix: '+',
-      color: '#00FF9D'
-    },
-    { 
-      icon: Clock, 
-      label: 'Years Experience', 
-      value: counts.experience,
-      suffix: '',
-      color: '#BC13FE'
-    },
-    { 
-      icon: TrendingUp, 
-      label: 'Contributions', 
-      value: counts.contributions,
-      suffix: '+',
-      color: '#F85149'
-    },
+    { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#00F0FF' },
+    { icon: GitCommit, label: 'Commits (this year)', value: counts.commits, suffix: '+', color: '#00FF9D' },
+    { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#BC13FE' },
+    { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#FFA657' },
   ];
 
+  // Fallback grid if data isn't loaded yet
+  const grid = githubStats?.contributionGrid ?? Array.from({ length: 26 }, () => Array(7).fill(0));
+
   return (
-    <section 
+    <section
       ref={sectionRef}
       id="stats"
       className="relative py-24"
@@ -141,8 +109,16 @@ const Stats = () => {
             <h2 className="text-3xl font-bold text-[#E6EDF3] mono">System Metrics</h2>
           </div>
           <p className="text-[#8B949E] max-w-2xl">
-            Real-time telemetry from development activity. Tracking repository contributions, 
-            commit frequency, and system engagement metrics.
+            Live telemetry pulled directly from{' '}
+            <a
+              href="https://github.com/Bibin-VR"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#00F0FF] hover:underline"
+            >
+              github.com/Bibin-VR
+            </a>
+            . Contribution graphs and counters reflect real activity.
           </p>
         </div>
 
@@ -157,50 +133,51 @@ const Stats = () => {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div 
-                  className="p-2 rounded-lg"
-                  style={{ backgroundColor: `${stat.color}20` }}
-                >
+                <div className="p-2 rounded-lg" style={{ backgroundColor: `${stat.color}20` }}>
                   <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
                 </div>
+                {loading && (
+                  <div className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: stat.color }} />
+                )}
               </div>
               <div className="counter text-3xl font-bold text-[#E6EDF3] mb-1">
-                {stat.value}{stat.suffix}
+                {loading ? '—' : `${stat.value}${stat.suffix}`}
               </div>
               <div className="mono text-xs text-[#8B949E]">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        {/* Contribution Graph */}
-        <div 
+        {/* Real Contribution Graph */}
+        <div
           className={`gh-card p-6 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '400ms' }}
         >
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-[#E6EDF3] mono">
-              Contribution Activity
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3 className="text-lg font-semibold text-[#E6EDF3] mono">Contribution Activity</h3>
+              {!loading && githubStats && (
+                <span className="mono text-xs px-2 py-1 rounded-full bg-[#00FF9D]/10 text-[#00FF9D] border border-[#00FF9D]/30">
+                  {githubStats.totalContributions} this year
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-2">
               <span className="mono text-xs text-[#8B949E]">Less</span>
               <div className="flex gap-1">
-                {[0, 1, 2, 3, 4].map((level) => (
-                  <div 
-                    key={level}
-                    className={`w-3 h-3 rounded-sm ${getContributionColor(level)}`}
-                  />
+                {[0, 1, 2, 3, 4].map(level => (
+                  <div key={level} className={`w-3 h-3 rounded-sm ${getContributionColor(level)}`} />
                 ))}
               </div>
               <span className="mono text-xs text-[#8B949E]">More</span>
             </div>
           </div>
 
-          {/* Contribution Grid */}
           <div className="overflow-x-auto">
             <div className="flex gap-1 min-w-max pb-2">
-              {contributionData.map((week, weekIndex) => (
+              {grid.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-1">
                   {week.map((level, dayIndex) => (
                     <div
@@ -212,7 +189,7 @@ const Stats = () => {
                         transitionDelay: `${(weekIndex * 7 + dayIndex) * 5}ms`,
                         transitionDuration: '200ms',
                       }}
-                      title={`${level} contributions`}
+                      title={`${level > 0 ? level : 'No'} contributions`}
                     />
                   ))}
                 </div>
@@ -220,16 +197,15 @@ const Stats = () => {
             </div>
           </div>
 
-          {/* Month Labels */}
           <div className="flex justify-between mt-2 px-1">
-            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month) => (
+            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(month => (
               <span key={month} className="mono text-xs text-[#8B949E]">{month}</span>
             ))}
           </div>
         </div>
 
-        {/* Skill Heatmap */}
-        <div 
+        {/* Technology Stack Intensity */}
+        <div
           className={`mt-6 gh-card p-6 transition-all duration-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
@@ -238,7 +214,6 @@ const Stats = () => {
           <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-6">
             Technology Stack Intensity
           </h3>
-          
           <div className="space-y-4">
             {[
               { name: 'Python / ROS', level: 95, color: '#00F0FF' },
@@ -252,7 +227,7 @@ const Stats = () => {
               { name: 'Vite / Node.js / Vercel', level: 83, color: '#FFA657' },
             ].map((skill, index) => (
               <div key={skill.name} className="flex items-center gap-4">
-                <span className="mono text-sm text-[#8B949E] w-48 truncate">{skill.name}</span>
+                <span className="mono text-sm text-[#8B949E] w-52 truncate">{skill.name}</span>
                 <div className="flex-1 h-2 bg-[#21262D] rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-1000 ease-out"
