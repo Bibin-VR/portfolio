@@ -68,7 +68,6 @@ Features:
 • 🔍 Gender filter & product search
 • 📱 Fully responsive — mobile to desktop`,
       liveUrl: 'https://Bibin-VR.github.io/Trendora',
-      githubUrl: 'https://github.com/Bibin-VR/Trendora',
       tags: ['Web', 'E-Commerce', 'React'],
       techStack: ['React 19', 'Tailwind CSS', 'FastAPI', 'MongoDB', 'Razorpay'],
       stats: { stars: 0, forks: 0 },
