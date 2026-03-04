@@ -7,6 +7,7 @@ import {
   Factory, 
   Flame, 
   Watch,
+  ShoppingBag,
   ChevronDown,
   ChevronUp,
   Code2,
@@ -18,7 +19,9 @@ interface Project {
   name: string;
   description: string;
   fullDescription: string;
-  image: string;
+  image?: string;
+  liveUrl?: string;
+  githubUrl?: string;
   tags: string[];
   techStack: string[];
   stats: { stars: number; forks: number };
@@ -125,6 +128,30 @@ Features:
       stats: { stars: 29, forks: 6 },
       color: '#00F0FF',
       icon: Watch,
+      githubUrl: 'https://github.com/Bibin-VR/smart-band-athletics',
+    },
+    {
+      id: 'trendora',
+      name: 'Trendora',
+      description: 'Fashion Aggregator & E-Commerce Platform',
+      fullDescription: `A cinematic fashion e-commerce web app with an immersive loading experience. Built with React 19 and a Python/FastAPI backend, deployed on GitHub Pages.
+
+Features:
+• 🔐 User Authentication with JWT
+• 🛒 Shopping Cart & Checkout flow
+• 🎨 Dark / Light theme toggle
+• 🔊 Ambient Audio Manager
+• 🏷️ Collections & Featured Products
+• 💳 Razorpay Payment Integration
+• 🔍 Gender filter & product search
+• 📱 Fully responsive — mobile to desktop`,
+      liveUrl: 'https://Bibin-VR.github.io/Trendora',
+      githubUrl: 'https://github.com/Bibin-VR/Trendora',
+      tags: ['Web', 'E-Commerce', 'React'],
+      techStack: ['React 19', 'Tailwind CSS', 'FastAPI', 'MongoDB', 'Razorpay'],
+      stats: { stars: 0, forks: 0 },
+      color: '#FF6B9D',
+      icon: ShoppingBag,
     },
   ];
 
@@ -164,19 +191,42 @@ Features:
                 borderTop: `3px solid ${project.color}`,
               }}
             >
-              {/* Project Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-                <div 
-                  className="absolute inset-0 opacity-30"
-                  style={{ background: `linear-gradient(to top, ${project.color}40, transparent)` }}
+              {/* Project Preview */}
+              <div className="relative h-48 overflow-hidden bg-[#0D1117]">
+                {project.liveUrl ? (
+                  <>
+                    <iframe
+                      src={project.liveUrl}
+                      title={`${project.name} preview`}
+                      className="absolute top-0 left-0"
+                      style={{
+                        width: '200%',
+                        height: '200%',
+                        transform: 'scale(0.5)',
+                        transformOrigin: 'top left',
+                        border: 'none',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                    {/* Live badge */}
+                    <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full backdrop-blur-sm" style={{ backgroundColor: '#0D1117cc', border: `1px solid ${project.color}40` }}>
+                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: project.color }} />
+                      <span className="mono text-xs" style={{ color: project.color }}>LIVE</span>
+                    </div>
+                  </>
+                ) : (
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                )}
+                <div
+                  className="absolute inset-0 opacity-40 pointer-events-none"
+                  style={{ background: `linear-gradient(to top, ${project.color}30, transparent 60%)` }}
                 />
                 <div className="absolute top-4 left-4">
-                  <div 
+                  <div
                     className="p-2 rounded-lg backdrop-blur-sm"
                     style={{ backgroundColor: `${project.color}30` }}
                   >
@@ -271,13 +321,29 @@ Features:
                     )}
                   </button>
                   <div className="flex-1" />
-                  <a 
-                    href="#"
-                    className="flex items-center gap-1 text-sm text-[#00F0FF] hover:text-[#00F0FF]/80 transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span className="mono">View Code</span>
-                  </a>
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm hover:opacity-80 transition-opacity"
+                      style={{ color: project.color }}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span className="mono">Live Site</span>
+                    </a>
+                  )}
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm text-[#00F0FF] hover:text-[#00F0FF]/80 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span className="mono">View Code</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
