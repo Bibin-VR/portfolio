@@ -3,7 +3,7 @@ import {
   Star, 
   GitFork, 
   ExternalLink, 
-  Brain, 
+  Bot,
   Flame, 
   Watch,
   ShoppingBag,
@@ -76,23 +76,29 @@ Features:
       icon: ShoppingBag,
     },
     {
-      id: 'trex-ai',
-      name: 'trex-ai',
-      description: 'Local LLM Personal Assistant',
-      fullDescription: `Trex is an AI-powered personal assistant designed to run entirely on a local system, ensuring privacy and offline accessibility. Built on LLaMA 3 architecture with Ollama as the backend runtime, enabling efficient inference directly on the host machine.
+      id: 'go2w',
+      name: 'Go2W_ws',
+      description: 'Voice-Controlled Unitree Go2 Robot',
+      fullDescription: `An interactive voice-controlled system for the Unitree Go2 quadruped robot. Combines offline speech recognition with Google Gemini AI to interpret and execute natural language commands in real time.
 
-Key Features:
-• Natural language interaction with contextual understanding
-• Task management and scheduling capabilities
-• Privacy-focused: all data stays local
-• Optimized for consumer hardware
-• Extensible plugin architecture`,
-      image: '/project-trex.jpg',
-      tags: ['AI', 'LLM', 'Python'],
-      techStack: ['Python', 'Ollama', 'LLaMA 3', 'PyQt5'],
-      stats: { stars: 47, forks: 12 },
-      color: '#BC13FE',
-      icon: Brain,
+System Architecture:
+• Wake-word detection ("zha zha") via Vosk offline ASR
+• Gemini AI interprets freeform voice commands
+• Direct keyword bypass for faster critical actions
+• Custom C++ executables for each robot behaviour
+• UDP broadcast of recognised speech for sensor fusion
+• 5-minute auto-reset to wake-word mode after pose
+
+Supported Commands:
+• Walk, turn left/right, move back, stop/halt
+• Pose, sing, talk, answer, sad expression
+• Stand up / sit down / lie down / balance`,
+      githubUrl: 'https://github.com/Bibin-VR/Go2W_ws',
+      tags: ['Robotics', 'Voice AI', 'C++'],
+      techStack: ['C++', 'Python', 'Vosk', 'Gemini AI', 'Unitree SDK'],
+      stats: { stars: 0, forks: 0 },
+      color: '#00FF9D',
+      icon: Bot,
     },
     {
       id: 'fire-safety',
