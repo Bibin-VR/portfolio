@@ -4,7 +4,7 @@ import {
   GitFork, 
   ExternalLink, 
   Bot,
-  Flame, 
+  Layers,
   Watch,
   ShoppingBag,
   ChevronDown,
@@ -76,6 +76,26 @@ Features:
       icon: ShoppingBag,
     },
     {
+      id: 'texstudio',
+      name: 'Tex Studio',
+      description: 'Creative Web Studio & Design Platform',
+      fullDescription: `A modern creative studio web application built with Next.js and deployed on Firebase. Designed as a professional design and productivity platform with a clean, minimal UI.
+
+Highlights:
+• ⚡ Next.js 14 App Router architecture
+• 🎨 Studio-grade design tooling interface
+• 🔥 Firebase hosting with global CDN
+• 📱 Fully responsive layout
+• 🌙 Dark-first aesthetic
+• ⚡ Blazing fast page loads with SSR`,
+      liveUrl: 'https://texstudio.web.app/',
+      tags: ['Web', 'Next.js', 'Firebase'],
+      techStack: ['Next.js 14', 'React', 'Tailwind CSS', 'Firebase'],
+      stats: { stars: 0, forks: 0 },
+      color: '#BC13FE',
+      icon: Layers,
+    },
+    {
       id: 'go2w',
       name: 'Go2W_ws',
       description: 'Voice-Controlled Unitree Go2 Robot',
@@ -100,25 +120,6 @@ Supported Commands:
       stats: { stars: 0, forks: 0 },
       color: '#00FF9D',
       icon: Bot,
-    },
-    {
-      id: 'fire-safety',
-      name: 'ai-fire-safety',
-      description: 'AI-Powered Fire Safety System',
-      fullDescription: `Intelligent fire safety system leveraging computer vision for proactive hazard detection. Designed and deployed at Mangalore Chemicals & Fertilizers Limited (MCF) for industrial safety.
-
-Capabilities:
-• Real-time fire and smoke detection using YOLOv8
-• Thermal anomaly detection
-• Automated alert system with SMS/email notifications
-• Integration with existing facility management systems
-• 99.2% detection accuracy with <100ms latency`,
-      image: '/project-fire.jpg',
-      tags: ['Computer Vision', 'Safety', 'IoT'],
-      techStack: ['Python', 'OpenCV', 'YOLOv8', 'TensorFlow'],
-      stats: { stars: 52, forks: 15 },
-      color: '#F85149',
-      icon: Flame,
     },
     {
       id: 'smart-band',
