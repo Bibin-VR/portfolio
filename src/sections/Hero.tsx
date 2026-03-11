@@ -3,15 +3,33 @@ import { ChevronDown } from 'lucide-react';
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
-  const [subText, setSubText] = useState('');
+  const [wordStates, setWordStates] = useState(['', '', '']);
   const [isScrambling, setIsScrambling] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const name = 'Bibin V R';
-  const title = 'Robotics · AI · Web';
+  const words = ['Robotics', 'AI', 'Web'];
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@!$%';
 
   useEffect(() => {
+    const scrambleWord = (wordIdx: number, delay: number, onDone?: () => void) => {
+      setTimeout(() => {
+        const word = words[wordIdx];
+        let it = 0;
+        const iv = setInterval(() => {
+          setWordStates(prev => {
+            const next = [...prev];
+            next[wordIdx] = word.split('').map((_, i) =>
+              i < it ? word[i] : chars[Math.floor(Math.random() * chars.length)]
+            ).join('');
+            return next;
+          });
+          if (it >= word.length) { clearInterval(iv); onDone?.(); }
+          it += 0.5;
+        }, 38);
+      }, delay);
+    };
+
     let iteration = 0;
     const nameInterval = setInterval(() => {
       setDisplayText(
@@ -22,22 +40,11 @@ const Hero = () => {
       );
       if (iteration >= name.length) {
         clearInterval(nameInterval);
-        let subIteration = 0;
-        const subInterval = setInterval(() => {
-          setSubText(
-            title.split('').map((_, index) => {
-              if (index < subIteration) return title[index];
-              return chars[Math.floor(Math.random() * chars.length)];
-            }).join('')
-          );
-          if (subIteration >= title.length) {
-            clearInterval(subInterval);
-            setIsScrambling(false);
-          }
-          subIteration += 1 / 2;
-        }, 35);
+        scrambleWord(0, 0);
+        scrambleWord(1, 210);
+        scrambleWord(2, 420, () => setIsScrambling(false));
       }
-      iteration += 1 / 2;
+      iteration += 0.5;
     }, 45);
     return () => clearInterval(nameInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,9 +126,27 @@ const Hero = () => {
               </span>
             </h1>
 
-            {/* Subtitle */}
-            <p className="mono mb-8" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', color: isScrambling ? '#B0C8E0' : 'rgba(240,240,240,0.45)', letterSpacing: '0.04em', transition: 'color 0.4s ease' }}>
-              {subText || '\u00A0'}
+            {/* Subtitle — per-word shuffle reveal */}
+            <p className="mono mb-8" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', letterSpacing: '0.06em' }}>
+              {words.map((word, i) => (
+                <span key={word}>
+                  <span style={{
+                    color: wordStates[i] === word
+                      ? 'rgba(240,240,240,0.45)'
+                      : wordStates[i]
+                        ? '#B0C8E0'
+                        : 'rgba(240,240,240,0)',
+                    transition: 'color 0.35s ease',
+                    display: 'inline-block',
+                    minWidth: `${word.length}ch`,
+                  }}>
+                    {wordStates[i] || word.replace(/./g, '\u00A0')}
+                  </span>
+                  {i < words.length - 1 && (
+                    <span style={{ color: 'rgba(240,240,240,0.2)', margin: '0 0.35em' }}>·</span>
+                  )}
+                </span>
+              ))}
             </p>
 
             {/* Ruled separator */}
