@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { playBoot, playBootAmbient, stopBootAmbient } from '../hooks/use-audio';
+import { playBoot, playBootAmbient, stopBootAmbient, unlockAudio } from '../hooks/use-audio';
 
 const LoadingScreen = () => {
   const [bootLines, setBootLines] = useState<string[]>([]);
@@ -19,7 +19,10 @@ const LoadingScreen = () => {
   ];
 
   useEffect(() => {
-    // Start ambient drone immediately
+    // Try to unlock AudioContext immediately on mount.
+    // Browser may allow it on revisits; worst case it's a no-op and the
+    // statechange listener inside playBootAmbient handles the deferred start.
+    unlockAudio();
     playBootAmbient();
     let lineIndex = 0;
 
@@ -51,7 +54,12 @@ const LoadingScreen = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{ background: '#060608' }}>
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{ background: '#060608' }}
+      onPointerMove={unlockAudio}
+      onTouchStart={unlockAudio}
+    >
       <div className="w-full max-w-xl px-8">
 
         {/* Logo mark */}
