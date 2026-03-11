@@ -2,15 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { playBoot, playBootAmbient, stopBootAmbient, unlockAudio } from '../hooks/use-audio';
 
 const BOOT_SEQ = [
-  'BVRS_OS v3.1.4 — initializing...',
-  'loading kernel modules............OK',
-  'mounting filesystems...............OK',
-  'starting ROS2 daemon...............OK',
-  'initializing AI inference engine...OK',
-  'loading neural network weights.....OK',
-  'calibrating sensors................OK',
-  'establishing secure connection.....OK',
-  'all systems nominal.',
+  'BIBIN_OS v1.0 — wake sequence initiated',
+  'loading perception stack...........OK',
+  'mounting ROS2 workspace............OK',
+  'linking neural inference engine....OK',
+  'calibrating LiDAR & IMU............OK',
+  'compiling portfolio modules........OK',
+  'establishing uplink................OK',
+  'handshake complete.',
 ];
 
 interface Props { onComplete: () => void; }
@@ -71,7 +70,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
             <div className="w-2 h-2 bg-[#B0C8E0]" />
           </div>
           <span className="mono text-xs tracking-[0.2em] uppercase" style={{ color: 'rgba(240,240,240,0.4)' }}>
-            bibin.vr — portfolio os
+            bibin.vr — system boot
           </span>
         </div>
 
@@ -86,10 +85,10 @@ const LoadingScreen = ({ onComplete }: Props) => {
               </div>
               <div className="flex flex-col items-center gap-1">
                 <span className="mono text-[10px] tracking-[0.35em] uppercase text-[rgba(176,200,224,0.5)]">
-                  audio system standby
+                  audio engine standby
                 </span>
                 <span className="mono text-[9px] tracking-[0.15em] uppercase text-[rgba(240,240,240,0.15)]">
-                  context suspended — awaiting gesture
+                  awaiting first gesture
                 </span>
               </div>
             </div>
@@ -99,7 +98,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
             >
               <div className="w-1.5 h-1.5 bg-[#B0C8E0] animate-pulse" />
               <span className="mono text-[10px] tracking-[0.28em] uppercase text-[rgba(240,240,240,0.35)]">
-                click anywhere to initialize
+                tap anywhere to begin
               </span>
             </div>
           </div>
@@ -138,7 +137,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
         <div>
           <div className="flex justify-between mb-2">
             <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'rgba(240,240,240,0.3)' }}>
-              {phase === 'init' ? 'Awaiting Signal' : 'System Init'}
+              {phase === 'init' ? 'Standby' : 'Boot Progress'}
             </span>
             <span className="mono text-[10px]" style={{ color: '#B0C8E0' }}>
               {phase === 'init' ? '--' : `${Math.min(Math.round(progress), 100)}%`}
@@ -157,7 +156,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
 
         {/* Status row */}
         <div className="flex items-center gap-8 mt-8">
-          {['AI MODULES', 'ROBOTICS', 'EMBEDDED'].map((label) => (
+          {['ROBOTICS', 'AI / ML', 'WEB'].map((label) => (
             <div key={label} className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full status-pulse" style={{ background: '#B0C8E0' }} />
               <span className="mono text-[10px] tracking-widest" style={{ color: 'rgba(240,240,240,0.3)' }}>
