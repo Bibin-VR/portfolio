@@ -8,14 +8,17 @@ import Contact from './sections/Contact';
 import Navigation from './sections/Navigation';
 import LoadingScreen from './sections/LoadingScreen';
 import Dither from './components/Dither';
-import { playClick, playScroll, unlockAudio } from './hooks/use-audio';
+import { playClick, playScroll, unlockAudio, startBgAmbient } from './hooks/use-audio';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2800);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      startBgAmbient(); // begin subtle pink-noise background after boot
+    }, 2800);
     return () => clearTimeout(timer);
   }, []);
 

@@ -34,36 +34,57 @@ export function unlockAudio(): void {
   } catch (_) {}
 }
 
-// ── Click — sci-fi metallic chime (4 inharmonic partials) ────────────────
-// Ratios tuned to give crystalline interface ping, not a musical bell.
+// ── Click — smooth sci-fi flow (noise whoosh + sine glide) ──────────────
+// A soft filtered-noise sweep paired with an upward sine glide:
+// sounds like data being transmitted / an interface breathing open.
 export function playClick() {
   if (_muted) return;
   try {
     const ctx = getCtx();
     const t = ctx.currentTime;
+    const dur = 0.22;
 
-    const partials = [
-      { freq: 420,  vol: 0.072, decay: 0.38 },
-      { freq: 1157, vol: 0.044, decay: 0.22 },
-      { freq: 2270, vol: 0.026, decay: 0.13 },
-      { freq: 3752, vol: 0.012, decay: 0.07 },
-    ];
+    // ── Layer 1: noise whoosh through a sweeping bandpass ───────────────
+    // Short white-noise buffer (looped for duration, then stopped)
+    const bufLen = Math.ceil(ctx.sampleRate * dur);
+    const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+    const nd = noiseBuf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) nd[i] = Math.random() * 2 - 1;
 
-    partials.forEach(({ freq, vol, decay }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      // Slight rising glide on attack for the "ping" shape
-      osc.frequency.setValueAtTime(freq * 0.96, t);
-      osc.frequency.linearRampToValueAtTime(freq, t + 0.018);
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(vol, t + 0.006);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + decay);
-      osc.start(t);
-      osc.stop(t + decay + 0.02);
-    });
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.Q.value = 1.6;
+    // Sweep bandpass centre from 140 Hz → 3200 Hz (exponential = smooth acceleration)
+    bp.frequency.setValueAtTime(140, t);
+    bp.frequency.exponentialRampToValueAtTime(3200, t + dur * 0.85);
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0, t);
+    noiseGain.gain.linearRampToValueAtTime(0.032, t + 0.014); // soft attack
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    noise.connect(bp);
+    bp.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(t);
+    noise.stop(t + dur + 0.01);
+
+    // ── Layer 2: sine glide — tonal sci-fi shimmer ───────────────────────
+    const osc = ctx.createOscillator();
+    const oscGain = ctx.createGain();
+    osc.connect(oscGain);
+    oscGain.connect(ctx.destination);
+    osc.type = 'sine';
+    // Smooth upward glide: 170 Hz → 640 Hz
+    osc.frequency.setValueAtTime(170, t);
+    osc.frequency.exponentialRampToValueAtTime(640, t + dur * 0.75);
+    oscGain.gain.setValueAtTime(0, t);
+    oscGain.gain.linearRampToValueAtTime(0.038, t + 0.012);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.start(t);
+    osc.stop(t + dur + 0.01);
   } catch (_) { /* silent fail */ }
 }
 
@@ -85,6 +106,94 @@ export function playHover() {
     osc.start(t);
     osc.stop(t + 0.07);
   } catch (_) { /* silent fail */ }
+}
+
+// ── Background ambient — very light pink-noise breath ────────────────────
+// Pink noise (Paul Kellett method) through a gently-breathing lowpass.
+// Gain: ~0.016 — barely audible, adds sci-fi texture without distraction.
+// Auto-defers via statechange if context is still suspended on call.
+let _bgNodes: { stop: () => void } | null = null;
+
+function _startBgNow(ctx: AudioContext) {
+  if (_bgNodes) return;
+  // Build a 3-second loopable pink-noise buffer
+  const sr = ctx.sampleRate;
+  const buf = ctx.createBuffer(1, sr * 3, sr);
+  const d = buf.getChannelData(0);
+  let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+  for (let i = 0; i < d.length; i++) {
+    const w = Math.random() * 2 - 1;
+    b0 = 0.99886*b0 + w*0.0555179;
+    b1 = 0.99332*b1 + w*0.0750759;
+    b2 = 0.96900*b2 + w*0.1538520;
+    b3 = 0.86650*b3 + w*0.3104856;
+    b4 = 0.55000*b4 + w*0.5329522;
+    b5 = -0.7616*b5 - w*0.0168980;
+    d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) * 0.11;
+    b6 = w * 0.115926;
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = buf;
+  noise.loop = true;
+
+  // Gentle lowpass — rolls off everything above ~380 Hz
+  const lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 380;
+  lp.Q.value = 0.5;
+
+  // Very slow LFO (0.07 Hz ≈ 14 s cycle) breathes the filter slightly
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  lfo.frequency.value = 0.07;
+  lfoGain.gain.value = 55; // ±55 Hz around 380
+  lfo.connect(lfoGain);
+  lfoGain.connect(lp.frequency);
+
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, ctx.currentTime);
+  master.gain.linearRampToValueAtTime(0.016, ctx.currentTime + 3.0); // slow fade-in
+
+  noise.connect(lp);
+  lp.connect(master);
+  master.connect(ctx.destination);
+  noise.start();
+  lfo.start();
+
+  _bgNodes = {
+    stop: () => {
+      try {
+        const now = ctx.currentTime;
+        master.gain.setValueAtTime(master.gain.value, now);
+        master.gain.linearRampToValueAtTime(0, now + 1.5);
+        setTimeout(() => { try { noise.stop(); lfo.stop(); } catch (_) {} _bgNodes = null; }, 1600);
+      } catch (_) {}
+    }
+  };
+}
+
+export function startBgAmbient() {
+  if (_muted || _bgNodes) return;
+  try {
+    const ctx = getCtx();
+    if (ctx.state === 'running') {
+      _startBgNow(ctx);
+    } else {
+      // Defer until context resumes (triggered by unlockAudio on first gesture)
+      const onState = () => {
+        if (ctx.state === 'running') {
+          ctx.removeEventListener('statechange', onState);
+          if (!_bgNodes && !_muted) _startBgNow(ctx);
+        }
+      };
+      ctx.addEventListener('statechange', onState);
+    }
+  } catch (_) {}
+}
+
+export function stopBgAmbient() {
+  _bgNodes?.stop();
 }
 
 // ── Scroll — continuous warp-drive engine (persistent, not discrete) ──────
@@ -354,5 +463,5 @@ export function stopBootAmbient() {
 
 // ── Hook wrapper ─────────────────────────────────────────────────────────
 export function useAudio() {
-  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio };
+  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio, startBgAmbient, stopBgAmbient };
 }
