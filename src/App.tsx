@@ -13,12 +13,11 @@ import { playClick, playScroll, unlockAudio, startBgAmbient, stopAllAudio } from
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Safety net only — LoadingScreen calls onComplete when boot sequence finishes.
+  // This timer fires if something goes wrong (audio error, etc.) after 10 s.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      startBgAmbient(); // begin subtle pink-noise background after boot
-    }, 2800);
-    return () => clearTimeout(timer);
+    const safety = setTimeout(() => { setIsLoading(false); startBgAmbient(); }, 10000);
+    return () => clearTimeout(safety);
   }, []);
 
   // ── Stop all audio when tab is hidden or page is left ─────────────────
@@ -90,7 +89,11 @@ function App() {
 
   return (
     <div className="min-h-screen overflow-x-hidden relative scanlines">
-      {isLoading && <LoadingScreen />}
+      {isLoading && (
+        <LoadingScreen
+          onComplete={() => { setIsLoading(false); startBgAmbient(); }}
+        />
+      )}
 
       {/* Dither Background */}
       <div style={{ width: '100%', minHeight: '100%', position: 'fixed', top: 0, left: 0, bottom: 0, right: 0, zIndex: 0 }}>

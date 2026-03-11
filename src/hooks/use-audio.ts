@@ -59,17 +59,15 @@ function _ensurePinkBuf(): void {
 }
 
 // Unlock AudioContext on first real user gesture.
-// Plays a silent 1-frame buffer (cross-browser unlock), then bakes the
-// shared noise buffer and starts the persistent background ambient.
-// Also polls every 150 ms for ~3 s — succeeds immediately on return
-// visits where Chrome's Media Engagement Index permits autoplay.
-export function unlockAudio(): void {
+// Accepts an optional onReady callback that fires ONCE when ctx transitions
+// to 'running' — callers gate their audio playback on this callback instead
+// of firing immediately and hitting a suspended context.
+export function unlockAudio(onReady?: () => void): void {
   try {
     const ctx = getCtx();
-    // Already running — just make sure buffers are ready
     if (ctx.state === 'running') {
       _ensurePinkBuf();
-      _startBgIfNeeded();
+      onReady?.();
       return;
     }
     // Silent 1-frame buffer — oldest cross-browser unlock trick
@@ -79,17 +77,14 @@ export function unlockAudio(): void {
     src.connect(ctx.destination);
     src.start(0);
 
-    const attempt = () => {
-      ctx.resume().then(() => {
-        _ensurePinkBuf();
-        _startBgIfNeeded();
-      }).catch(() => {});
-    };
+    let fired = false;
+    const done = () => { if (!fired) { fired = true; _ensurePinkBuf(); onReady?.(); } };
+
+    const attempt = () => { ctx.resume().then(done).catch(() => {}); };
     attempt();
 
-    // Aggressive retry — resolves immediately for return visitors (Chrome MEI);
-    // for first-time visitors it fires the moment ctx transitions to 'running'
-    // after their first genuine gesture.
+    // Retry poll — resolves immediately for return visitors (Chrome MEI);
+    // for first-timers, resolves inside the gesture handler that called us.
     let n = 0;
     const poll = setInterval(() => {
       if (ctx.state === 'running' || n++ > 20) { clearInterval(poll); return; }
@@ -220,18 +215,17 @@ function _startBgIfNeeded(): void {
   _bgMaster = master;
   _bgRunning = true;
 
-  src.onended = () => {
-    _bgRunning = false;
-    // Auto-restart if something killed it unexpectedly
-    if (!_muted && _ctx?.state === 'running') _startBgIfNeeded();
-  };
+  // onended fires when .stop() is called explicitly — do NOT auto-restart here,
+  // that would undo stopAllAudio(). _bgRunning is already reset by the caller.
+  src.onended = () => { _bgRunning = false; };
 }
 
 export function startBgAmbient() {
   if (_muted || _bgRunning) return;
   try {
     const ctx = getCtx();
-    if (ctx.state === 'running' && _pinkBuf) {
+    if (ctx.state === 'running') {
+      _ensurePinkBuf();
       _startBgIfNeeded();
     } else {
       const onState = () => {
@@ -253,6 +247,7 @@ export function stopBgAmbient() {
   _bgMaster.gain.setValueAtTime(_bgMaster.gain.value, now);
   _bgMaster.gain.linearRampToValueAtTime(0, now + 1.2);
   const srcSnap = _bgSrc; const lfoSnap = _bgLfo;
+  if (srcSnap) srcSnap.onended = null;
   _bgSrc = null; _bgLfo = null;
   setTimeout(() => {
     _bgRunning = false; _bgMaster = null;
@@ -265,7 +260,7 @@ export function stopBgAmbient() {
 export function stopAllAudio() {
   try {
     // Kill bg ambient instantly — stop the looping src node so it can be GC'd
-    if (_bgSrc) { try { _bgSrc.stop(); } catch (_) {} _bgSrc = null; }
+    if (_bgSrc) { _bgSrc.onended = null; try { _bgSrc.stop(); } catch (_) {} _bgSrc = null; }
     if (_bgLfo) { try { _bgLfo.stop(); } catch (_) {} _bgLfo = null; }
     if (_bgMaster && _ctx) {
       const now = _ctx.currentTime;
