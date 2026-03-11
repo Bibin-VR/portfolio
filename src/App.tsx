@@ -8,7 +8,7 @@ import Contact from './sections/Contact';
 import Navigation from './sections/Navigation';
 import LoadingScreen from './sections/LoadingScreen';
 import Dither from './components/Dither';
-import { playClick, playScroll, unlockAudio, startBgAmbient } from './hooks/use-audio';
+import { playClick, playScroll, unlockAudio, startBgAmbient, stopAllAudio } from './hooks/use-audio';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +19,18 @@ function App() {
       startBgAmbient(); // begin subtle pink-noise background after boot
     }, 2800);
     return () => clearTimeout(timer);
+  }, []);
+
+  // ── Stop all audio when tab is hidden or page is left ─────────────────
+  useEffect(() => {
+    const onHide = () => { if (document.visibilityState === 'hidden') stopAllAudio(); };
+    document.addEventListener('visibilitychange', onHide);
+    // pagehide fires on mobile Safari and bfcache navigations
+    window.addEventListener('pagehide', stopAllAudio);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', stopAllAudio);
+    };
   }, []);
 
   // ── Eagerly unlock AudioContext on first user signal ──────────────────

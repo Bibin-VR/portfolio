@@ -215,7 +215,26 @@ export function stopBgAmbient() {
   setTimeout(() => { _bgRunning = false; _bgMaster = null; }, 1300);
 }
 
-// ── Scroll — continuous warp-drive engine (persistent, not discrete) ──────
+// Stops all running audio immediately — called on page hide / tab switch.
+export function stopAllAudio() {
+  try {
+    // Kill bg ambient instantly
+    if (_bgMaster && _ctx) {
+      const now = _ctx.currentTime;
+      _bgMaster.gain.cancelScheduledValues(now);
+      _bgMaster.gain.setValueAtTime(0, now);
+      _bgRunning = false;
+      _bgMaster = null;
+    }
+    // Kill scroll engine instantly
+    if (_scrollEndTimer) { clearTimeout(_scrollEndTimer); _scrollEndTimer = null; }
+    if (_scrollEngine) { _scrollEngine.stop(); }
+    // Kill boot ambient
+    stopBootAmbient();
+    // Suspend the AudioContext so the OS releases audio hardware
+    _ctx?.suspend();
+  } catch (_) {}
+} — continuous warp-drive engine (persistent, not discrete) ──────
 // Fades in when scrolling starts, fades out 150 ms after last scroll event.
 // Sound: two detuned sawtooths through a slowly sweeping bandpass +
 //        a low sub-sine for body = spaceship engine / data-stream feel.
@@ -482,5 +501,5 @@ export function stopBootAmbient() {
 
 // ── Hook wrapper ─────────────────────────────────────────────────────────
 export function useAudio() {
-  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio, startBgAmbient, stopBgAmbient };
+  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio, startBgAmbient, stopBgAmbient, stopAllAudio };
 }
