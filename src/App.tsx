@@ -23,12 +23,21 @@ function App() {
 
   // ── Stop all audio when tab is hidden or page is left ─────────────────
   useEffect(() => {
-    const onHide = () => { if (document.visibilityState === 'hidden') stopAllAudio(); };
-    document.addEventListener('visibilitychange', onHide);
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') {
+        stopAllAudio();
+      } else {
+        // Tab returned — resume the AudioContext (browsers allow this without a gesture
+        // after the page already had user interaction) then restart bg ambient.
+        unlockAudio();
+        startBgAmbient();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
     // pagehide fires on mobile Safari and bfcache navigations
     window.addEventListener('pagehide', stopAllAudio);
     return () => {
-      document.removeEventListener('visibilitychange', onHide);
+      document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pagehide', stopAllAudio);
     };
   }, []);

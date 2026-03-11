@@ -12,6 +12,8 @@ let _pinkBuf: AudioBuffer | null = null;
 
 // Background ambient refs — held so setMuted can smoothly fade without stopping nodes
 let _bgMaster: GainNode | null = null;
+let _bgSrc:    AudioBufferSourceNode | null = null; // looping src — must be stopped explicitly
+let _bgLfo:    OscillatorNode | null = null;        // LFO modulating the lowpass filter
 let _bgRunning = false;
 const BG_GAIN = 0.013;
 
@@ -213,6 +215,8 @@ function _startBgIfNeeded(): void {
   src.connect(lp); lp.connect(master); master.connect(ctx.destination);
   src.start();
 
+  _bgSrc    = src;
+  _bgLfo    = lfo;
   _bgMaster = master;
   _bgRunning = true;
 
@@ -248,13 +252,21 @@ export function stopBgAmbient() {
   _bgMaster.gain.cancelScheduledValues(now);
   _bgMaster.gain.setValueAtTime(_bgMaster.gain.value, now);
   _bgMaster.gain.linearRampToValueAtTime(0, now + 1.2);
-  setTimeout(() => { _bgRunning = false; _bgMaster = null; }, 1300);
+  const srcSnap = _bgSrc; const lfoSnap = _bgLfo;
+  _bgSrc = null; _bgLfo = null;
+  setTimeout(() => {
+    _bgRunning = false; _bgMaster = null;
+    try { srcSnap?.stop(); } catch (_) {}
+    try { lfoSnap?.stop(); } catch (_) {}
+  }, 1300);
 }
 
 // Stops all running audio immediately — called on page hide / tab switch.
 export function stopAllAudio() {
   try {
-    // Kill bg ambient instantly
+    // Kill bg ambient instantly — stop the looping src node so it can be GC'd
+    if (_bgSrc) { try { _bgSrc.stop(); } catch (_) {} _bgSrc = null; }
+    if (_bgLfo) { try { _bgLfo.stop(); } catch (_) {} _bgLfo = null; }
     if (_bgMaster && _ctx) {
       const now = _ctx.currentTime;
       _bgMaster.gain.cancelScheduledValues(now);
@@ -282,7 +294,8 @@ interface ScrollEngine {
   stop: () => void;
 }
 let _scrollEngine: ScrollEngine | null = null;
-let _scrollEndTimer: ReturnType<typeof setTimeout> | null = null;
+let _scrollEndTimer:    ReturnType<typeof setTimeout> | null = null;
+let _scrollStopTimeout: ReturnType<typeof setTimeout> | null = null;
 
 export function playScroll() {
   if (_muted) { _teardownScrollEngine(); return; }
@@ -338,16 +351,18 @@ export function playScroll() {
             const n = ctx.currentTime;
             masterGain.gain.setValueAtTime(masterGain.gain.value, n);
             masterGain.gain.linearRampToValueAtTime(0, n + 0.28); // soft fade-out
-            setTimeout(() => {
+            _scrollStopTimeout = setTimeout(() => {
               try { osc1.stop(); osc2.stop(); sub.stop(); } catch (_) {}
               _scrollEngine = null;
+              _scrollStopTimeout = null;
             }, 350);
           } catch (_) {}
         },
       };
     } catch (_) { /* silent fail */ }
   } else {
-    // Engine already running — keep gain from decaying
+    // Engine alive — cancel any pending osc-stop so it doesn't kill a revived engine
+    if (_scrollStopTimeout) { clearTimeout(_scrollStopTimeout); _scrollStopTimeout = null; }
     _scrollEngine.masterGain.gain.cancelScheduledValues(now);
     _scrollEngine.masterGain.gain.setValueAtTime(_scrollEngine.masterGain.gain.value, now);
     _scrollEngine.masterGain.gain.linearRampToValueAtTime(0.055, now + 0.05);
@@ -362,8 +377,10 @@ export function playScroll() {
 }
 
 function _teardownScrollEngine() {
-  if (_scrollEndTimer) { clearTimeout(_scrollEndTimer); _scrollEndTimer = null; }
+  if (_scrollEndTimer)    { clearTimeout(_scrollEndTimer);    _scrollEndTimer    = null; }
+  if (_scrollStopTimeout) { clearTimeout(_scrollStopTimeout); _scrollStopTimeout = null; }
   _scrollEngine?.stop();
+  _scrollEngine = null;
 }
 
 // ── Boot sequence — pentatonic ascending sine arpeggio ───────────────────
@@ -371,6 +388,8 @@ const C_PENTATONIC = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 65
 
 export function playBoot(step: number, totalSteps: number) {
   if (_muted) return;
+  // If ctx is suspended, notes scheduled now all fire simultaneously on resume → skip
+  if (!_ctx || _ctx.state !== 'running') return;
   try {
     const ctx = getCtx();
     const idx = Math.min(
