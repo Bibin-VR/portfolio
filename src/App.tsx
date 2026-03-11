@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hero from './sections/Hero';
 import Stats from './sections/Stats';
 import Projects from './sections/Projects';
@@ -12,7 +12,6 @@ import { playClick, playScroll, unlockAudio, startBgAmbient } from './hooks/use-
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -97,7 +96,7 @@ function App() {
 
       <Navigation />
 
-      <main ref={mainRef} className="relative z-10">
+      <main className="relative z-10">
         <Hero />
         <Stats />
         <Projects />

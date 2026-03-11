@@ -6,85 +6,116 @@
 let _ctx: AudioContext | null = null;
 let _muted = false;
 
-export function setMuted(v: boolean) { _muted = v; }
+// Pre-baked 2-second pink-noise buffer — generated ONCE on first unlock,
+// reused for every click and the background ambient. Zero per-click allocation.
+let _pinkBuf: AudioBuffer | null = null;
+
+// Background ambient refs — held so setMuted can smoothly fade without stopping nodes
+let _bgMaster: GainNode | null = null;
+let _bgRunning = false;
+const BG_GAIN = 0.013;
+
 export function getMuted() { return _muted; }
-export function toggleMuted() { _muted = !_muted; return _muted; }
+export function setMuted(v: boolean) {
+  _muted = v;
+  // Smoothly silence / restore background without stopping oscillators
+  if (_bgMaster && _ctx) {
+    const now = _ctx.currentTime;
+    _bgMaster.gain.cancelScheduledValues(now);
+    _bgMaster.gain.setValueAtTime(_bgMaster.gain.value, now);
+    _bgMaster.gain.linearRampToValueAtTime(v ? 0 : BG_GAIN, now + 0.35);
+  }
+}
+export function toggleMuted() { setMuted(!_muted); return _muted; }
 
 function getCtx(): AudioContext {
   if (!_ctx) {
     _ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
   }
-  if (_ctx.state === 'suspended') {
-    _ctx.resume();
-  }
+  if (_ctx.state === 'suspended') _ctx.resume();
   return _ctx;
 }
 
-// Unlock audio context — call on any early user signal (mousemove, keydown, etc).
-// Plays a 1-frame silent buffer: the universal cross-browser unlock trick.
+// Bake a 2-second pink-noise buffer once, cache in _pinkBuf.
+// Paul Kellett's method — smooth spectral shape, no harsh transients.
+function _ensurePinkBuf(): void {
+  if (_pinkBuf || !_ctx) return;
+  const sr = _ctx.sampleRate;
+  const buf = _ctx.createBuffer(1, sr * 2, sr);
+  const d = buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for (let i = 0; i < d.length; i++) {
+    const w = Math.random() * 2 - 1;
+    b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
+    b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
+    b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+    d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.12; b6=w*0.115926;
+  }
+  _pinkBuf = buf;
+}
+
+// Unlock AudioContext on first user gesture.
+// Plays a silent 1-frame buffer (cross-browser unlock), then bakes the
+// shared noise buffer and starts the persistent background ambient.
 export function unlockAudio(): void {
   try {
     const ctx = getCtx();
-    ctx.resume();
-    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const silentBuf = ctx.createBuffer(1, 1, ctx.sampleRate);
     const src = ctx.createBufferSource();
-    src.buffer = buf;
+    src.buffer = silentBuf;
     src.connect(ctx.destination);
     src.start(0);
+    ctx.resume().then(() => {
+      _ensurePinkBuf();
+      _startBgIfNeeded();
+    }).catch(() => {});
   } catch (_) {}
 }
 
-// ── Click — smooth sci-fi flow (noise whoosh + sine glide) ──────────────
-// A soft filtered-noise sweep paired with an upward sine glide:
-// sounds like data being transmitted / an interface breathing open.
+// ── Click — smooth sci-fi flow ──────────────────────────────────────────
+// Reuses the pre-baked _pinkBuf — zero per-click buffer allocation.
+// Sound: pink-noise whoosh through a rising bandpass + soft sine glide.
 export function playClick() {
-  if (_muted) return;
+  if (_muted || !_pinkBuf) return;
   try {
     const ctx = getCtx();
     const t = ctx.currentTime;
-    const dur = 0.22;
+    const dur = 0.20;
 
-    // ── Layer 1: noise whoosh through a sweeping bandpass ───────────────
-    // Short white-noise buffer (looped for duration, then stopped)
-    const bufLen = Math.ceil(ctx.sampleRate * dur);
-    const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-    const nd = noiseBuf.getChannelData(0);
-    for (let i = 0; i < bufLen; i++) nd[i] = Math.random() * 2 - 1;
+    // Layer 1: noise whoosh — random offset into the pre-baked buffer
+    // so consecutive clicks never sound identical
+    const maxOffset = Math.max(0, _pinkBuf.duration - dur - 0.02);
+    const offset = Math.random() * maxOffset;
 
     const noise = ctx.createBufferSource();
-    noise.buffer = noiseBuf;
+    noise.buffer = _pinkBuf;
+    noise.loop = false;
+
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
     bp.Q.value = 1.6;
-    // Sweep bandpass centre from 140 Hz → 3200 Hz (exponential = smooth acceleration)
-    bp.frequency.setValueAtTime(140, t);
-    bp.frequency.exponentialRampToValueAtTime(3200, t + dur * 0.85);
+    bp.frequency.setValueAtTime(120, t);
+    bp.frequency.exponentialRampToValueAtTime(2600, t + dur * 0.78);
 
     const noiseGain = ctx.createGain();
     noiseGain.gain.setValueAtTime(0, t);
-    noiseGain.gain.linearRampToValueAtTime(0.032, t + 0.014); // soft attack
+    noiseGain.gain.linearRampToValueAtTime(0.026, t + 0.011); // soft attack
     noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
 
-    noise.connect(bp);
-    bp.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
-    noise.start(t);
-    noise.stop(t + dur + 0.01);
+    noise.connect(bp); bp.connect(noiseGain); noiseGain.connect(ctx.destination);
+    noise.start(t, offset, dur + 0.02);
 
-    // ── Layer 2: sine glide — tonal sci-fi shimmer ───────────────────────
+    // Layer 2: sine glide — upward tonal shimmer
     const osc = ctx.createOscillator();
     const oscGain = ctx.createGain();
-    osc.connect(oscGain);
-    oscGain.connect(ctx.destination);
     osc.type = 'sine';
-    // Smooth upward glide: 170 Hz → 640 Hz
-    osc.frequency.setValueAtTime(170, t);
-    osc.frequency.exponentialRampToValueAtTime(640, t + dur * 0.75);
+    osc.frequency.setValueAtTime(175, t);
+    osc.frequency.exponentialRampToValueAtTime(560, t + dur * 0.72);
     oscGain.gain.setValueAtTime(0, t);
-    oscGain.gain.linearRampToValueAtTime(0.038, t + 0.012);
+    oscGain.gain.linearRampToValueAtTime(0.030, t + 0.010);
     oscGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.start(t);
-    osc.stop(t + dur + 0.01);
+    osc.connect(oscGain); oscGain.connect(ctx.destination);
+    osc.start(t); osc.stop(t + dur + 0.01);
   } catch (_) { /* silent fail */ }
 }
 
@@ -108,83 +139,66 @@ export function playHover() {
   } catch (_) { /* silent fail */ }
 }
 
-// ── Background ambient — very light pink-noise breath ────────────────────
-// Pink noise (Paul Kellett method) through a gently-breathing lowpass.
-// Gain: ~0.016 — barely audible, adds sci-fi texture without distraction.
-// Auto-defers via statechange if context is still suspended on call.
-let _bgNodes: { stop: () => void } | null = null;
+// ── Background ambient — persistent pink-noise breath ─────────────────────
+// Reuses _pinkBuf. Gain ~0.013 — barely perceptible, just enough texture.
+// Keeps AudioContext 'running' so it can't re-suspend between interactions.
+// setMuted() fades _bgMaster gain without stopping nodes — no restart glitch.
+function _startBgIfNeeded(): void {
+  if (_bgRunning || _muted || !_ctx || !_pinkBuf) return;
+  const ctx = _ctx;
+  const t = ctx.currentTime;
 
-function _startBgNow(ctx: AudioContext) {
-  if (_bgNodes) return;
-  // Build a 3-second loopable pink-noise buffer
-  const sr = ctx.sampleRate;
-  const buf = ctx.createBuffer(1, sr * 3, sr);
-  const d = buf.getChannelData(0);
-  let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
-  for (let i = 0; i < d.length; i++) {
-    const w = Math.random() * 2 - 1;
-    b0 = 0.99886*b0 + w*0.0555179;
-    b1 = 0.99332*b1 + w*0.0750759;
-    b2 = 0.96900*b2 + w*0.1538520;
-    b3 = 0.86650*b3 + w*0.3104856;
-    b4 = 0.55000*b4 + w*0.5329522;
-    b5 = -0.7616*b5 - w*0.0168980;
-    d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) * 0.11;
-    b6 = w * 0.115926;
-  }
+  const src = ctx.createBufferSource();
+  src.buffer = _pinkBuf;
+  src.loop = true;
+  // Tiny playback-rate offset makes the loop seam inaudible
+  src.playbackRate.value = 0.998 + Math.random() * 0.004;
 
-  const noise = ctx.createBufferSource();
-  noise.buffer = buf;
-  noise.loop = true;
-
-  // Gentle lowpass — rolls off everything above ~380 Hz
+  // Lowpass at 300 Hz — removes all harshness, leaves only deep texture
   const lp = ctx.createBiquadFilter();
   lp.type = 'lowpass';
-  lp.frequency.value = 380;
-  lp.Q.value = 0.5;
+  lp.frequency.value = 300;
+  lp.Q.value = 0.4;
 
-  // Very slow LFO (0.07 Hz ≈ 14 s cycle) breathes the filter slightly
+  // Extremely slow LFO (0.05 Hz ≈20 s cycle) breathes the filter slightly
   const lfo = ctx.createOscillator();
   const lfoGain = ctx.createGain();
-  lfo.frequency.value = 0.07;
-  lfoGain.gain.value = 55; // ±55 Hz around 380
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.05;
+  lfoGain.gain.value = 40; // ±40 Hz around 300
   lfo.connect(lfoGain);
   lfoGain.connect(lp.frequency);
-
-  const master = ctx.createGain();
-  master.gain.setValueAtTime(0, ctx.currentTime);
-  master.gain.linearRampToValueAtTime(0.016, ctx.currentTime + 3.0); // slow fade-in
-
-  noise.connect(lp);
-  lp.connect(master);
-  master.connect(ctx.destination);
-  noise.start();
   lfo.start();
 
-  _bgNodes = {
-    stop: () => {
-      try {
-        const now = ctx.currentTime;
-        master.gain.setValueAtTime(master.gain.value, now);
-        master.gain.linearRampToValueAtTime(0, now + 1.5);
-        setTimeout(() => { try { noise.stop(); lfo.stop(); } catch (_) {} _bgNodes = null; }, 1600);
-      } catch (_) {}
-    }
+  const master = ctx.createGain();
+  master.gain.setValueAtTime(0, t);
+  master.gain.linearRampToValueAtTime(BG_GAIN, t + 5.0); // very slow fade-in
+
+  src.connect(lp); lp.connect(master); master.connect(ctx.destination);
+  src.start();
+
+  _bgMaster = master;
+  _bgRunning = true;
+
+  src.onended = () => {
+    _bgRunning = false;
+    // Auto-restart if something killed it unexpectedly
+    if (!_muted && _ctx?.state === 'running') _startBgIfNeeded();
   };
 }
 
 export function startBgAmbient() {
-  if (_muted || _bgNodes) return;
+  if (_muted || _bgRunning) return;
   try {
     const ctx = getCtx();
-    if (ctx.state === 'running') {
-      _startBgNow(ctx);
+    if (ctx.state === 'running' && _pinkBuf) {
+      _startBgIfNeeded();
     } else {
-      // Defer until context resumes (triggered by unlockAudio on first gesture)
       const onState = () => {
         if (ctx.state === 'running') {
           ctx.removeEventListener('statechange', onState);
-          if (!_bgNodes && !_muted) _startBgNow(ctx);
+          _ensurePinkBuf();
+          _startBgIfNeeded();
         }
       };
       ctx.addEventListener('statechange', onState);
@@ -193,7 +207,12 @@ export function startBgAmbient() {
 }
 
 export function stopBgAmbient() {
-  _bgNodes?.stop();
+  if (!_bgMaster || !_ctx) return;
+  const now = _ctx.currentTime;
+  _bgMaster.gain.cancelScheduledValues(now);
+  _bgMaster.gain.setValueAtTime(_bgMaster.gain.value, now);
+  _bgMaster.gain.linearRampToValueAtTime(0, now + 1.2);
+  setTimeout(() => { _bgRunning = false; _bgMaster = null; }, 1300);
 }
 
 // ── Scroll — continuous warp-drive engine (persistent, not discrete) ──────
