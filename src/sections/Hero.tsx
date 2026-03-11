@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const Hero = () => {
+const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
   const [displayText, setDisplayText] = useState('');
   const [wordStates, setWordStates] = useState(['', '', '']);
   const [isScrambling, setIsScrambling] = useState(true);
@@ -12,6 +12,7 @@ const Hero = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@!$%';
 
   useEffect(() => {
+    if (!startAnim) return;
     const scrambleWord = (wordIdx: number, delay: number, onDone?: () => void) => {
       setTimeout(() => {
         const word = words[wordIdx];
@@ -48,7 +49,7 @@ const Hero = () => {
     }, 45);
     return () => clearInterval(nameInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startAnim]);
 
   const statusItems = [
     { label: 'AI Systems', status: 'ONLINE' },

@@ -100,16 +100,6 @@ function App() {
     return () => window.removeEventListener('click', handleClick, { capture: true });
   }, []);
 
-  // ── Cursor spotlight — update CSS vars directly, zero React re-render ───
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      document.documentElement.style.setProperty('--cursor-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
-    };
-    window.addEventListener('mousemove', handleMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMove);
-  }, []);
-
   // ── Scroll → sci-fi sweep sound (rAF-throttled) ────────────────────
   useEffect(() => {
     let rafPending = false;
@@ -149,7 +139,7 @@ function App() {
       <Navigation />
 
       <main className="relative z-10">
-        <Hero />
+        <Hero startAnim={!isLoading} />
         <Stats />
         <Projects />
         <Skills />
