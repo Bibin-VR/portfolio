@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Github, Linkedin, Mail, Menu, X, Volume2, VolumeX } from 'lucide-react';
-import { setMuted } from '../hooks/use-audio';
+import { getMuted, setMuted } from '../hooks/use-audio';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(!getMuted());
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 60);

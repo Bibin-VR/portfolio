@@ -203,27 +203,42 @@ const Skills = () => {
 
             {/* Skills List */}
             <div className="space-y-5">
-              {activeSkills.map((skill, index) => (
-                <div 
-                  key={skill.name}
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="mono text-xs text-[rgba(240,240,240,0.65)]">{skill.name}</span>
-                    <span className="mono text-xs text-[rgba(240,240,240,0.35)]">{skill.level}%</span>
+              {activeSkills.map((skill, index) => {
+                const totalSegs = 16;
+                const activeSeg = Math.round((skill.level / 100) * totalSegs);
+                const peakSeg = activeSeg - 1;
+                return (
+                  <div key={skill.name}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="mono text-[10px] text-[rgba(240,240,240,0.3)]">[{String(index + 1).padStart(2, '0')}]</span>
+                        <span className="mono text-xs text-[rgba(240,240,240,0.65)]">{skill.name}</span>
+                      </div>
+                      <span className="mono text-[10px] text-[rgba(176,200,224,0.6)]">{skill.level}%</span>
+                    </div>
+                    {/* 16-segment HUD bar */}
+                    <div className="flex gap-px">
+                      {Array.from({ length: totalSegs }).map((_, segIdx) => {
+                        const active = segIdx < activeSeg;
+                        const isPeak = segIdx === peakSeg;
+                        return (
+                          <div
+                            key={segIdx}
+                            className="h-1.5 flex-1 transition-all duration-300"
+                            style={{
+                              background: active
+                                ? isPeak ? '#B0C8E0' : 'rgba(176,200,224,0.32)'
+                                : 'rgba(255,255,255,0.05)',
+                              opacity: isVisible ? 1 : 0,
+                              transitionDelay: `${300 + index * 50 + segIdx * 22}ms`,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                    <div
-                      className="h-px transition-all duration-700 ease-out"
-                      style={{
-                        width: isVisible ? `${skill.level}%` : '0%',
-                        background: 'linear-gradient(90deg, rgba(176,200,224,0.4), #B0C8E0)',
-                        transitionDelay: `${300 + index * 60}ms`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Certifications */}

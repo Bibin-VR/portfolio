@@ -147,9 +147,13 @@ const Experience = () => {
                 <div className="absolute left-4 md:left-1/2 -translate-x-1/2 z-10">
                   <div 
                     className="w-6 h-6 flex items-center justify-center"
-                    style={{ background: 'rgba(17,17,20,1)', border: '1px solid rgba(176,200,224,0.25)' }}
+                    style={{
+                      background: 'rgba(17,17,20,1)',
+                      border: `1px solid ${exp.color}50`,
+                      boxShadow: `0 0 8px ${exp.color}20`,
+                    }}
                   >
-                    <exp.icon className="w-3 h-3 text-[#B0C8E0]" />
+                    <exp.icon className="w-3 h-3" style={{ color: exp.color }} />
                   </div>
                 </div>
 
@@ -157,11 +161,17 @@ const Experience = () => {
                 <div className={`ml-16 md:ml-0 md:w-[calc(50%-2rem)] ${
                   index % 2 === 0 ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'
                 }`}>
-                  <div className="gh-card p-6 hover-lift">
+                  <div className="gh-card p-6 hover-lift overflow-hidden relative">
+                    {/* Left accent bar matching experience color */}
+                    <div
+                      className="absolute left-0 top-0 bottom-0 w-[2px]"
+                      style={{ background: `linear-gradient(to bottom, ${exp.color}60, transparent)` }}
+                    />
                     {/* Commit Header */}
                     <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
-                      <GitCommit className="w-4 h-4 text-[rgba(240,240,240,0.3)]" />
-                      <span className="mono text-xs text-[#B0C8E0]">commit {exp.commitHash}</span>
+                      <GitCommit className="w-3.5 h-3.5 text-[rgba(240,240,240,0.25)]" />
+                      <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.3)]">commit</span>
+                      <span className="mono text-xs text-[#B0C8E0]">{exp.commitHash}</span>
                     </div>
 
                     {/* Role & Company */}

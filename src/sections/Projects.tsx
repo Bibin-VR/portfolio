@@ -180,7 +180,7 @@ Features:
               }}
             >
               {/* Project Preview */}
-              <div className="relative h-48 overflow-hidden" style={{ background: '#0A0A0D' }}>
+              <div className="relative h-48 overflow-hidden scanlines" style={{ background: '#0A0A0D' }}>
                 {project.liveUrl && !iframeErrors[project.id] ? (
                   <>
                     <iframe
@@ -242,7 +242,10 @@ Features:
               <div className="p-6">
                 {/* Header */}
                 <div className="mb-4">
-                  <h3 className="text-base font-semibold text-[#F0F0F0] mono mb-1">
+                  <span className="mono text-[10px] text-[rgba(240,240,240,0.25)] tracking-widest">
+                    ~/projects/{project.id}
+                  </span>
+                  <h3 className="text-base font-semibold text-[#F0F0F0] mono mt-0.5 mb-1">
                     {project.name}
                   </h3>
                   <p className="text-xs text-[rgba(240,240,240,0.42)] mono">{project.description}</p>
