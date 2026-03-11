@@ -25,6 +25,8 @@ export function setMuted(v: boolean) {
     _bgMaster.gain.setValueAtTime(_bgMaster.gain.value, now);
     _bgMaster.gain.linearRampToValueAtTime(v ? 0 : BG_GAIN, now + 0.35);
   }
+  // Kill scroll engine immediately when muting — it has its own gain nodes
+  if (v) _teardownScrollEngine();
 }
 export function toggleMuted() { setMuted(!_muted); return _muted; }
 
@@ -72,50 +74,62 @@ export function unlockAudio(): void {
   } catch (_) {}
 }
 
-// ── Click — smooth sci-fi flow ──────────────────────────────────────────
+// ── Click — smooth sci-fi zap ────────────────────────────────────────────
 // Reuses the pre-baked _pinkBuf — zero per-click buffer allocation.
-// Sound: pink-noise whoosh through a rising bandpass + soft sine glide.
+// Sound: resonant noise sweep (3200→480 Hz) + descending sine thwip
+//        (1600→200 Hz) + sub-sine punch (80 Hz, 55 ms) = smooth holographic tap.
 export function playClick() {
   if (_muted || !_pinkBuf) return;
   try {
     const ctx = getCtx();
     const t = ctx.currentTime;
-    const dur = 0.20;
+    const dur = 0.13;
 
-    // Layer 1: noise whoosh — random offset into the pre-baked buffer
-    // so consecutive clicks never sound identical
+    // Layer 1: noise zap — resonant bandpass sweeps high→low so it feels like
+    // a UI-confirmation rather than a loading sweep. Random offset keeps each
+    // click unique without allocating new buffers.
     const maxOffset = Math.max(0, _pinkBuf.duration - dur - 0.02);
     const offset = Math.random() * maxOffset;
-
     const noise = ctx.createBufferSource();
     noise.buffer = _pinkBuf;
     noise.loop = false;
 
     const bp = ctx.createBiquadFilter();
     bp.type = 'bandpass';
-    bp.Q.value = 1.6;
-    bp.frequency.setValueAtTime(120, t);
-    bp.frequency.exponentialRampToValueAtTime(2600, t + dur * 0.78);
+    bp.Q.value = 4.0;                                         // resonant = tonal
+    bp.frequency.setValueAtTime(3200, t);
+    bp.frequency.exponentialRampToValueAtTime(480, t + dur * 0.88);
 
     const noiseGain = ctx.createGain();
     noiseGain.gain.setValueAtTime(0, t);
-    noiseGain.gain.linearRampToValueAtTime(0.026, t + 0.011); // soft attack
+    noiseGain.gain.linearRampToValueAtTime(0.030, t + 0.005); // crisp 5 ms attack
     noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
 
     noise.connect(bp); bp.connect(noiseGain); noiseGain.connect(ctx.destination);
     noise.start(t, offset, dur + 0.02);
 
-    // Layer 2: sine glide — upward tonal shimmer
+    // Layer 2: descending sine "thwip" — gives the zap its tonal sci-fi character
     const osc = ctx.createOscillator();
     const oscGain = ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(175, t);
-    osc.frequency.exponentialRampToValueAtTime(560, t + dur * 0.72);
+    osc.frequency.setValueAtTime(1600, t);
+    osc.frequency.exponentialRampToValueAtTime(200, t + dur * 0.92);
     oscGain.gain.setValueAtTime(0, t);
-    oscGain.gain.linearRampToValueAtTime(0.030, t + 0.010);
+    oscGain.gain.linearRampToValueAtTime(0.026, t + 0.004);
     oscGain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     osc.connect(oscGain); oscGain.connect(ctx.destination);
     osc.start(t); osc.stop(t + dur + 0.01);
+
+    // Layer 3: sub-sine punch — 80 Hz transient adds tactile weight (55 ms)
+    const sub = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    sub.type = 'sine';
+    sub.frequency.value = 80;
+    subGain.gain.setValueAtTime(0, t);
+    subGain.gain.linearRampToValueAtTime(0.042, t + 0.004);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
+    sub.connect(subGain); subGain.connect(ctx.destination);
+    sub.start(t); sub.stop(t + 0.06);
   } catch (_) { /* silent fail */ }
 }
 
