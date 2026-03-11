@@ -324,7 +324,7 @@ export function playScroll() {
       filter.Q.value = 3.5;
 
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(0.055, now + 0.12); // soft fade-in
+      masterGain.gain.linearRampToValueAtTime(0.042, now + 0.22); // slow, smooth fade-in
 
       osc1.start(); osc2.start(); sub.start();
 
@@ -363,12 +363,12 @@ export function playScroll() {
     _scrollEngine.masterGain.gain.linearRampToValueAtTime(0.055, now + 0.05);
   }
 
-  // ── Debounce scroll-end: stop engine 150 ms after last event ─────────────
+  // ── Debounce scroll-end: stop engine 220 ms after last event ─────────────
   if (_scrollEndTimer) clearTimeout(_scrollEndTimer);
   _scrollEndTimer = setTimeout(() => {
     _scrollEngine?.stop();
     _scrollEndTimer = null;
-  }, 150);
+  }, 220);
 }
 
 function _teardownScrollEngine() {
@@ -551,7 +551,36 @@ export function stopBootAmbient() {
   _ambientNodes = [];
 }
 
+// ── Section enter — very quiet 2-note chime as a section scrolls into view ──
+// Frequency pair gently marks the new section without being intrusive.
+const SECTION_FREQS = [330, 415, 370, 440, 392, 350];
+let _sectionChimeIdx = 0;
+export function playSection() {
+  if (_muted) return;
+  if (!_ctx || _ctx.state !== 'running') return;
+  try {
+    const ctx = _ctx;
+    const t = ctx.currentTime;
+    const freq = SECTION_FREQS[_sectionChimeIdx % SECTION_FREQS.length];
+    _sectionChimeIdx++;
+
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lp   = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 900;
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, t);
+    osc.frequency.linearRampToValueAtTime(freq * 1.003, t + 0.3);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.018, t + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    osc.connect(lp); lp.connect(gain); gain.connect(ctx.destination);
+    osc.start(t); osc.stop(t + 0.6);
+  } catch (_) {}
+}
+
 // ── Hook wrapper ─────────────────────────────────────────────────────────
 export function useAudio() {
-  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio, startBgAmbient, stopBgAmbient, stopAllAudio };
+  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, playSection, setMuted, getMuted, toggleMuted, unlockAudio, startBgAmbient, stopBgAmbient, stopAllAudio };
 }

@@ -8,7 +8,7 @@ import Contact from './sections/Contact';
 import Navigation from './sections/Navigation';
 import LoadingScreen from './sections/LoadingScreen';
 import Dither from './components/Dither';
-import { playClick, playScroll, unlockAudio, startBgAmbient, stopAllAudio } from './hooks/use-audio';
+import { playClick, playScroll, playSection, unlockAudio, startBgAmbient, stopAllAudio } from './hooks/use-audio';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -65,6 +65,26 @@ function App() {
     };
   }, []);
 
+  // ── Section-crossing chime — fires once per section enter ────────────
+  useEffect(() => {
+    if (isLoading) return;
+    const sections = document.querySelectorAll('main > section[id]');
+    let lastId = '';
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.id !== lastId) {
+            lastId = entry.target.id;
+            playSection();
+          }
+        });
+      },
+      { threshold: 0.25, rootMargin: '-80px 0px -20% 0px' }
+    );
+    sections.forEach((s) => obs.observe(s));
+    return () => obs.disconnect();
+  }, [isLoading]);
+
   // ── Global click → techie beep ────────────────────────────────────────
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -80,9 +100,14 @@ function App() {
     return () => window.removeEventListener('click', handleClick, { capture: true });
   }, []);
 
-  // ── Scroll → sci-fi sweep sound ───────────────────────────────────────
+  // ── Scroll → sci-fi sweep sound (rAF-throttled) ────────────────────
   useEffect(() => {
-    const handleScroll = () => playScroll();
+    let rafPending = false;
+    const handleScroll = () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => { playScroll(); rafPending = false; });
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

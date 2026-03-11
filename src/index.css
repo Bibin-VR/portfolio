@@ -58,7 +58,11 @@
 @layer base {
   * { @apply border-border; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4rem;   /* account for fixed nav */
+    overscroll-behavior: none;  /* prevent rubber-banding jank */
+  }
 
   body {
     @apply antialiased;
@@ -360,6 +364,18 @@
   ::-webkit-scrollbar-thumb { background: var(--ig-border-hover); }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
+  /* GPU-composited layers for smooth repaint */
+  .gh-card, .ig-card, .hover-lift { will-change: transform; }
+  main > section { contain: layout style; }
+
+  /* Reduced motion — respect accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   /* ── Animations ──────────────────────────────────────────────────── */
   .fade-in { animation: fadeIn 0.4s ease-out forwards; }
   @keyframes fadeIn {
@@ -373,10 +389,10 @@
     to   { opacity:1; transform:translateY(0); }
   }
 
-  .ig-reveal { animation: igReveal 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .ig-reveal { animation: igReveal 0.65s cubic-bezier(0.16,1,0.3,1) both; }
   @keyframes igReveal {
-    from { opacity:0; transform:translateY(24px) scaleY(0.96); }
-    to   { opacity:1; transform:translateY(0) scaleY(1); }
+    from { opacity:0; transform:translateY(28px) scaleY(0.97); filter: blur(2px); }
+    to   { opacity:1; transform:translateY(0) scaleY(1);       filter: blur(0); }
   }
 
   .card-deal { animation: cardDeal 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
@@ -388,9 +404,27 @@
   /* ── Counter ─────────────────────────────────────────────────────── */
   .counter { font-variant-numeric: tabular-nums; }
 
-  /* ── Hover lift ──────────────────────────────────────────────────── */
-  .hover-lift { transition: transform 0.25s ease; }
-  .hover-lift:hover { transform: translateY(-3px); }
+  /* ── Stagger children (add .in-view via IntersectionObserver) ─────── */
+  .stagger-children > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1),
+                transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .stagger-children.in-view > *:nth-child(1)  { opacity:1; transform:none; transition-delay:  0ms; }
+  .stagger-children.in-view > *:nth-child(2)  { opacity:1; transform:none; transition-delay: 70ms; }
+  .stagger-children.in-view > *:nth-child(3)  { opacity:1; transform:none; transition-delay:140ms; }
+  .stagger-children.in-view > *:nth-child(4)  { opacity:1; transform:none; transition-delay:210ms; }
+  .stagger-children.in-view > *:nth-child(5)  { opacity:1; transform:none; transition-delay:280ms; }
+  .stagger-children.in-view > *:nth-child(n+6){ opacity:1; transform:none; transition-delay:350ms; }
+
+  /* Fade top+bottom edges on long scroll areas */
+  .scroll-fade-edge {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
+    mask-image:         linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
+  }
+  .hover-lift { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
+  .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 
   /* ── Grid background ─────────────────────────────────────────────── */
   .grid-pattern {
@@ -481,5 +515,19 @@
 *:focus-visible {
   outline: 1px solid var(--ig-accent);
   outline-offset: 2px;
+}
+
+/* ── Smooth section entry — override Tailwind's linear ease ─────────────── */
+/* Every section uses opacity/translate transitions for reveal.              */
+/* Replacing the implicit ease with our spring curve makes scrolling feel   */
+/* organic rather than robotic.                                              */
+[class*="transition-all"] {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+/* Slightly longer duration for translate-y reveals */
+[class*="translate-y-8"], [class*="translate-x-8"],
+[class*="-translate-x-8"], [class*="translate-x-0"],
+[class*="translate-y-0"] {
+  transition-duration: 750ms !important;
 }
 
