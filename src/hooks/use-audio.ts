@@ -248,7 +248,9 @@ export function stopAllAudio() {
     // Suspend the AudioContext so the OS releases audio hardware
     _ctx?.suspend();
   } catch (_) {}
-} — continuous warp-drive engine (persistent, not discrete) ──────
+}
+
+// ── Scroll — continuous warp-drive engine (persistent, not discrete) ──────
 // Fades in when scrolling starts, fades out 150 ms after last scroll event.
 // Sound: two detuned sawtooths through a slowly sweeping bandpass +
 //        a low sub-sine for body = spaceship engine / data-stream feel.

@@ -79,6 +79,12 @@ const Stats = () => {
     return () => clearInterval(timer);
   }, [isVisible, githubStats]);
 
+  // Fallback grid if data isn't loaded yet
+  const grid = githubStats?.contributionGrid ?? Array.from({ length: 26 }, () => Array(7).fill(0));
+  // Weekly totals for the frequency spectrum waveform
+  const weekTotals = grid.map((week: number[]) => week.reduce((a: number, b: number) => a + b, 0));
+  const maxWeekTotal = Math.max(...weekTotals, 1);
+
   // Scanline sweep animation state
   const [scanCol, setScanCol] = useState(-1);
   useEffect(() => {
@@ -99,12 +105,6 @@ const Stats = () => {
     { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#B0C8E0' },
     { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#B0C8E0' },
   ];
-
-  // Fallback grid if data isn't loaded yet
-  const grid = githubStats?.contributionGrid ?? Array.from({ length: 26 }, () => Array(7).fill(0));
-  // Weekly totals for the frequency spectrum waveform
-  const weekTotals = grid.map((week: number[]) => week.reduce((a: number, b: number) => a + b, 0));
-  const maxWeekTotal = Math.max(...weekTotals, 1);
 
   return (
     <section
