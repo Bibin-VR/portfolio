@@ -20,6 +20,20 @@ function getCtx(): AudioContext {
   return _ctx;
 }
 
+// Unlock audio context — call on any early user signal (mousemove, keydown, etc).
+// Plays a 1-frame silent buffer: the universal cross-browser unlock trick.
+export function unlockAudio(): void {
+  try {
+    const ctx = getCtx();
+    ctx.resume();
+    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+  } catch (_) {}
+}
+
 // ── Click — sci-fi metallic chime (4 inharmonic partials) ────────────────
 // Ratios tuned to give crystalline interface ping, not a musical bell.
 export function playClick() {
@@ -225,13 +239,17 @@ export function playSuccess() {
 //   2. Slowly LFO-modulated mid sine at 110 Hz (pulsing heartbeat)
 //   3. Periodic high-frequency sweep (scanner ping every ~1.4 s)
 let _ambientNodes: { stop: () => void }[] = [];
+let _ambientPending = false; // true while waiting for suspended ctx to resume
 
 export function playBootAmbient() {
   if (_muted) return;
   try {
     stopBootAmbient(); // clear any existing
     const ctx = getCtx();
-    const t = ctx.currentTime;
+
+    const startAmbient = () => {
+      _ambientPending = false;
+      const t = ctx.currentTime;
 
     // ── Layer 1: deep sub drone ──────────────────────────────────────────
     const subOsc = ctx.createOscillator();
@@ -308,15 +326,33 @@ export function playBootAmbient() {
         } catch (_) {}
       }
     }];
+    }; // end startAmbient
+
+    if (ctx.state === 'running') {
+      startAmbient();
+    } else {
+      // AudioContext suspended (browser autoplay policy).
+      // Register a one-shot statechange listener — fires the instant
+      // unlockAudio() resumes the context on the first user gesture.
+      _ambientPending = true;
+      const onStateChange = () => {
+        if (ctx.state === 'running') {
+          ctx.removeEventListener('statechange', onStateChange);
+          if (_ambientPending) startAmbient();
+        }
+      };
+      ctx.addEventListener('statechange', onStateChange);
+    }
   } catch (_) { /* silent fail */ }
 }
 
 export function stopBootAmbient() {
+  _ambientPending = false;
   _ambientNodes.forEach(n => n.stop());
   _ambientNodes = [];
 }
 
 // ── Hook wrapper ─────────────────────────────────────────────────────────
 export function useAudio() {
-  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted };
+  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted, unlockAudio };
 }

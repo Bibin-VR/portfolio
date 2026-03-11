@@ -8,7 +8,7 @@ import Contact from './sections/Contact';
 import Navigation from './sections/Navigation';
 import LoadingScreen from './sections/LoadingScreen';
 import Dither from './components/Dither';
-import { playClick, playScroll } from './hooks/use-audio';
+import { playClick, playScroll, unlockAudio } from './hooks/use-audio';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,6 +17,37 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 2800);
     return () => clearTimeout(timer);
+  }, []);
+
+  // ── Eagerly unlock AudioContext on first user signal ──────────────────
+  // Browsers suspend AudioContext until a gesture. Listening to mousemove
+  // means audio starts as soon as the user moves their cursor over the page
+  // — even before they click anything. This triggers the statechange event
+  // which playBootAmbient() has already registered a listener for.
+  useEffect(() => {
+    let unlocked = false;
+    const unlock = () => {
+      if (unlocked) return;
+      unlocked = true;
+      unlockAudio();
+      document.removeEventListener('mousemove', unlock, true);
+      document.removeEventListener('mousedown', unlock, true);
+      document.removeEventListener('touchstart', unlock, true);
+      document.removeEventListener('keydown', unlock, true);
+      document.removeEventListener('scroll', unlock, true);
+    };
+    document.addEventListener('mousemove', unlock, true);
+    document.addEventListener('mousedown', unlock, true);
+    document.addEventListener('touchstart', unlock, true);
+    document.addEventListener('keydown', unlock, true);
+    document.addEventListener('scroll', unlock, true);
+    return () => {
+      document.removeEventListener('mousemove', unlock, true);
+      document.removeEventListener('mousedown', unlock, true);
+      document.removeEventListener('touchstart', unlock, true);
+      document.removeEventListener('keydown', unlock, true);
+      document.removeEventListener('scroll', unlock, true);
+    };
   }, []);
 
   // ── Global click → techie beep ────────────────────────────────────────
