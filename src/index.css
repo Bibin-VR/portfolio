@@ -160,59 +160,135 @@
   }
   @keyframes ig-blink { 50% { opacity:0; } }
 
-  /* ── Contribution cells — sci-fi energy matrix ──────────────────── */
-  .contrib-cell {
-    aspect-ratio: 1;
-    width: 100%;
+  /* ── Contribution frequency spectrum — oscilloscope waveform ─────── */
+
+  /* CRT display wrapper */
+  .contrib-display {
+    background: rgba(4, 6, 14, 0.97);
+    border: 1px solid rgba(176, 200, 224, 0.07);
     border-radius: 2px;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    padding: 12px 8px 0;
     position: relative;
+    height: 110px;
+    overflow: hidden;
   }
-  .contrib-cell:hover {
-    transform: scale(1.35);
+  /* CRT scanline overlay */
+  .contrib-display::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.18) 2px,
+      rgba(0, 0, 0, 0.18) 4px
+    );
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* Oscilloscope reference grid */
+  .contrib-grid-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .contrib-gridline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(176, 200, 224, 0.05);
+  }
+
+  /* Bar chart layout */
+  .contrib-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 100%;
+    position: relative;
     z-index: 2;
   }
-
-  /* Level 0 — dead / void */
-  .contrib-0 {
-    background: rgba(16,16,22,0.9);
-    border: 1px solid rgba(255,255,255,0.04);
+  .contrib-bar-wrapper {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
   }
-  /* Level 1 — faint signal */
-  .contrib-1 {
-    background: rgba(30,40,70,0.85);
-    border: 1px solid rgba(80,110,180,0.2);
-    box-shadow: 0 0 3px rgba(80,110,180,0.15);
+  .contrib-bar-fill {
+    width: 100%;
+    min-height: 0;
+    transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    background: linear-gradient(
+      to top,
+      rgba(30, 55, 100, 0.5) 0%,
+      rgba(90, 140, 200, 0.8) 60%,
+      rgba(176, 200, 224, 0.95) 100%
+    );
+    position: relative;
   }
-  /* Level 2 — active node */
-  .contrib-2 {
-    background: rgba(45,65,120,0.9);
-    border: 1px solid rgba(110,150,220,0.35);
-    box-shadow: 0 0 5px rgba(110,150,220,0.25);
-  }
-  /* Level 3 — high-output */
-  .contrib-3 {
-    background: rgba(70,110,190,0.95);
-    border: 1px solid rgba(150,190,240,0.5);
-    box-shadow: 0 0 7px rgba(150,190,240,0.4), 0 0 14px rgba(150,190,240,0.15);
-  }
-  /* Level 4 — max power */
-  .contrib-4 {
+  /* Glowing top edge */
+  .contrib-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
     background: #B0C8E0;
-    border: 1px solid rgba(200,225,255,0.7);
-    box-shadow: 0 0 8px rgba(176,200,224,0.7), 0 0 18px rgba(176,200,224,0.35);
-  }
-  .contrib-4:hover {
-    box-shadow: 0 0 12px rgba(176,200,224,0.9), 0 0 28px rgba(176,200,224,0.5);
+    box-shadow: 0 0 3px rgba(176, 200, 224, 0.8), 0 0 7px rgba(176, 200, 224, 0.4);
   }
 
-  /* Scan-column highlight during reveal animation */
-  .contrib-scan {
-    filter: brightness(1.6) saturate(1.4);
-    box-shadow: 0 0 10px rgba(176,200,224,0.6) !important;
+  /* Sweep-scan highlight during reveal */
+  .contrib-scan-bar {
+    background: linear-gradient(
+      to top,
+      rgba(60, 100, 180, 0.7) 0%,
+      rgba(180, 220, 255, 1) 70%,
+      #fff 100%
+    ) !important;
+    filter: brightness(1.35);
+  }
+  .contrib-scan-bar::after {
+    box-shadow: 0 0 6px rgba(220, 240, 255, 1), 0 0 14px rgba(176, 200, 224, 0.7) !important;
   }
 
-  /* Outer panel glow for the contribution card */
+  /* Baseline rule */
+  .contrib-baseline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(176, 200, 224, 0.18);
+    z-index: 3;
+  }
+
+  /* Signal legend mini-bars */
+  .contrib-legend-bar {
+    width: 4px;
+    background: linear-gradient(
+      to top,
+      rgba(30, 55, 100, 0.5),
+      rgba(176, 200, 224, 0.9)
+    );
+    position: relative;
+  }
+  .contrib-legend-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(176, 200, 224, 0.8);
+    box-shadow: 0 0 3px rgba(176, 200, 224, 0.5);
+  }
+
+  /* Outer panel glow */
   .contrib-panel {
     position: relative;
   }
@@ -221,7 +297,7 @@
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(176,200,224,0.08) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(176,200,224,0.06) 0%, transparent 60%);
     pointer-events: none;
   }
 

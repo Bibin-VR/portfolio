@@ -79,16 +79,6 @@ const Stats = () => {
     return () => clearInterval(timer);
   }, [isVisible, githubStats]);
 
-  const getContributionColor = (level: number) => {
-    return [
-      'contrib-0',
-      'contrib-1',
-      'contrib-2',
-      'contrib-3',
-      'contrib-4',
-    ][level] ?? 'contrib-0';
-  };
-
   // Scanline sweep animation state
   const [scanCol, setScanCol] = useState(-1);
   useEffect(() => {
@@ -112,6 +102,9 @@ const Stats = () => {
 
   // Fallback grid if data isn't loaded yet
   const grid = githubStats?.contributionGrid ?? Array.from({ length: 26 }, () => Array(7).fill(0));
+  // Weekly totals for the frequency spectrum waveform
+  const weekTotals = grid.map((week: number[]) => week.reduce((a: number, b: number) => a + b, 0));
+  const maxWeekTotal = Math.max(...weekTotals, 1);
 
   return (
     <section
@@ -167,7 +160,7 @@ const Stats = () => {
           ))}
         </div>
 
-        {/* Real Contribution Graph — sci-fi edition */}
+        {/* Commit Frequency Spectrum — oscilloscope waveform */}
         <div
           className={`gh-card p-6 transition-all duration-700 contrib-panel ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -175,13 +168,13 @@ const Stats = () => {
           style={{ transitionDelay: '400ms' }}
         >
           {/* Header */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
               <div className="relative w-2 h-2">
                 <div className="w-2 h-2 rounded-full bg-[#B0C8E0] absolute animate-ping opacity-40" />
                 <div className="w-2 h-2 rounded-full bg-[#B0C8E0]" />
               </div>
-              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Contribution Activity</h3>
+              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Signal Waveform</h3>
             </div>
             <div className="flex items-center gap-2">
               {!loading && githubStats && (
@@ -197,36 +190,37 @@ const Stats = () => {
             </div>
           </div>
 
-          {/* Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-              gap: 'clamp(1px, 0.35vw, 3px)',
-              width: '100%',
-            }}
-          >
-            {grid.map((week, weekIndex) => (
-              <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1px, 0.35vw, 3px)' }}>
-                {week.map((level, dayIndex) => (
-                  <div
-                    key={`${weekIndex}-${dayIndex}`}
-                    className={`contrib-cell ${getContributionColor(level)} ${
-                      isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                    } ${scanCol === weekIndex ? 'contrib-scan' : ''}`}
-                    style={{
-                      transitionDelay: `${(weekIndex * 7 + dayIndex) * 4}ms`,
-                      transitionDuration: '180ms',
-                    }}
-                    title={`${level > 0 ? level : 'No'} contributions`}
-                  />
-                ))}
-              </div>
-            ))}
+          {/* Oscilloscope display */}
+          <div className="contrib-display">
+            {/* Reference grid lines */}
+            <div className="contrib-grid-lines">
+              {[25, 50, 75].map(pct => (
+                <div key={pct} className="contrib-gridline" style={{ bottom: `${pct}%` }} />
+              ))}
+            </div>
+            {/* Frequency bars — one per week */}
+            <div className="contrib-bars">
+              {weekTotals.map((total, weekIndex) => {
+                const heightPct = (total / maxWeekTotal) * 100;
+                return (
+                  <div key={weekIndex} className="contrib-bar-wrapper">
+                    <div
+                      className={`contrib-bar-fill${scanCol === weekIndex ? ' contrib-scan-bar' : ''}`}
+                      style={{
+                        height: isVisible ? `${total > 0 ? Math.max(heightPct, 2) : 0}%` : '0%',
+                        transitionDelay: `${weekIndex * 6}ms`,
+                        transitionDuration: '500ms',
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="contrib-baseline" />
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4"
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3 pt-3"
             style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             {/* Month labels */}
             <div className="flex justify-between sm:justify-start sm:gap-6">
@@ -234,15 +228,15 @@ const Stats = () => {
                 <span key={month} className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">{month}</span>
               ))}
             </div>
-            {/* Energy legend */}
+            {/* Signal legend */}
             <div className="flex items-center gap-2">
-              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">LOW</span>
-              <div className="flex gap-[3px]">
-                {[0,1,2,3,4].map(level => (
-                  <div key={level} className={`contrib-cell w-3 h-3 ${getContributionColor(level)}`} style={{ borderRadius: '2px' }} />
+              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">BASELINE</span>
+              <div className="flex items-end gap-[2px]" style={{ height: '16px' }}>
+                {[12, 25, 40, 62, 100].map((h, i) => (
+                  <div key={i} className="contrib-legend-bar" style={{ height: `${h}%` }} />
                 ))}
               </div>
-              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">HIGH</span>
+              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">PEAK</span>
             </div>
           </div>
         </div>
