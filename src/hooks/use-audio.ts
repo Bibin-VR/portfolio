@@ -167,7 +167,104 @@ export function playSuccess() {
   } catch (_) { /* silent fail */ }
 }
 
+// ── Boot ambient — layered drone that plays during the loading screen ──────
+// Three layers:
+//   1. Sub-bass sine drone at 55 Hz (deep rumble)
+//   2. Slowly LFO-modulated mid sine at 110 Hz (pulsing heartbeat)
+//   3. Periodic high-frequency sweep (scanner ping every ~1.4 s)
+let _ambientNodes: { stop: () => void }[] = [];
+
+export function playBootAmbient() {
+  if (_muted) return;
+  try {
+    stopBootAmbient(); // clear any existing
+    const ctx = getCtx();
+    const t = ctx.currentTime;
+
+    // ── Layer 1: deep sub drone ──────────────────────────────────────────
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    subOsc.connect(subGain);
+    subGain.connect(ctx.destination);
+    subOsc.type = 'sine';
+    subOsc.frequency.value = 55;
+    subGain.gain.setValueAtTime(0, t);
+    subGain.gain.linearRampToValueAtTime(0.09, t + 1.2);
+    subOsc.start(t);
+
+    // ── Layer 2: pulsing LFO-modulated mid sine ──────────────────────────
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.connect(lfoGain);
+    lfo.type = 'sine';
+    lfo.frequency.value = 0.35;     // 0.35 Hz — slow pulse
+    lfoGain.gain.value = 0.025;
+
+    const midOsc = ctx.createOscillator();
+    const midGain = ctx.createGain();
+    lfoGain.connect(midGain.gain);  // LFO modulates gain
+    midOsc.connect(midGain);
+    midGain.connect(ctx.destination);
+    midOsc.type = 'sine';
+    midOsc.frequency.value = 110;
+    midGain.gain.setValueAtTime(0, t);
+    midGain.gain.linearRampToValueAtTime(0.035, t + 0.8);
+    midOsc.start(t);
+    lfo.start(t);
+
+    // ── Layer 3: periodic scanner ping ──────────────────────────────────
+    let pingActive = true;
+    function schedulePing(delay: number) {
+      if (!pingActive) return;
+      const pt = ctx.currentTime + delay;
+      const pingOsc = ctx.createOscillator();
+      const pingFilter = ctx.createBiquadFilter();
+      const pingGain = ctx.createGain();
+      pingOsc.connect(pingFilter);
+      pingFilter.connect(pingGain);
+      pingGain.connect(ctx.destination);
+
+      pingFilter.type = 'bandpass';
+      pingFilter.frequency.setValueAtTime(900, pt);
+      pingFilter.Q.value = 12;
+
+      pingOsc.type = 'sine';
+      pingOsc.frequency.setValueAtTime(320, pt);
+      pingOsc.frequency.linearRampToValueAtTime(1800, pt + 0.55);
+
+      pingGain.gain.setValueAtTime(0, pt);
+      pingGain.gain.linearRampToValueAtTime(0.055, pt + 0.04);
+      pingGain.gain.exponentialRampToValueAtTime(0.0001, pt + 0.7);
+
+      pingOsc.start(pt);
+      pingOsc.stop(pt + 0.75);
+
+      if (pingActive) setTimeout(() => schedulePing(1.35), delay * 1000 + 200);
+    }
+    schedulePing(0.6);
+
+    _ambientNodes = [{
+      stop: () => {
+        pingActive = false;
+        try {
+          const now = ctx.currentTime;
+          subGain.gain.setValueAtTime(subGain.gain.value, now);
+          subGain.gain.linearRampToValueAtTime(0, now + 0.6);
+          midGain.gain.setValueAtTime(midGain.gain.value, now);
+          midGain.gain.linearRampToValueAtTime(0, now + 0.6);
+          setTimeout(() => { subOsc.stop(); midOsc.stop(); lfo.stop(); }, 700);
+        } catch (_) {}
+      }
+    }];
+  } catch (_) { /* silent fail */ }
+}
+
+export function stopBootAmbient() {
+  _ambientNodes.forEach(n => n.stop());
+  _ambientNodes = [];
+}
+
 // ── Hook wrapper ─────────────────────────────────────────────────────────
 export function useAudio() {
-  return { playClick, playHover, playScroll, playBoot, playSuccess, setMuted, getMuted, toggleMuted };
+  return { playClick, playHover, playScroll, playBoot, playBootAmbient, stopBootAmbient, playSuccess, setMuted, getMuted, toggleMuted };
 }

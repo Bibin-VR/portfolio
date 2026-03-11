@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { playBoot } from '../hooks/use-audio';
+import { playBoot, playBootAmbient, stopBootAmbient } from '../hooks/use-audio';
 
 const LoadingScreen = () => {
   const [bootLines, setBootLines] = useState<string[]>([]);
@@ -19,6 +19,8 @@ const LoadingScreen = () => {
   ];
 
   useEffect(() => {
+    // Start ambient drone immediately
+    playBootAmbient();
     let lineIndex = 0;
 
     const lineInterval = setInterval(() => {
@@ -29,6 +31,7 @@ const LoadingScreen = () => {
       } else {
         clearInterval(lineInterval);
         setPhase('ready');
+        stopBootAmbient();   // fade out drone when boot completes
       }
     }, 220);
 
@@ -42,6 +45,7 @@ const LoadingScreen = () => {
     return () => {
       clearInterval(lineInterval);
       clearInterval(progressInterval);
+      stopBootAmbient();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
