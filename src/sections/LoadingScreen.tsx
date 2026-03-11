@@ -49,12 +49,16 @@ const LoadingScreen = ({ onComplete }: Props) => {
   };
 
   useEffect(() => {
-    // Return visitors / Chrome MEI: ctx already allowed — fires callback immediately.
-    // First-time visitors: deferred until their first click on this screen.
-    unlockAudio(startSequence);
+    // Pre-warm the AudioContext silently so it's ready when the button is clicked.
+    // Do NOT pass startSequence here — the sequence must only run on explicit button press.
+    unlockAudio();
     return () => { stopBootAmbient(); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleEnter = () => {
+    unlockAudio(startSequence);
+  };
 
   return (
     <div
@@ -92,7 +96,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
               </div>
             </div>
             <button
-              onClick={() => unlockAudio(startSequence)}
+              onClick={() => handleEnter()}
               className="group relative flex items-center gap-4 px-10 py-4 transition-all duration-300"
               style={{ border: '1px solid rgba(176,200,224,0.3)', background: 'rgba(176,200,224,0.04)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(176,200,224,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(176,200,224,0.6)'; }}
