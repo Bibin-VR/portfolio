@@ -60,7 +60,6 @@ const LoadingScreen = ({ onComplete }: Props) => {
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
       style={{ background: '#060608' }}
-      onClick={() => unlockAudio(startSequence)}
     >
       <div className="w-full max-w-xl px-8">
 
@@ -85,22 +84,30 @@ const LoadingScreen = ({ onComplete }: Props) => {
               </div>
               <div className="flex flex-col items-center gap-1">
                 <span className="mono text-[10px] tracking-[0.35em] uppercase text-[rgba(176,200,224,0.5)]">
-                  audio engine standby
+                  portfolio system offline
                 </span>
                 <span className="mono text-[9px] tracking-[0.15em] uppercase text-[rgba(240,240,240,0.15)]">
-                  awaiting first gesture
+                  bibin v r — robotics · ai · web
                 </span>
               </div>
             </div>
-            <div
-              className="border border-[rgba(176,200,224,0.15)] px-8 py-3 flex items-center gap-3"
-              style={{ background: 'rgba(176,200,224,0.03)' }}
+            <button
+              onClick={() => unlockAudio(startSequence)}
+              className="group relative flex items-center gap-4 px-10 py-4 transition-all duration-300"
+              style={{ border: '1px solid rgba(176,200,224,0.3)', background: 'rgba(176,200,224,0.04)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(176,200,224,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(176,200,224,0.6)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(176,200,224,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(176,200,224,0.3)'; }}
             >
+              {/* Corner accents */}
+              <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[rgba(176,200,224,0.6)]" />
+              <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[rgba(176,200,224,0.6)]" />
+              <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[rgba(176,200,224,0.6)]" />
+              <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[rgba(176,200,224,0.6)]" />
               <div className="w-1.5 h-1.5 bg-[#B0C8E0] animate-pulse" />
-              <span className="mono text-[10px] tracking-[0.28em] uppercase text-[rgba(240,240,240,0.35)]">
-                tap anywhere to begin
+              <span className="mono text-xs tracking-[0.3em] uppercase text-[rgba(240,240,240,0.8)] group-hover:text-[#F0F0F0] transition-colors">
+                Enter World
               </span>
-            </div>
+            </button>
           </div>
         )}
 
