@@ -301,6 +301,59 @@
     pointer-events: none;
   }
 
+  /* ── HUD Capability Matrix — segmented energy bars ────────────────── */
+  .hud-matrix {
+    position: relative;
+  }
+  /* Corner bracket accents */
+  .hud-corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hud-corner-tl { top: 0;    left: 0;  border-top:    1px solid rgba(176,200,224,0.5); border-left:   1px solid rgba(176,200,224,0.5); }
+  .hud-corner-tr { top: 0;    right: 0; border-top:    1px solid rgba(176,200,224,0.5); border-right:  1px solid rgba(176,200,224,0.5); }
+  .hud-corner-bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(176,200,224,0.5); border-left:   1px solid rgba(176,200,224,0.5); }
+  .hud-corner-br { bottom: 0; right: 0; border-bottom: 1px solid rgba(176,200,224,0.5); border-right:  1px solid rgba(176,200,224,0.5); }
+
+  .hud-row {
+    display: grid;
+    grid-template-columns: 26px 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.025);
+  }
+  .hud-row:last-child { border-bottom: none; }
+
+  .hud-segments {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+  /* Inactive segment — dark placeholder */
+  .hud-seg {
+    flex: 1;
+    height: 7px;
+    background: rgba(176,200,224,0.04);
+    border: 1px solid rgba(176,200,224,0.07);
+    transition: background 0.10s ease, box-shadow 0.10s ease, border-color 0.10s ease;
+  }
+  /* Normal active segment */
+  .hud-seg-active {
+    background: rgba(65,110,195,0.82);
+    border-color: rgba(110,160,230,0.45);
+    box-shadow: 0 0 3px rgba(110,160,230,0.35);
+  }
+  /* Peak segments (last 2 when level ≥ 80) — full brightness */
+  .hud-seg-peak {
+    background: #B0C8E0;
+    border-color: rgba(200,225,255,0.75);
+    box-shadow: 0 0 5px rgba(176,200,224,0.75), 0 0 10px rgba(176,200,224,0.3);
+  }
+
   /* ── Scrollbar — ultra thin ──────────────────────────────────────── */
   ::-webkit-scrollbar { width: 3px; height: 3px; }
   ::-webkit-scrollbar-track { background: transparent; }

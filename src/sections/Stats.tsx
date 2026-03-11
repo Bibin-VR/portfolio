@@ -241,43 +241,78 @@ const Stats = () => {
           </div>
         </div>
 
-        {/* Technology Stack Intensity */}
+        {/* CAPABILITY MATRIX — HUD segmented bars */}
         <div
-          className={`mt-6 gh-card p-6 transition-all duration-700 ${
+          className={`mt-6 gh-card p-6 transition-all duration-700 hud-matrix ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '600ms' }}
         >
-          <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-6">
-            Technology Stack Intensity
-          </h3>
-          <div className="space-y-4">
-            {[
-              { name: 'Python / ROS', level: 95 },
-              { name: 'Computer Vision / OpenCV', level: 88 },
-              { name: 'Machine Learning / TensorFlow', level: 85 },
-              { name: 'Embedded Systems', level: 82 },
-              { name: 'LLMs / NLP', level: 78 },
-              { name: 'React / TypeScript', level: 88 },
-              { name: 'Tailwind CSS', level: 90 },
-              { name: 'Three.js / OpenGL / WebGL', level: 75 },
-              { name: 'Vite / Node.js / Vercel', level: 83 },
-            ].map((skill, index) => (
-              <div key={skill.name} className="flex items-center gap-4">
-                <span className="mono text-xs text-[rgba(240,240,240,0.4)] w-52 truncate">{skill.name}</span>
-                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                  <div
-                    className="h-px transition-all duration-1000 ease-out"
-                    style={{
-                      width: isVisible ? `${skill.level}%` : '0%',
-                      background: 'linear-gradient(90deg, rgba(176,200,224,0.5), #B0C8E0)',
-                      transitionDelay: `${700 + index * 100}ms`,
-                    }}
-                  />
-                </div>
-                <span className="mono text-xs text-[rgba(240,240,240,0.5)] w-10">{skill.level}%</span>
+          {/* Corner bracket accents */}
+          <div className="hud-corner hud-corner-tl" />
+          <div className="hud-corner hud-corner-tr" />
+          <div className="hud-corner hud-corner-bl" />
+          <div className="hud-corner hud-corner-br" />
+
+          {/* Header */}
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="relative w-2 h-2">
+                <div className="w-2 h-2 bg-[#B0C8E0] absolute animate-ping opacity-40" />
+                <div className="w-2 h-2 bg-[#B0C8E0]" />
               </div>
-            ))}
+              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Capability Matrix</h3>
+            </div>
+            <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.2)]">
+              SYS.STATUS: <span className="text-[#B0C8E0]">NOMINAL</span>
+            </span>
+          </div>
+
+          {/* Skill rows */}
+          <div>
+            {([
+              { name: 'Python / ROS',                   level: 95, id: '01' },
+              { name: 'Computer Vision / OpenCV',        level: 88, id: '02' },
+              { name: 'Machine Learning / TensorFlow',   level: 85, id: '03' },
+              { name: 'Embedded Systems',                level: 82, id: '04' },
+              { name: 'LLMs / NLP',                     level: 78, id: '05' },
+              { name: 'React / TypeScript',              level: 88, id: '06' },
+              { name: 'Tailwind CSS',                    level: 90, id: '07' },
+              { name: 'Three.js / OpenGL / WebGL',       level: 75, id: '08' },
+              { name: 'Vite / Node.js / Vercel',         level: 83, id: '09' },
+            ] as { name: string; level: number; id: string }[]).map((skill, index) => {
+              const SEGS = 22;
+              const filled = isVisible ? Math.round((skill.level / 100) * SEGS) : 0;
+              return (
+                <div key={skill.name} className="hud-row">
+                  {/* Row ID */}
+                  <span className="mono text-[9px] text-[rgba(176,200,224,0.3)] tracking-wider">[{skill.id}]</span>
+                  {/* Skill name */}
+                  <span className="mono text-[11px] text-[rgba(240,240,240,0.42)] truncate tracking-wide">{skill.name}</span>
+                  {/* Segmented bar */}
+                  <div className="hud-segments" style={{ width: 'clamp(100px,28vw,210px)' }}>
+                    {Array.from({ length: SEGS }).map((_, s) => {
+                      const isActive = s < filled;
+                      const isPeak   = isActive && s >= filled - 2 && skill.level >= 78;
+                      return (
+                        <div
+                          key={s}
+                          className={`hud-seg${ isPeak ? ' hud-seg-peak' : isActive ? ' hud-seg-active' : '' }`}
+                          style={{ transitionDelay: `${700 + index * 50 + s * 16}ms` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  {/* Percentage readout */}
+                  <span
+                    className="mono text-[10px] w-8 text-right"
+                    style={{ color: skill.level >= 85 ? '#B0C8E0' : 'rgba(176,200,224,0.45)' }}
+                  >
+                    {isVisible ? `${skill.level}%` : '--'}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
