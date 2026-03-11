@@ -9,7 +9,6 @@ import {
   ShoppingBag,
   ChevronDown,
   ChevronUp,
-  Code2,
   type LucideIcon
 } from 'lucide-react';
 
@@ -157,12 +156,12 @@ Features:
         {/* Section Header */}
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#00FF9D] to-[#00F0FF] rounded-full" />
-            <h2 className="text-3xl font-bold text-[#E6EDF3] mono">Active Modules</h2>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">02 / Projects</span>
           </div>
-          <p className="text-[#8B949E] max-w-2xl">
-            Repository overview of active development projects. Each module represents 
-            a complete system with documentation, tests, and deployment configurations.
+          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">Active Modules</h2>
+          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+            Repository overview of active development projects. Each module is a complete system.
           </p>
         </div>
 
@@ -171,16 +170,17 @@ Features:
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className={`gh-card overflow-hidden hover-lift transition-all duration-700 ${
+              className={`overflow-hidden transition-all duration-700 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
               style={{ 
                 transitionDelay: `${index * 150}ms`,
-                borderTop: `3px solid ${project.color}`,
+                border: '1px solid rgba(255,255,255,0.07)',
+                background: '#111114',
               }}
             >
               {/* Project Preview */}
-              <div className="relative h-48 overflow-hidden bg-[#0D1117]">
+              <div className="relative h-48 overflow-hidden" style={{ background: '#0A0A0D' }}>
                 {project.liveUrl && !iframeErrors[project.id] ? (
                   <>
                     <iframe
@@ -194,13 +194,17 @@ Features:
                         transformOrigin: 'top left',
                         border: 'none',
                         pointerEvents: 'none',
+                        filter: 'grayscale(30%) brightness(0.7)',
                       }}
                       onError={() => setIframeErrors(prev => ({ ...prev, [project.id]: true }))}
                     />
                     {/* Live badge */}
-                    <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full backdrop-blur-sm" style={{ backgroundColor: '#0D1117cc', border: `1px solid ${project.color}40` }}>
-                      <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: project.color }} />
-                      <span className="mono text-xs" style={{ color: project.color }}>LIVE</span>
+                    <div
+                      className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1"
+                      style={{ background: 'rgba(9,9,9,0.85)', border: '1px solid rgba(176,200,224,0.2)' }}
+                    >
+                      <span className="w-1 h-1 rounded-full bg-[#B0C8E0]" />
+                      <span className="mono text-[10px] text-[rgba(240,240,240,0.5)]">LIVE</span>
                     </div>
                   </>
                 ) : project.liveUrl && iframeErrors[project.id] ? (
@@ -209,28 +213,27 @@ Features:
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute inset-0 flex flex-col items-center justify-center gap-3 hover:bg-[#21262D]/40 transition-colors"
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-3 transition-colors"
+                    style={{ background: 'rgba(255,255,255,0.02)' }}
                   >
-                    <project.icon className="w-10 h-10" style={{ color: project.color }} />
-                    <span className="mono text-xs" style={{ color: project.color }}>Click to visit live site</span>
+                    <project.icon className="w-8 h-8 text-[rgba(240,240,240,0.3)]" />
+                    <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">Click to visit live site</span>
                   </a>
                 ) : (
                   <img
                     src={project.image}
                     alt={project.name}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    style={{ filter: 'grayscale(20%) brightness(0.75)' }}
                   />
                 )}
                 <div
                   className="absolute inset-0 opacity-40 pointer-events-none"
-                  style={{ background: `linear-gradient(to top, ${project.color}30, transparent 60%)` }}
+                  style={{ background: 'linear-gradient(to top, rgba(9,9,9,0.9), transparent 60%)' }}
                 />
                 <div className="absolute top-4 left-4">
-                  <div
-                    className="p-2 rounded-lg backdrop-blur-sm"
-                    style={{ backgroundColor: `${project.color}30` }}
-                  >
-                    <project.icon className="w-5 h-5" style={{ color: project.color }} />
+                  <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(9,9,9,0.7)' }}>
+                    <project.icon className="w-4 h-4 text-[rgba(240,240,240,0.45)]" />
                   </div>
                 </div>
               </div>
@@ -238,21 +241,20 @@ Features:
               {/* Project Content */}
               <div className="p-6">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#E6EDF3] mono mb-1">
-                      {project.name}
-                    </h3>
-                    <p className="text-sm text-[#8B949E]">{project.description}</p>
-                  </div>
+                <div className="mb-4">
+                  <h3 className="text-base font-semibold text-[#F0F0F0] mono mb-1">
+                    {project.name}
+                  </h3>
+                  <p className="text-xs text-[rgba(240,240,240,0.42)] mono">{project.description}</p>
                 </div>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1.5 mb-4">
                   {project.tags.map((tag) => (
                     <span 
                       key={tag}
-                      className="px-2 py-1 text-xs mono rounded-full bg-[#21262D] text-[#8B949E] border border-[#30363D]"
+                      className="px-2 py-0.5 text-[10px] mono text-[rgba(240,240,240,0.45)]"
+                      style={{ border: '1px solid rgba(255,255,255,0.07)' }}
                     >
                       {tag}
                     </span>
@@ -260,32 +262,26 @@ Features:
                 </div>
 
                 {/* Tech Stack */}
-                <div className="flex items-center gap-2 mb-4">
-                  <Code2 className="w-4 h-4 text-[#8B949E]" />
-                  <div className="flex flex-wrap gap-1">
-                    {project.techStack.map((tech) => (
-                      <span 
-                        key={tech}
-                        className="text-xs text-[#8B949E]"
-                      >
-                        {tech}
-                        {project.techStack.indexOf(tech) < project.techStack.length - 1 && (
-                          <span className="mx-1">•</span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap gap-x-2 gap-y-1 mb-4">
+                  {project.techStack.map((tech, i) => (
+                    <span 
+                      key={tech}
+                      className="text-[10px] mono text-[rgba(240,240,240,0.35)]"
+                    >
+                      {tech}{i < project.techStack.length - 1 && <span className="mx-1 opacity-30">·</span>}
+                    </span>
+                  ))}
                 </div>
 
                 {/* Stats */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-1 text-[#8B949E]">
-                    <Star className="w-4 h-4" />
-                    <span className="mono text-sm">{project.stats.stars}</span>
+                  <div className="flex items-center gap-1 text-[rgba(240,240,240,0.3)]">
+                    <Star className="w-3 h-3" />
+                    <span className="mono text-[10px]">{project.stats.stars}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[#8B949E]">
-                    <GitFork className="w-4 h-4" />
-                    <span className="mono text-sm">{project.stats.forks}</span>
+                  <div className="flex items-center gap-1 text-[rgba(240,240,240,0.3)]">
+                    <GitFork className="w-3 h-3" />
+                    <span className="mono text-[10px]">{project.stats.forks}</span>
                   </div>
                 </div>
 
@@ -295,29 +291,26 @@ Features:
                     expandedProject === project.id ? 'max-h-96' : 'max-h-0'
                   }`}
                 >
-                  <div className="pt-4 border-t border-[#30363D]">
-                    <pre className="text-sm text-[#8B949E] whitespace-pre-wrap font-mono leading-relaxed">
+                  <div className="pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <pre className="text-xs text-[rgba(240,240,240,0.45)] whitespace-pre-wrap font-mono leading-relaxed">
                       {project.fullDescription}
                     </pre>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-3 pt-4 border-t border-[#30363D]">
+                <div
+                  className="flex items-center gap-3 pt-4"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+                >
                   <button
                     onClick={() => toggleExpand(project.id)}
-                    className="flex items-center gap-1 text-sm text-[#8B949E] hover:text-[#E6EDF3] transition-colors"
+                    className="flex items-center gap-1 text-[10px] mono text-[rgba(240,240,240,0.35)] hover:text-[rgba(240,240,240,0.7)] transition-colors uppercase tracking-widest"
                   >
                     {expandedProject === project.id ? (
-                      <>
-                        <ChevronUp className="w-4 h-4" />
-                        <span className="mono">Collapse README</span>
-                      </>
+                      <><ChevronUp className="w-3 h-3" /><span>Collapse</span></>
                     ) : (
-                      <>
-                        <ChevronDown className="w-4 h-4" />
-                        <span className="mono">View README</span>
-                      </>
+                      <><ChevronDown className="w-3 h-3" /><span>README</span></>
                     )}
                   </button>
                   <div className="flex-1" />
@@ -326,11 +319,10 @@ Features:
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-sm hover:opacity-80 transition-opacity"
-                      style={{ color: project.color }}
+                      className="ig-btn flex items-center gap-1 text-[10px] px-3 py-1"
                     >
-                      <ExternalLink className="w-4 h-4" />
-                      <span className="mono">Live Site</span>
+                      <ExternalLink className="w-3 h-3" />
+                      <span>Live</span>
                     </a>
                   )}
                   {project.githubUrl && (
@@ -338,10 +330,10 @@ Features:
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-sm text-[#00F0FF] hover:text-[#00F0FF]/80 transition-colors"
+                      className="ig-btn flex items-center gap-1 text-[10px] px-3 py-1"
                     >
-                      <ExternalLink className="w-4 h-4" />
-                      <span className="mono">View Code</span>
+                      <ExternalLink className="w-3 h-3" />
+                      <span>Code</span>
                     </a>
                   )}
                 </div>
@@ -353,13 +345,13 @@ Features:
         {/* View All Link */}
         <div className={`mt-12 text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
           <a 
-            href="https://github.com"
+            href="https://github.com/Bibin-VR"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-[#30363D] rounded-lg text-[#E6EDF3] hover:bg-[#21262D] hover:border-[#00F0FF] transition-all"
+            className="ig-btn inline-flex items-center gap-2 px-6 py-2.5"
           >
-            <span className="mono text-sm">View All Repositories</span>
-            <ExternalLink className="w-4 h-4" />
+            <span className="mono text-xs uppercase tracking-widest">View All Repositories</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
       </div>

@@ -7,8 +7,7 @@ import {
   MapPin, 
   Phone,
   AlertCircle,
-  CheckCircle,
-  MessageSquare
+  CheckCircle
 } from 'lucide-react';
 
 const Contact = () => {
@@ -84,10 +83,10 @@ const Contact = () => {
   };
 
   const labels = [
-    { id: 'collaboration', name: 'Collaboration', color: '#00FF9D' },
-    { id: 'opportunity', name: 'Opportunity', color: '#00F0FF' },
-    { id: 'consulting', name: 'Consulting', color: '#BC13FE' },
-    { id: 'bug', name: 'Bug Report', color: '#F85149' },
+    { id: 'collaboration', name: 'Collaboration' },
+    { id: 'opportunity', name: 'Opportunity' },
+    { id: 'consulting', name: 'Consulting' },
+    { id: 'bug', name: 'Bug Report' },
   ];
 
   const contactInfo = [
@@ -97,8 +96,8 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, label: 'GitHub', href: 'https://github.com/Bibin-VR', color: '#E6EDF3' },
-    { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/', color: '#00F0FF' },
+    { icon: Github, label: 'GitHub', href: 'https://github.com/Bibin-VR' },
+    { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/' },
   ];
 
   return (
@@ -107,27 +106,16 @@ const Contact = () => {
       id="contact"
       className="relative py-24"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, #00F0FF 1px, transparent 0)`,
-            backgroundSize: '40px 40px',
-          }}
-        />
-      </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#00F0FF] to-[#00FF9D] rounded-full" />
-            <h2 className="text-3xl font-bold text-[#E6EDF3] mono">Open an Issue</h2>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">05 / Contact</span>
           </div>
-          <p className="text-[#8B949E] max-w-2xl">
-            Found a bug in the matrix? Want to collaborate on a project? 
-            Open an issue and let's build something amazing together.
+          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">Initiate Transmission</h2>
+          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+            Want to collaborate on a project or discuss an opportunity? Send a message.
           </p>
         </div>
 
@@ -138,15 +126,21 @@ const Contact = () => {
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <div className="gh-card overflow-hidden">
+            <div
+              className="overflow-hidden"
+              style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}
+            >
               {/* Form Header */}
-              <div className="flex items-center gap-3 px-6 py-4 border-b border-[#30363D] bg-[#161B22]">
-                <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
-                <span className="mono text-sm text-[#E6EDF3]">New Issue</span>
+              <div
+                className="flex items-center gap-3 px-6 py-4"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: '#13131A' }}
+              >
+                <AlertCircle className="w-4 h-4 text-[rgba(240,240,240,0.4)]" />
+                <span className="mono text-xs tracking-widest uppercase text-[rgba(240,240,240,0.5)]">New Message</span>
                 <div className="flex-1" />
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#00FF9D]" />
-                  <span className="mono text-xs text-[#8B949E]">Open</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
+                  <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">OPEN</span>
                 </div>
               </div>
 
@@ -154,31 +148,31 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="p-6">
               {isSubmitted ? (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <div className="w-16 h-16 rounded-full bg-[#00FF9D]/10 flex items-center justify-center mb-4">
-                      <CheckCircle className="w-8 h-8 text-[#00FF9D]" />
+                    <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ border: '1px solid rgba(176,200,224,0.25)' }}>
+                      <CheckCircle className="w-6 h-6 text-[#B0C8E0]" />
                     </div>
-                    <h3 className="text-xl font-semibold text-[#E6EDF3] mb-2">
-                      Issue Created Successfully!
+                    <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-2">
+                      Transmission Sent
                     </h3>
-                    <p className="text-[#8B949E] text-center">
-                      Thank you for reaching out. I'll get back to you soon.
+                    <p className="text-[rgba(240,240,240,0.42)] text-sm mono text-center">
+                      I'll get back to you shortly.
                     </p>
                   </div>
                 ) : isError ? (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <div className="w-16 h-16 rounded-full bg-[#F85149]/10 flex items-center justify-center mb-4">
-                      <AlertCircle className="w-8 h-8 text-[#F85149]" />
+                    <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ border: '1px solid rgba(255,80,80,0.2)' }}>
+                      <AlertCircle className="w-6 h-6 text-[rgba(240,100,100,0.7)]" />
                     </div>
-                    <h3 className="text-xl font-semibold text-[#E6EDF3] mb-2">
+                    <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-2">
                       Transmission Failed
                     </h3>
-                    <p className="text-[#8B949E] text-center mb-6">
-                      Something went wrong. Please try again or email directly at{' '}
-                      <a href="mailto:bibin.blp@gmail.com" className="text-[#00F0FF] hover:underline">bibin.blp@gmail.com</a>.
+                    <p className="text-[rgba(240,240,240,0.42)] text-sm mono text-center mb-6">
+                      Try again or email{' '}
+                      <a href="mailto:bibin.blp@gmail.com" className="text-[#B0C8E0] hover:underline">bibin.blp@gmail.com</a>.
                     </p>
                     <button
                       onClick={() => setIsError(false)}
-                      className="px-4 py-2 border border-[#30363D] rounded-lg text-[#E6EDF3] hover:bg-[#21262D] transition-all mono text-sm"
+                      className="ig-btn text-xs px-4 py-2"
                     >
                       Try Again
                     </button>
@@ -187,38 +181,38 @@ const Contact = () => {
                   <>
                     {/* Name Input */}
                     <div className="mb-6">
-                      <label className="block text-sm text-[#8B949E] mb-2 mono">
-                        Name <span className="text-[#F85149]">*</span>
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                        Name <span className="text-[rgba(240,100,100,0.6)]">*</span>
                       </label>
                       <input
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Your name"
-                        className="w-full px-4 py-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-[#E6EDF3] placeholder-[#484F58] focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF] outline-none transition-all mono text-sm"
+                        className="ig-input w-full"
                         required
                       />
                     </div>
 
                     {/* Email Input */}
                     <div className="mb-6">
-                      <label className="block text-sm text-[#8B949E] mb-2 mono">
-                        Email <span className="text-[#F85149]">*</span>
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                        Email <span className="text-[rgba(240,100,100,0.6)]">*</span>
                       </label>
                       <input
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="your.email@example.com"
-                        className="w-full px-4 py-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-[#E6EDF3] placeholder-[#484F58] focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF] outline-none transition-all mono text-sm"
+                        className="ig-input w-full"
                         required
                       />
                     </div>
 
                     {/* Label Selection */}
                     <div className="mb-6">
-                      <label className="block text-sm text-[#8B949E] mb-2 mono">
-                        Label
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-3 mono">
+                        Type
                       </label>
                       <div className="flex flex-wrap gap-2">
                         {labels.map((label) => (
@@ -226,16 +220,12 @@ const Contact = () => {
                             key={label.id}
                             type="button"
                             onClick={() => setFormData({ ...formData, label: label.id })}
-                            className={`px-3 py-1.5 rounded-full text-xs mono transition-all ${
-                              formData.label === label.id
-                                ? 'ring-2 ring-offset-2 ring-offset-[#161B22]'
-                                : 'opacity-60 hover:opacity-100'
-                            }`}
+                            className="px-3 py-1.5 mono text-xs transition-all"
                             style={{
-                              backgroundColor: `${label.color}20`,
-                              color: label.color,
-                              '--tw-ring-color': formData.label === label.id ? label.color : 'transparent',
-                            } as React.CSSProperties}
+                              border: `1px solid ${formData.label === label.id ? 'rgba(176,200,224,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                              color: formData.label === label.id ? '#B0C8E0' : 'rgba(240,240,240,0.4)',
+                              background: formData.label === label.id ? 'rgba(176,200,224,0.05)' : 'transparent',
+                            }}
                           >
                             {label.name}
                           </button>
@@ -245,57 +235,53 @@ const Contact = () => {
 
                     {/* Title Input */}
                     <div className="mb-6">
-                      <label className="block text-sm text-[#8B949E] mb-2 mono">
-                        Title
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                        Subject
                       </label>
                       <input
                         type="text"
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         placeholder="Brief description of your message"
-                        className="w-full px-4 py-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-[#E6EDF3] placeholder-[#484F58] focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF] outline-none transition-all mono text-sm"
+                        className="ig-input w-full"
                         required
                       />
                     </div>
 
                     {/* Body Input */}
                     <div className="mb-6">
-                      <label className="block text-sm text-[#8B949E] mb-2 mono">
-                        Body
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                        Message
                       </label>
                       <textarea
                         value={formData.body}
                         onChange={(e) => setFormData({ ...formData, body: e.target.value })}
                         placeholder="Describe your message in detail..."
                         rows={6}
-                        className="w-full px-4 py-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-[#E6EDF3] placeholder-[#484F58] focus:border-[#00F0FF] focus:ring-1 focus:ring-[#00F0FF] outline-none transition-all mono text-sm resize-none"
+                        className="ig-input w-full resize-none"
                         required
                       />
-                      <div className="mt-2 flex items-center gap-2 text-xs text-[#484F58]">
-                        <MessageSquare className="w-3 h-3" />
-                        <span>Markdown supported</span>
-                      </div>
                     </div>
 
                     {/* Submit Button */}
                     <div className="flex items-center justify-between">
-                      <div className="text-xs text-[#484F58] mono">
-                        <span className="text-[#F85149]">*</span> Required fields
+                      <div className="text-[10px] text-[rgba(240,240,240,0.25)] mono">
+                        <span className="text-[rgba(240,100,100,0.5)]">*</span> Required
                       </div>
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex items-center gap-2 px-6 py-3 bg-[#00FF9D] text-[#0D1117] font-semibold rounded-lg hover:bg-[#00FF9D]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="ig-btn-primary flex items-center gap-2 px-6 py-2.5 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
                           <>
-                            <div className="w-4 h-4 border-2 border-[#0D1117] border-t-transparent rounded-full animate-spin" />
-                            <span className="mono text-sm">Creating...</span>
+                            <div className="w-3 h-3 border border-[#090909] border-t-transparent rounded-full animate-spin" />
+                            <span className="mono text-xs">Sending...</span>
                           </>
                         ) : (
                           <>
-                            <Send className="w-4 h-4" />
-                            <span className="mono text-sm">{formData.label === 'bug' ? 'Submit Issue' : 'Submit Request'}</span>
+                            <Send className="w-3.5 h-3.5" />
+                            <span className="mono text-xs">{formData.label === 'bug' ? 'Submit Issue' : 'Send Message'}</span>
                           </>
                         )}
                       </button>
@@ -314,23 +300,19 @@ const Contact = () => {
             style={{ transitionDelay: '200ms' }}
           >
             {/* Contact Details */}
-            <div className="gh-card p-6">
-              <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-4">
-                Contact Details
-              </h3>
+            <div className="p-6" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-5">Contact</p>
               <div className="space-y-4">
                 {contactInfo.map((item) => (
                   <a
                     key={item.label}
                     href={item.href}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#21262D] transition-all group"
+                    className="flex items-center gap-3 py-2 group transition-colors"
                   >
-                    <div className="p-2 rounded-lg bg-[#21262D] group-hover:bg-[#00F0FF]/10 transition-colors">
-                      <item.icon className="w-4 h-4 text-[#8B949E] group-hover:text-[#00F0FF] transition-colors" />
-                    </div>
+                    <item.icon className="w-4 h-4 text-[rgba(240,240,240,0.3)] group-hover:text-[#B0C8E0] transition-colors" />
                     <div>
-                      <p className="text-xs text-[#8B949E] mono">{item.label}</p>
-                      <p className="text-sm text-[#E6EDF3]">{item.value}</p>
+                      <p className="text-[10px] mono uppercase tracking-widest text-[rgba(240,240,240,0.25)]">{item.label}</p>
+                      <p className="text-xs text-[rgba(240,240,240,0.65)] mono">{item.value}</p>
                     </div>
                   </a>
                 ))}
@@ -338,10 +320,8 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="gh-card p-6">
-              <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-4">
-                Connect
-              </h3>
+            <div className="p-6" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-4">Connect</p>
               <div className="flex gap-3">
                 {socialLinks.map((social) => (
                   <a
@@ -349,28 +329,25 @@ const Contact = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col items-center gap-2 p-4 rounded-lg bg-[#21262D] hover:bg-[#30363D] transition-all group"
+                    className="flex-1 flex flex-col items-center gap-2 py-4 transition-all group"
+                    style={{ border: '1px solid rgba(255,255,255,0.06)' }}
                   >
-                    <social.icon 
-                      className="w-6 h-6 transition-colors"
-                      style={{ color: social.color }}
+                    <social.icon
+                      className="w-5 h-5 text-[rgba(240,240,240,0.35)] group-hover:text-[#B0C8E0] transition-colors"
                     />
-                    <span className="text-xs text-[#8B949E] mono">{social.label}</span>
+                    <span className="text-[10px] mono uppercase tracking-widest text-[rgba(240,240,240,0.25)]">{social.label}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Availability Badge */}
-            <div className="gh-card p-6">
+            {/* Availability */}
+            <div className="p-5" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
               <div className="flex items-center gap-3">
-                <div className="relative">
-                  <div className="w-3 h-3 rounded-full bg-[#00FF9D]" />
-                  <div className="absolute inset-0 w-3 h-3 rounded-full bg-[#00FF9D] animate-ping" />
-                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
                 <div>
-                  <p className="text-sm font-semibold text-[#E6EDF3]">Available for work</p>
-                  <p className="text-xs text-[#8B949E]">Open to collaborations & opportunities</p>
+                  <p className="text-xs mono text-[rgba(240,240,240,0.65)]">Available for work</p>
+                  <p className="text-[10px] mono text-[rgba(240,240,240,0.3)]">Open to collaborations</p>
                 </div>
               </div>
             </div>
@@ -378,23 +355,26 @@ const Contact = () => {
         </div>
 
         {/* Footer */}
-        <div className={`mt-16 pt-8 border-t border-[#30363D] transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '400ms' }}>
+        <div
+          className={`mt-16 pt-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)', transitionDelay: '400ms' }}
+        >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00F0FF] to-[#BC13FE] flex items-center justify-center">
-                <span className="text-[#0D1117] font-bold text-sm">B</span>
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 flex items-center justify-center" style={{ border: '1px solid rgba(176,200,224,0.2)' }}>
+                <span className="text-[#B0C8E0] font-bold text-xs mono">B</span>
               </div>
-              <span className="mono text-sm text-[#8B949E]">
-                Bibin V R <span className="text-[#484F58]">© 2026</span>
+              <span className="mono text-xs text-[rgba(240,240,240,0.35)]">
+                Bibin V R — 2026
               </span>
             </div>
             <div className="flex items-center gap-6">
-              <span className="mono text-xs text-[#484F58]">
-                Built with React + TypeScript + Tailwind
+              <span className="mono text-[10px] text-[rgba(240,240,240,0.2)]">
+                React · TypeScript · Tailwind
               </span>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#00FF9D]" />
-                <span className="mono text-xs text-[#00FF9D]">System Operational</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
+                <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">System Operational</span>
               </div>
             </div>
           </div>

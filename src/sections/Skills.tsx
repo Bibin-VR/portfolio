@@ -5,8 +5,6 @@ import {
   Code, 
   Microchip,
   Globe,
-  ChevronRight,
-  Check,
   type LucideIcon
 } from 'lucide-react';
 
@@ -121,7 +119,6 @@ const Skills = () => {
   ];
 
   const activeSkills = categories.find(c => c.id === activeCategory)?.skills || [];
-  const activeColor = categories.find(c => c.id === activeCategory)?.color || '#00F0FF';
 
   return (
     <section 
@@ -133,12 +130,12 @@ const Skills = () => {
         {/* Section Header */}
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#BC13FE] to-[#F85149] rounded-full" />
-            <h2 className="text-3xl font-bold text-[#E6EDF3] mono">System Architecture</h2>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">03 / Stack</span>
           </div>
-          <p className="text-[#8B949E] max-w-2xl">
-            Modular skill stack organized by domain. Each module represents a competency 
-            area with associated technologies and proficiency levels.
+          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">System Architecture</h2>
+          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+            Modular skill stack organized by domain.
           </p>
         </div>
 
@@ -153,47 +150,27 @@ const Skills = () => {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${
+                className={`w-full text-left p-4 transition-all duration-200 ${
                   activeCategory === category.id
-                    ? 'bg-[#161B22] border-[#30363D]'
-                    : 'bg-transparent border-transparent hover:bg-[#161B22]/50'
+                    ? 'bg-[#18181C]'
+                    : 'bg-transparent hover:bg-[#13131620]'
                 }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
+                style={{
+                  border: `1px solid ${activeCategory === category.id ? 'rgba(176,200,224,0.2)' : 'rgba(255,255,255,0.05)'}`,
+                  transitionDelay: `${index * 60}ms`
+                }}
               >
                 <div className="flex items-center gap-4">
-                  <div 
-                    className="p-3 rounded-lg transition-all"
-                    style={{ 
-                      backgroundColor: activeCategory === category.id 
-                        ? `${category.color}30` 
-                        : '#21262D',
-                    }}
-                  >
-                    <category.icon 
-                      className="w-5 h-5 transition-colors"
-                      style={{ 
-                        color: activeCategory === category.id ? category.color : '#8B949E' 
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 
-                      className="font-semibold transition-colors"
-                      style={{ 
-                        color: activeCategory === category.id ? '#E6EDF3' : '#8B949E' 
-                      }}
-                    >
-                      {category.name}
-                    </h3>
-                  </div>
-                  <ChevronRight 
-                    className={`w-5 h-5 transition-all ${
-                      activeCategory === category.id 
-                        ? 'opacity-100 translate-x-0' 
-                        : 'opacity-0 -translate-x-2'
-                    }`}
-                    style={{ color: category.color }}
+                  <category.icon
+                    className="w-4 h-4 transition-colors"
+                    style={{ color: activeCategory === category.id ? '#B0C8E0' : 'rgba(240,240,240,0.3)' }}
                   />
+                  <h3
+                    className="font-medium text-sm mono transition-colors"
+                    style={{ color: activeCategory === category.id ? '#F0F0F0' : 'rgba(240,240,240,0.4)' }}
+                  >
+                    {category.name}
+                  </h3>
                 </div>
               </button>
             ))}
@@ -207,21 +184,18 @@ const Skills = () => {
             style={{ transitionDelay: '200ms' }}
           >
             {/* Active Category Header */}
-            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[#30363D]">
-              <div 
-                className="p-3 rounded-lg"
-                style={{ backgroundColor: `${activeColor}20` }}
-              >
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[rgba(255,255,255,0.06)]">
+              <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                 {(() => {
                   const Icon = categories.find(c => c.id === activeCategory)?.icon || Cpu;
-                  return <Icon className="w-6 h-6" style={{ color: activeColor }} />;
+                  return <Icon className="w-5 h-5 text-[rgba(240,240,240,0.5)]" />;
                 })()}
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-[#E6EDF3] mono">
+                <h3 className="text-lg font-semibold text-[#F0F0F0] mono">
                   {categories.find(c => c.id === activeCategory)?.name}
                 </h3>
-                <p className="text-sm text-[#8B949E]">
+                <p className="text-xs text-[rgba(240,240,240,0.4)] mono">
                   {categories.find(c => c.id === activeCategory)?.description}
                 </p>
               </div>
@@ -232,27 +206,19 @@ const Skills = () => {
               {activeSkills.map((skill, index) => (
                 <div 
                   key={skill.name}
-                  className="group"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Check 
-                        className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ color: activeColor }}
-                      />
-                      <span className="mono text-sm text-[#E6EDF3]">{skill.name}</span>
-                    </div>
-                    <span className="mono text-sm text-[#8B949E]">{skill.level}%</span>
+                    <span className="mono text-xs text-[rgba(240,240,240,0.65)]">{skill.name}</span>
+                    <span className="mono text-xs text-[rgba(240,240,240,0.35)]">{skill.level}%</span>
                   </div>
-                  <div className="h-2 bg-[#21262D] rounded-full overflow-hidden">
+                  <div className="h-px" style={{ background: 'rgba(255,255,255,0.06)' }}>
                     <div
-                      className="h-full rounded-full transition-all duration-700 ease-out"
+                      className="h-px transition-all duration-700 ease-out"
                       style={{
                         width: isVisible ? `${skill.level}%` : '0%',
-                        backgroundColor: activeColor,
-                        boxShadow: `0 0 10px ${activeColor}50`,
-                        transitionDelay: `${300 + index * 50}ms`,
+                        background: 'linear-gradient(90deg, rgba(176,200,224,0.4), #B0C8E0)',
+                        transitionDelay: `${300 + index * 60}ms`,
                       }}
                     />
                   </div>
@@ -260,21 +226,17 @@ const Skills = () => {
               ))}
             </div>
 
-            {/* Certification Badges */}
-            <div className="mt-8 pt-6 border-t border-[#30363D]">
-              <h4 className="text-sm text-[#8B949E] mono mb-4">Verified Certifications</h4>
+            {/* Certifications */}
+            <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.05)]">
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-4">Certifications</p>
               <div className="flex flex-wrap gap-2">
-                {[
-                  'TensorFlow Developer',
-                  'Google ML Engineer',
-                  'AWS NLP',
-                  'Advanced Python',
-                ].map((cert) => (
+                {['TensorFlow Dev', 'Google ML', 'AWS NLP', 'Advanced Python'].map((cert) => (
                   <span 
                     key={cert}
-                    className="px-3 py-1.5 text-xs mono rounded-full bg-[#21262D] text-[#8B949E] border border-[#30363D] flex items-center gap-1.5"
+                    className="px-3 py-1 text-[10px] mono text-[rgba(240,240,240,0.45)] flex items-center gap-1.5"
+                    style={{ border: '1px solid rgba(255,255,255,0.07)' }}
                   >
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00FF9D]" />
+                    <div className="w-1 h-1 rounded-full bg-[#B0C8E0]" />
                     {cert}
                   </span>
                 ))}
@@ -290,44 +252,22 @@ const Skills = () => {
           }`}
           style={{ transitionDelay: '400ms' }}
         >
-          <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-6">
+          <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-6">
             Technology Constellation
           </h3>
           
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap gap-2">
             {[
-              { name: 'ROS2', color: '#00F0FF' },
-              { name: 'Python', color: '#00FF9D' },
-              { name: 'TensorFlow', color: '#BC13FE' },
-              { name: 'OpenCV', color: '#F85149' },
-              { name: 'PyTorch', color: '#FFA657' },
-              { name: 'Docker', color: '#00F0FF' },
-              { name: 'Git', color: '#F85149' },
-              { name: 'Linux', color: '#00FF9D' },
-              { name: 'CUDA', color: '#BC13FE' },
-              { name: 'LLaMA', color: '#FFA657' },
-              { name: 'YOLO', color: '#00F0FF' },
-              { name: 'Gazebo', color: '#F85149' },
-              { name: 'React', color: '#00F0FF' },
-              { name: 'TypeScript', color: '#00FF9D' },
-              { name: 'Tailwind CSS', color: '#FFA657' },
-              { name: 'Three.js', color: '#BC13FE' },
-              { name: 'OpenGL', color: '#F85149' },
-              { name: 'Vite', color: '#00FF9D' },
-              { name: 'Vercel', color: '#E6EDF3' },
-              { name: 'Node.js', color: '#00FF9D' },
-            ].map((tech, index) => (
+              'ROS2', 'Python', 'TensorFlow', 'OpenCV', 'PyTorch', 'Docker',
+              'Git', 'Linux', 'CUDA', 'LLaMA', 'YOLO', 'Gazebo',
+              'React', 'TypeScript', 'Tailwind CSS', 'Three.js', 'OpenGL', 'Vite', 'Vercel', 'Node.js',
+            ].map((tech) => (
               <div
-                key={tech.name}
-                className="px-4 py-2 rounded-full border border-[#30363D] bg-[#161B22] hover:bg-[#21262D] transition-all cursor-default hover:scale-105"
-                style={{ 
-                  animationDelay: `${index * 50}ms`,
-                  borderColor: `${tech.color}40`,
-                }}
+                key={tech}
+                className="px-3 py-1.5 mono text-xs cursor-default transition-all hover:border-[rgba(176,200,224,0.25)]"
+                style={{ border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(240,240,240,0.5)' }}
               >
-                <span className="mono text-sm" style={{ color: tech.color }}>
-                  {tech.name}
-                </span>
+                {tech}
               </div>
             ))}
           </div>

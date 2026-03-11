@@ -118,10 +118,11 @@ const Experience = () => {
         {/* Section Header */}
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#F85149] to-[#FFA657] rounded-full" />
-            <h2 className="text-3xl font-bold text-[#E6EDF3] mono">Execution Log</h2>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">04 / Experience</span>
           </div>
-          <p className="text-[#8B949E] max-w-2xl">
+          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">Execution Log</h2>
+          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
             Commit history of professional experience. Each entry represents a significant 
             contribution to robotics and AI systems development.
           </p>
@@ -130,7 +131,7 @@ const Experience = () => {
         {/* Timeline */}
         <div className="relative">
           {/* Timeline Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#00F0FF] via-[#BC13FE] to-[#F85149]" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
 
           {/* Experience Items */}
           <div className="space-y-8">
@@ -145,10 +146,10 @@ const Experience = () => {
                 {/* Timeline Node */}
                 <div className="absolute left-4 md:left-1/2 -translate-x-1/2 z-10">
                   <div 
-                    className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-[#0D1117]"
-                    style={{ backgroundColor: exp.color }}
+                    className="w-6 h-6 flex items-center justify-center"
+                    style={{ background: 'rgba(17,17,20,1)', border: '1px solid rgba(176,200,224,0.25)' }}
                   >
-                    <exp.icon className="w-4 h-4 text-[#0D1117]" />
+                    <exp.icon className="w-3 h-3 text-[#B0C8E0]" />
                   </div>
                 </div>
 
@@ -158,29 +159,29 @@ const Experience = () => {
                 }`}>
                   <div className="gh-card p-6 hover-lift">
                     {/* Commit Header */}
-                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#30363D]">
-                      <GitCommit className="w-4 h-4 text-[#8B949E]" />
-                      <span className="mono text-xs text-[#00F0FF]">commit {exp.commitHash}</span>
+                    <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[rgba(255,255,255,0.06)]">
+                      <GitCommit className="w-4 h-4 text-[rgba(240,240,240,0.3)]" />
+                      <span className="mono text-xs text-[#B0C8E0]">commit {exp.commitHash}</span>
                     </div>
 
                     {/* Role & Company */}
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-1">
+                      <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-1">
                         {exp.role}
                       </h3>
-                      <div className="flex items-center gap-2 text-[#8B949E]">
-                        <span className="text-sm">{exp.company}</span>
+                      <div className="flex items-center gap-2 text-[rgba(240,240,240,0.5)]">
+                        <span className="text-sm mono">{exp.company}</span>
                       </div>
                     </div>
 
                     {/* Meta Info */}
-                    <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-[#8B949E]">
+                    <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-[rgba(240,240,240,0.4)]">
                       <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
+                        <Calendar className="w-3 h-3" />
                         <span className="mono text-xs">{exp.period}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
+                        <MapPin className="w-3 h-3" />
                         <span className="mono text-xs">{exp.location}</span>
                       </div>
                     </div>
@@ -189,23 +190,20 @@ const Experience = () => {
                     <div className="space-y-2">
                       {exp.description.map((item, i) => (
                         <div key={i} className="flex items-start gap-2">
-                          <span className="text-[#00FF9D] mt-1.5">•</span>
-                          <p className="text-sm text-[#8B949E] leading-relaxed">{item}</p>
+                          <span className="text-[rgba(240,240,240,0.3)] mt-1.5 text-xs">›</span>
+                          <p className="text-xs text-[rgba(240,240,240,0.5)] leading-relaxed">{item}</p>
                         </div>
                       ))}
                     </div>
 
-                    {/* Author Info */}
-                    <div className="mt-4 pt-4 border-t border-[#30363D] flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#00F0FF] to-[#BC13FE]" />
-                        <span className="mono text-xs text-[#8B949E]">Author: Bibin V R</span>
-                      </div>
+                    {/* Footer */}
+                    <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)] flex items-center justify-between">
+                      <span className="mono text-[10px] text-[rgba(240,240,240,0.25)]">Author: Bibin V R</span>
                       <a 
                         href="#"
-                        className="flex items-center gap-1 text-xs text-[#00F0FF] hover:underline"
+                        className="flex items-center gap-1 text-[10px] text-[#B0C8E0] hover:opacity-70 transition-opacity mono"
                       >
-                        <span className="mono">View Details</span>
+                        <span>Details</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
@@ -224,36 +222,36 @@ const Experience = () => {
           style={{ transitionDelay: '600ms' }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#00FF9D] to-[#00F0FF] rounded-full" />
-            <h3 className="text-xl font-semibold text-[#E6EDF3] mono">Education</h3>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <h3 className="text-xl font-semibold text-[#F0F0F0] mono">Education</h3>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-[#00F0FF]/10">
-                <Cpu className="w-5 h-5 text-[#00F0FF]" />
+              <div className="p-3" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+                <Cpu className="w-4 h-4 text-[rgba(240,240,240,0.5)]" />
               </div>
               <div>
-                <h4 className="font-semibold text-[#E6EDF3] mb-1">
+                <h4 className="font-semibold text-[#F0F0F0] mono text-sm mb-1">
                   B.Tech - Robotics, AI & ML
                 </h4>
-                <p className="text-sm text-[#8B949E] mb-1">Srinivas University, Mangalore</p>
-                <p className="mono text-xs text-[#484F58]">Dec 2020 - May 2024</p>
+                <p className="text-xs text-[rgba(240,240,240,0.4)] mono mb-1">Srinivas University, Mangalore</p>
+                <p className="mono text-[10px] text-[rgba(240,240,240,0.25)]">Dec 2020 - May 2024</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-[#BC13FE]/10">
-                <Factory className="w-5 h-5 text-[#BC13FE]" />
+              <div className="p-3" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+                <Factory className="w-4 h-4 text-[rgba(240,240,240,0.5)]" />
               </div>
               <div>
-                <h4 className="font-semibold text-[#E6EDF3] mb-1">
+                <h4 className="font-semibold text-[#F0F0F0] mono text-sm mb-1">
                   Pre-University - PCMB
                 </h4>
-                <p className="text-sm text-[#8B949E] mb-1">
+                <p className="text-xs text-[rgba(240,240,240,0.4)] mono mb-1">
                   Sri Subrahmanyeshwara PU College
                 </p>
-                <p className="mono text-xs text-[#484F58]">Jul 2017 - May 2019</p>
+                <p className="mono text-[10px] text-[rgba(240,240,240,0.25)]">Jul 2017 - May 2019</p>
               </div>
             </div>
           </div>

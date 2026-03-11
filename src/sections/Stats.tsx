@@ -81,19 +81,19 @@ const Stats = () => {
 
   const getContributionColor = (level: number) => {
     return [
-      'bg-[#21262D]',
-      'bg-[#0E4429]',
-      'bg-[#006D32]',
-      'bg-[#26A641]',
-      'bg-[#39D353]',
-    ][level] ?? 'bg-[#21262D]';
+      'bg-[#151518]',
+      'bg-[#252530]',
+      'bg-[#3a3a50]',
+      'bg-[#6070A0]',
+      'bg-[#B0C8E0]',
+    ][level] ?? 'bg-[#151518]';
   };
 
   const statCards = [
-    { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#00F0FF' },
-    { icon: GitCommit, label: 'Commits (this year)', value: counts.commits, suffix: '+', color: '#00FF9D' },
-    { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#BC13FE' },
-    { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#FFA657' },
+    { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#B0C8E0' },
+    { icon: GitCommit, label: 'Commits (this year)', value: counts.commits, suffix: '+', color: '#B0C8E0' },
+    { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#B0C8E0' },
+    { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#B0C8E0' },
   ];
 
   // Fallback grid if data isn't loaded yet
@@ -109,16 +109,17 @@ const Stats = () => {
         {/* Section Header */}
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-1 h-6 bg-gradient-to-b from-[#00F0FF] to-[#BC13FE] rounded-full" />
-            <h2 className="text-3xl font-bold text-[#E6EDF3] mono">System Metrics</h2>
+            <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">01 / Metrics</span>
           </div>
-          <p className="text-[#8B949E] max-w-2xl">
+          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">System Metrics</h2>
+          <p className="text-[rgba(240,240,240,0.42)] max-w-2xl mono text-sm">
             Live telemetry pulled directly from{' '}
             <a
               href="https://github.com/Bibin-VR"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00F0FF] hover:underline"
+              className="text-[#B0C8E0] hover:underline"
             >
               github.com/Bibin-VR
             </a>
@@ -137,17 +138,17 @@ const Stats = () => {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg" style={{ backgroundColor: `${stat.color}20` }}>
-                  <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <stat.icon className="w-4 h-4 text-[rgba(240,240,240,0.45)]" />
                 </div>
                 {loading && (
-                  <div className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: stat.color }} />
+                  <div className="w-2 h-2 rounded-full border border-t-transparent animate-spin border-[#B0C8E0]" />
                 )}
               </div>
-              <div className="counter text-3xl font-bold text-[#E6EDF3] mb-1">
+              <div className="counter text-3xl font-bold text-[#F0F0F0] mb-1 mono">
                 {loading ? '—' : `${stat.value}${stat.suffix}`}
               </div>
-              <div className="mono text-xs text-[#8B949E]">{stat.label}</div>
+              <div className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)]">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -161,15 +162,15 @@ const Stats = () => {
         >
           {/* Header: title + badge — legend moves below on mobile */}
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            <h3 className="text-lg font-semibold text-[#E6EDF3] mono">Contribution Activity</h3>
+            <h3 className="text-lg font-semibold text-[#F0F0F0] mono">Contribution Activity</h3>
             {!loading && githubStats && (
-              <span className="mono text-xs px-2 py-1 rounded-full bg-[#00FF9D]/10 text-[#00FF9D] border border-[#00FF9D]/30">
+              <span className="mono text-[10px] px-2 py-1 text-[#B0C8E0]" style={{ border: '1px solid rgba(176,200,224,0.2)' }}>
                 {githubStats.totalContributions} this year
               </span>
             )}
             {apiError && (
-              <span className="mono text-xs px-2 py-1 rounded-full bg-[#F85149]/10 text-[#F85149] border border-[#F85149]/30">
-                GitHub API unavailable — showing placeholder
+              <span className="mono text-[10px] px-2 py-1 text-[rgba(240,240,240,0.4)]" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                GitHub API unavailable
               </span>
             )}
           </div>
@@ -228,35 +229,34 @@ const Stats = () => {
           }`}
           style={{ transitionDelay: '600ms' }}
         >
-          <h3 className="text-lg font-semibold text-[#E6EDF3] mono mb-6">
+          <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-6">
             Technology Stack Intensity
           </h3>
           <div className="space-y-4">
             {[
-              { name: 'Python / ROS', level: 95, color: '#00F0FF' },
-              { name: 'Computer Vision / OpenCV', level: 88, color: '#00FF9D' },
-              { name: 'Machine Learning / TensorFlow', level: 85, color: '#BC13FE' },
-              { name: 'Embedded Systems', level: 82, color: '#F85149' },
-              { name: 'LLMs / NLP', level: 78, color: '#FFA657' },
-              { name: 'React / TypeScript', level: 88, color: '#00F0FF' },
-              { name: 'Tailwind CSS', level: 90, color: '#00FF9D' },
-              { name: 'Three.js / OpenGL / WebGL', level: 75, color: '#BC13FE' },
-              { name: 'Vite / Node.js / Vercel', level: 83, color: '#FFA657' },
+              { name: 'Python / ROS', level: 95 },
+              { name: 'Computer Vision / OpenCV', level: 88 },
+              { name: 'Machine Learning / TensorFlow', level: 85 },
+              { name: 'Embedded Systems', level: 82 },
+              { name: 'LLMs / NLP', level: 78 },
+              { name: 'React / TypeScript', level: 88 },
+              { name: 'Tailwind CSS', level: 90 },
+              { name: 'Three.js / OpenGL / WebGL', level: 75 },
+              { name: 'Vite / Node.js / Vercel', level: 83 },
             ].map((skill, index) => (
               <div key={skill.name} className="flex items-center gap-4">
-                <span className="mono text-sm text-[#8B949E] w-52 truncate">{skill.name}</span>
-                <div className="flex-1 h-2 bg-[#21262D] rounded-full overflow-hidden">
+                <span className="mono text-xs text-[rgba(240,240,240,0.4)] w-52 truncate">{skill.name}</span>
+                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }}>
                   <div
-                    className="h-full rounded-full transition-all duration-1000 ease-out"
+                    className="h-px transition-all duration-1000 ease-out"
                     style={{
                       width: isVisible ? `${skill.level}%` : '0%',
-                      backgroundColor: skill.color,
-                      boxShadow: `0 0 10px ${skill.color}40`,
+                      background: 'linear-gradient(90deg, rgba(176,200,224,0.5), #B0C8E0)',
                       transitionDelay: `${700 + index * 100}ms`,
                     }}
                   />
                 </div>
-                <span className="mono text-sm text-[#E6EDF3] w-10">{skill.level}%</span>
+                <span className="mono text-xs text-[rgba(240,240,240,0.5)] w-10">{skill.level}%</span>
               </div>
             ))}
           </div>

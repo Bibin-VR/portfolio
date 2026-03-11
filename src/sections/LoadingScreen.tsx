@@ -1,124 +1,129 @@
 import { useEffect, useState } from 'react';
-import { Terminal, Cpu, Activity } from 'lucide-react';
+import { playBoot } from '../hooks/use-audio';
 
 const LoadingScreen = () => {
   const [bootLines, setBootLines] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<'boot' | 'ready'>('boot');
 
   const bootSequence = [
-    '> Initializing system core...',
-    '> Loading kernel modules...',
-    '> Mounting file systems...',
-    '> Starting ROS/ROS2 daemon...',
-    '> Initializing AI inference engine...',
-    '> Loading neural network weights...',
-    '> Calibrating sensors...',
-    '> Establishing secure connection...',
-    '> System ready.',
+    'BVRS_OS v3.1.4 — initializing...',
+    'loading kernel modules............OK',
+    'mounting filesystems...............OK',
+    'starting ROS2 daemon...............OK',
+    'initializing AI inference engine...OK',
+    'loading neural network weights.....OK',
+    'calibrating sensors................OK',
+    'establishing secure connection.....OK',
+    'all systems nominal.',
   ];
 
   useEffect(() => {
     let lineIndex = 0;
+
     const lineInterval = setInterval(() => {
       if (lineIndex < bootSequence.length) {
         setBootLines(prev => [...prev, bootSequence[lineIndex]]);
+        playBoot(lineIndex, bootSequence.length);
         lineIndex++;
+      } else {
+        clearInterval(lineInterval);
+        setPhase('ready');
       }
-    }, 150);
+    }, 220);
 
     const progressInterval = setInterval(() => {
       setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return prev + 2;
+        if (prev >= 100) { clearInterval(progressInterval); return 100; }
+        return prev + 2.2;
       });
-    }, 30);
+    }, 38);
 
     return () => {
       clearInterval(lineInterval);
       clearInterval(progressInterval);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#010409] flex items-center justify-center">
-      <div className="w-full max-w-2xl p-8">
-        {/* Terminal Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex items-center gap-2">
-            <Terminal className="w-5 h-5 text-[#00F0FF]" />
-            <span className="mono text-sm text-[#8B949E]">portfolio_boot.log</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{ background: '#060608' }}>
+      <div className="w-full max-w-xl px-8">
+
+        {/* Logo mark */}
+        <div className="mb-10 flex items-center gap-3">
+          <div className="w-5 h-5 border border-[rgba(176,200,224,0.5)] flex items-center justify-center">
+            <div className="w-2 h-2 bg-[#B0C8E0]" />
           </div>
-          <div className="flex-1" />
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-[#00FF9D]" />
-              <span className="mono text-xs text-[#8B949E]">CPU: 12%</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#BC13FE]" />
-              <span className="mono text-xs text-[#8B949E]">MEM: 2.4GB</span>
-            </div>
-          </div>
+          <span className="mono text-xs tracking-[0.2em] uppercase" style={{ color: 'rgba(240,240,240,0.4)' }}>
+            bibin.vr — portfolio os
+          </span>
         </div>
 
-        {/* Terminal Window */}
-        <div className="terminal p-6 min-h-[300px]">
-          {/* Boot Lines */}
-          <div className="space-y-1 mb-6">
-            {bootLines.map((line, index) => (
-              <div 
-                key={index} 
-                className="mono text-sm fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
+        {/* Boot log */}
+        <div className="terminal p-6 min-h-[280px] mb-6">
+          <div className="space-y-1.5">
+            {bootLines.map((line, i) => (
+              <div
+                key={i}
+                className="mono text-xs fade-in flex gap-3"
+                style={{ animationDelay: `${i * 30}ms` }}
               >
-                <span className="text-[#00F0FF]">$</span>
-                <span className="text-[#E6EDF3] ml-2">{line}</span>
+                <span style={{ color: 'rgba(176,200,224,0.5)' }}>›</span>
+                <span style={{
+                  color: i === bootLines.length - 1 && phase === 'ready'
+                    ? '#B0C8E0'
+                    : 'rgba(240,240,240,0.75)'
+                }}>
+                  {line}
+                </span>
               </div>
             ))}
-            {progress < 100 && (
-              <div className="mono text-sm">
-                <span className="text-[#00F0FF]">$</span>
-                <span className="text-[#E6EDF3] ml-2 typing-cursor">_</span>
+            {phase === 'boot' && (
+              <div className="mono text-xs" style={{ color: 'rgba(240,240,240,0.4)' }}>
+                <span className="typing-cursor" />
               </div>
             )}
           </div>
+        </div>
 
-          {/* Progress Bar */}
-          <div className="mt-auto">
-            <div className="flex items-center justify-between mb-2">
-              <span className="mono text-xs text-[#8B949E]">SYSTEM INITIALIZATION</span>
-              <span className="mono text-xs text-[#00FF9D]">{progress}%</span>
-            </div>
-            <div className="h-1 bg-[#21262D] rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-[#00F0FF] to-[#BC13FE] transition-all duration-100"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+        {/* Progress */}
+        <div>
+          <div className="flex justify-between mb-2">
+            <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'rgba(240,240,240,0.3)' }}>
+              System Init
+            </span>
+            <span className="mono text-[10px]" style={{ color: '#B0C8E0' }}>
+              {Math.min(Math.round(progress), 100)}%
+            </span>
+          </div>
+          <div className="h-px w-full" style={{ background: 'rgba(255,255,255,0.07)' }}>
+            <div
+              className="h-px transition-all duration-100"
+              style={{
+                width: `${Math.min(progress, 100)}%`,
+                background: 'linear-gradient(90deg, rgba(176,200,224,0.4), #B0C8E0)',
+              }}
+            />
           </div>
         </div>
 
-        {/* Status Indicators */}
-        <div className="flex items-center justify-center gap-8 mt-8">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00FF9D] status-pulse" />
-            <span className="mono text-xs text-[#8B949E]">AI MODULES</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00F0FF] status-pulse" />
-            <span className="mono text-xs text-[#8B949E]">ROBOTICS</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#BC13FE] status-pulse" />
-            <span className="mono text-xs text-[#8B949E]">EMBEDDED</span>
-          </div>
+        {/* Status row */}
+        <div className="flex items-center gap-8 mt-8">
+          {['AI MODULES', 'ROBOTICS', 'EMBEDDED'].map((label) => (
+            <div key={label} className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full status-pulse" style={{ background: '#B0C8E0' }} />
+              <span className="mono text-[10px] tracking-widest" style={{ color: 'rgba(240,240,240,0.3)' }}>
+                {label}
+              </span>
+            </div>
+          ))}
         </div>
+
       </div>
     </div>
   );
 };
 
 export default LoadingScreen;
+

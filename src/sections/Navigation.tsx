@@ -1,103 +1,108 @@
 import { useEffect, useState } from 'react';
-import { Github, Linkedin, Mail, Terminal, Menu, X } from 'lucide-react';
+import { Github, Linkedin, Mail, Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
     { label: 'Overview', href: '#stats' },
-    { label: 'Repositories', href: '#projects' },
+    { label: 'Projects', href: '#projects' },
     { label: 'Stack', href: '#skills' },
-    { label: 'Commits', href: '#experience' },
-    { label: 'Issues', href: '#contact' },
+    { label: 'Experience', href: '#experience' },
+    { label: 'Contact', href: '#contact' },
   ];
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
     setIsMobileMenuOpen(false);
   };
 
   return (
     <>
-      <nav 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-[#0D1117]/95 backdrop-blur-xl border-b border-[#30363D] shadow-2xl' 
-            : 'bg-[#0D1117]/70 backdrop-blur-md'
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
+          isScrolled
+            ? 'border-b border-[rgba(255,255,255,0.06)]'
+            : ''
         }`}
+        style={{
+          background: isScrolled
+            ? 'rgba(9,9,9,0.92)'
+            : 'transparent',
+          backdropFilter: isScrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
+        }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+
             {/* Logo */}
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="flex items-center gap-2 group"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             >
-              <Terminal className="w-5 h-5 text-[#00F0FF] group-hover:text-[#BC13FE] transition-colors" />
-              <span className="mono text-sm font-semibold text-[#E6EDF3]">
-                bibin<span className="text-[#8B949E]">.dev</span>
+              <div className="w-4 h-4 border border-[rgba(176,200,224,0.4)] flex items-center justify-center transition-colors group-hover:border-[rgba(176,200,224,0.8)]">
+                <div className="w-1.5 h-1.5 bg-[#B0C8E0] transition-all group-hover:scale-110" />
+              </div>
+              <span className="mono text-xs tracking-[0.15em] uppercase" style={{ color: 'rgba(240,240,240,0.7)' }}>
+                bibin<span style={{ color: 'rgba(240,240,240,0.3)' }}>.vr</span>
               </span>
             </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-0">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
-                  className="px-4 py-2 mono text-sm text-[#8B949E] hover:text-[#E6EDF3] rounded-md hover:bg-[#21262D] transition-all"
+                  className="px-4 py-2 mono text-[11px] tracking-[0.12em] uppercase transition-colors"
+                  style={{ color: 'rgba(240,240,240,0.4)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.9)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.4)')}
                 >
                   {link.label}
                 </button>
               ))}
             </div>
 
-            {/* Social Links */}
-            <div className="hidden md:flex items-center gap-3">
-              <a 
-                href="https://github.com/Bibin-VR" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a 
-                href="https://www.linkedin.com/in/bibin-v-r-5a6762271/"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a 
-                href="mailto:bibin.blp@gmail.com"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
+            {/* Social links */}
+            <div className="hidden md:flex items-center gap-1">
+              {[
+                { href: 'https://github.com/Bibin-VR', icon: Github },
+                { href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/', icon: Linkedin },
+                { href: 'mailto:bibin.blp@gmail.com', icon: Mail },
+              ].map(({ href, icon: Icon }) => (
+                <a
+                  key={href}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="p-2 transition-opacity"
+                  style={{ color: 'rgba(240,240,240,0.35)', opacity: 1 }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.35)')}
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-[#8B949E] hover:text-[#E6EDF3]"
+              className="md:hidden p-2 transition-opacity"
+              style={{ color: 'rgba(240,240,240,0.5)' }}
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -109,50 +114,41 @@ const Navigation = () => {
           isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div 
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        <div
+          className="absolute inset-0"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
           onClick={() => setIsMobileMenuOpen(false)}
         />
         <div
-          className={`absolute top-16 left-0 right-0 bg-[#161B22] border-b border-[#30363D] p-4 transition-transform duration-200 ${
-            isMobileMenuOpen ? 'translate-y-0' : '-translate-y-4'
+          className={`absolute top-14 left-0 right-0 border-b border-[rgba(255,255,255,0.06)] p-6 transition-transform duration-200 ${
+            isMobileMenuOpen ? 'translate-y-0' : '-translate-y-2'
           }`}
+          style={{ background: 'rgba(9,9,9,0.97)' }}
         >
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => scrollToSection(link.href)}
-                  className="px-4 py-3 mono text-sm text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#21262D] rounded-md transition-all text-left"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#30363D]">
-              <a 
-                href="https://github.com/Bibin-VR" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"
+          <div className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => scrollToSection(link.href)}
+                className="py-3 mono text-xs tracking-[0.15em] uppercase text-left border-b border-[rgba(255,255,255,0.04)] transition-colors"
+                style={{ color: 'rgba(240,240,240,0.5)' }}
               >
-                <Github className="w-5 h-5" />
+                {link.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-4 mt-6">
+            {[
+              { href: 'https://github.com/Bibin-VR', icon: Github },
+              { href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/', icon: Linkedin },
+              { href: 'mailto:bibin.blp@gmail.com', icon: Mail },
+            ].map(({ href, icon: Icon }) => (
+              <a key={href} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
+                style={{ color: 'rgba(240,240,240,0.4)' }}>
+                <Icon className="w-4 h-4" />
               </a>
-              <a 
-                href="https://www.linkedin.com/in/bibin-v-r-5a6762271/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a 
-                href="mailto:bibin.blp@gmail.com"
-                className="p-2 text-[#8B949E] hover:text-[#E6EDF3]"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
-            </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
@@ -160,3 +156,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
