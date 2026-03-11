@@ -81,13 +81,27 @@ const Stats = () => {
 
   const getContributionColor = (level: number) => {
     return [
-      'bg-[#151518]',
-      'bg-[#252530]',
-      'bg-[#3a3a50]',
-      'bg-[#6070A0]',
-      'bg-[#B0C8E0]',
-    ][level] ?? 'bg-[#151518]';
+      'contrib-0',
+      'contrib-1',
+      'contrib-2',
+      'contrib-3',
+      'contrib-4',
+    ][level] ?? 'contrib-0';
   };
+
+  // Scanline sweep animation state
+  const [scanCol, setScanCol] = useState(-1);
+  useEffect(() => {
+    if (!isVisible) return;
+    let col = 0;
+    const total = grid.length;
+    const sweep = setInterval(() => {
+      setScanCol(col);
+      col++;
+      if (col >= total) { clearInterval(sweep); setScanCol(-1); }
+    }, 28);
+    return () => clearInterval(sweep);
+  }, [isVisible, grid.length]);
 
   const statCards = [
     { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#B0C8E0' },
@@ -153,48 +167,56 @@ const Stats = () => {
           ))}
         </div>
 
-        {/* Real Contribution Graph */}
+        {/* Real Contribution Graph — sci-fi edition */}
         <div
-          className={`gh-card p-6 transition-all duration-700 ${
+          className={`gh-card p-6 transition-all duration-700 contrib-panel ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '400ms' }}
         >
-          {/* Header: title + badge — legend moves below on mobile */}
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <h3 className="text-lg font-semibold text-[#F0F0F0] mono">Contribution Activity</h3>
-            {!loading && githubStats && (
-              <span className="mono text-[10px] px-2 py-1 text-[#B0C8E0]" style={{ border: '1px solid rgba(176,200,224,0.2)' }}>
-                {githubStats.totalContributions} this year
-              </span>
-            )}
-            {apiError && (
-              <span className="mono text-[10px] px-2 py-1 text-[rgba(240,240,240,0.4)]" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
-                GitHub API unavailable
-              </span>
-            )}
+          {/* Header */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div className="flex items-center gap-3">
+              <div className="relative w-2 h-2">
+                <div className="w-2 h-2 rounded-full bg-[#B0C8E0] absolute animate-ping opacity-40" />
+                <div className="w-2 h-2 rounded-full bg-[#B0C8E0]" />
+              </div>
+              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Contribution Activity</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              {!loading && githubStats && (
+                <span className="mono text-[10px] px-2 py-0.5 text-[#B0C8E0] tracking-widest"
+                  style={{ border: '1px solid rgba(176,200,224,0.25)', background: 'rgba(176,200,224,0.05)' }}>
+                  {githubStats.totalContributions.toLocaleString()} SIGNALS / YEAR
+                </span>
+              )}
+              {apiError && (
+                <span className="mono text-[10px] px-2 py-0.5 text-[rgba(240,240,240,0.35)] tracking-widest"
+                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}>UPLINK LOST</span>
+              )}
+            </div>
           </div>
 
-          {/* Grid — fully fluid, no horizontal scroll */}
+          {/* Grid */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${grid.length}, 1fr)`,
-              gap: 'clamp(1px, 0.4vw, 4px)',
+              gap: 'clamp(1px, 0.35vw, 3px)',
               width: '100%',
             }}
           >
             {grid.map((week, weekIndex) => (
-              <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1px, 0.4vw, 4px)' }}>
+              <div key={weekIndex} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1px, 0.35vw, 3px)' }}>
                 {week.map((level, dayIndex) => (
                   <div
                     key={`${weekIndex}-${dayIndex}`}
                     className={`contrib-cell ${getContributionColor(level)} ${
-                      isVisible ? 'scale-100' : 'scale-0'
-                    } transition-transform`}
+                      isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                    } ${scanCol === weekIndex ? 'contrib-scan' : ''}`}
                     style={{
-                      transitionDelay: `${(weekIndex * 7 + dayIndex) * 5}ms`,
-                      transitionDuration: '200ms',
+                      transitionDelay: `${(weekIndex * 7 + dayIndex) * 4}ms`,
+                      transitionDuration: '180ms',
                     }}
                     title={`${level > 0 ? level : 'No'} contributions`}
                   />
@@ -203,21 +225,24 @@ const Stats = () => {
             ))}
           </div>
 
-          {/* Footer: month labels left, legend right — stacks on mobile */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 px-1">
+          {/* Footer */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4 pt-4"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            {/* Month labels */}
             <div className="flex justify-between sm:justify-start sm:gap-6">
-              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(month => (
-                <span key={month} className="mono text-xs text-[#8B949E]">{month}</span>
+              {['JAN','FEB','MAR','APR','MAY','JUN'].map(month => (
+                <span key={month} className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">{month}</span>
               ))}
             </div>
+            {/* Energy legend */}
             <div className="flex items-center gap-2">
-              <span className="mono text-xs text-[#8B949E]">Less</span>
-              <div className="flex gap-1">
-                {[0, 1, 2, 3, 4].map(level => (
-                  <div key={level} className={`w-3 h-3 rounded-sm ${getContributionColor(level)}`} />
+              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">LOW</span>
+              <div className="flex gap-[3px]">
+                {[0,1,2,3,4].map(level => (
+                  <div key={level} className={`contrib-cell w-3 h-3 ${getContributionColor(level)}`} style={{ borderRadius: '2px' }} />
                 ))}
               </div>
-              <span className="mono text-xs text-[#8B949E]">More</span>
+              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">HIGH</span>
             </div>
           </div>
         </div>
