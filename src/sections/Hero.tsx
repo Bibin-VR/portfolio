@@ -6,6 +6,19 @@ const Hero = () => {
   const [wordStates, setWordStates] = useState(['', '', '']);
   const [isScrambling, setIsScrambling] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  const handleImgMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = imgRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(700px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) scale(1.025)`;
+  };
+  const handleImgLeave = () => {
+    if (imgRef.current) imgRef.current.style.transform = '';
+  };
 
   const name = 'Bibin V R';
   const words = ['Robotics', 'AI', 'Web'];
@@ -71,8 +84,11 @@ const Hero = () => {
           {/* LEFT — Image */}
           <div className="flex-shrink-0 w-full max-w-[280px] sm:max-w-xs lg:max-w-sm order-1">
             <div
+              ref={imgRef}
+              onMouseMove={handleImgMove}
+              onMouseLeave={handleImgLeave}
               className="relative w-full overflow-hidden"
-              style={{ aspectRatio: '3/4', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ aspectRatio: '3/4', border: '1px solid rgba(255,255,255,0.07)', transition: 'transform 0.25s cubic-bezier(0.34,1.56,0.64,1)', willChange: 'transform', transformStyle: 'preserve-3d' }}
             >
               <img
                 src="/profile-hero.png"

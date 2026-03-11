@@ -516,7 +516,21 @@
   outline: 1px solid var(--ig-accent);
   outline-offset: 2px;
 }
-
+/* ── Cursor spotlight ────────────────────────────────────────────── */
+/* Updated by mousemove via CSS custom properties — zero React re-render */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    700px circle at var(--cursor-x, -1000px) var(--cursor-y, -1000px),
+    rgba(176, 200, 224, 0.045),
+    transparent 65%
+  );
+  transition: background 0.12s ease;
+}
 /* ── Smooth section entry — override Tailwind's linear ease ─────────────── */
 /* Every section uses opacity/translate transitions for reveal.              */
 /* Replacing the implicit ease with our spring curve makes scrolling feel   */
