@@ -20,38 +20,36 @@ function getCtx(): AudioContext {
   return _ctx;
 }
 
-// ── Click — soft sine chime with harmonic shimmer ────────────────────────
+// ── Click — sci-fi metallic chime (4 inharmonic partials) ────────────────
+// Ratios tuned to give crystalline interface ping, not a musical bell.
 export function playClick() {
   if (_muted) return;
   try {
     const ctx = getCtx();
     const t = ctx.currentTime;
 
-    // Fundamental — warm 660 Hz sine
-    const osc1 = ctx.createOscillator();
-    const gain1 = ctx.createGain();
-    osc1.connect(gain1);
-    gain1.connect(ctx.destination);
-    osc1.type = 'sine';
-    osc1.frequency.value = 660;
-    gain1.gain.setValueAtTime(0, t);
-    gain1.gain.linearRampToValueAtTime(0.08, t + 0.008);
-    gain1.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
-    osc1.start(t);
-    osc1.stop(t + 0.25);
+    const partials = [
+      { freq: 420,  vol: 0.072, decay: 0.38 },
+      { freq: 1157, vol: 0.044, decay: 0.22 },
+      { freq: 2270, vol: 0.026, decay: 0.13 },
+      { freq: 3752, vol: 0.012, decay: 0.07 },
+    ];
 
-    // Octave shimmer
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-    osc2.type = 'sine';
-    osc2.frequency.value = 1320;
-    gain2.gain.setValueAtTime(0, t + 0.005);
-    gain2.gain.linearRampToValueAtTime(0.028, t + 0.012);
-    gain2.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
-    osc2.start(t + 0.005);
-    osc2.stop(t + 0.2);
+    partials.forEach(({ freq, vol, decay }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      // Slight rising glide on attack for the "ping" shape
+      osc.frequency.setValueAtTime(freq * 0.96, t);
+      osc.frequency.linearRampToValueAtTime(freq, t + 0.018);
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(vol, t + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+      osc.start(t);
+      osc.stop(t + decay + 0.02);
+    });
   } catch (_) { /* silent fail */ }
 }
 
@@ -75,44 +73,98 @@ export function playHover() {
   } catch (_) { /* silent fail */ }
 }
 
-// ── Scroll — glassy sine sweep through rising lowpass, throttled ─────────
-let _lastScrollSound = 0;
+// ── Scroll — continuous warp-drive engine (persistent, not discrete) ──────
+// Fades in when scrolling starts, fades out 150 ms after last scroll event.
+// Sound: two detuned sawtooths through a slowly sweeping bandpass +
+//        a low sub-sine for body = spaceship engine / data-stream feel.
+interface ScrollEngine {
+  masterGain: GainNode;
+  filterFreq: AudioParam;
+  stop: () => void;
+}
+let _scrollEngine: ScrollEngine | null = null;
+let _scrollEndTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function playScroll() {
-  if (_muted) return;
-  const now = Date.now();
-  if (now - _lastScrollSound < 200) return;
-  _lastScrollSound = now;
+  if (_muted) { _teardownScrollEngine(); return; }
 
-  try {
-    const ctx = getCtx();
-    const t = ctx.currentTime;
+  const ctx = getCtx();
+  const now = ctx.currentTime;
 
-    // Sine gliding upward through a gentle lowpass — calm, airy, spatial
-    const osc = ctx.createOscillator();
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
+  // ── Start engine if not running ───────────────────────────────────────
+  if (!_scrollEngine) {
+    try {
+      // Sawtooth pair — slightly detuned for that phasing chorus texture
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      // Sub sine for body
+      const sub  = ctx.createOscillator();
 
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
+      const filter = ctx.createBiquadFilter();
+      const masterGain = ctx.createGain();
 
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(500, t);
-    filter.frequency.linearRampToValueAtTime(2200, t + 0.22);
-    filter.Q.value = 2.5;
+      osc1.connect(filter); osc2.connect(filter);
+      sub.connect(masterGain);
+      filter.connect(masterGain);
+      masterGain.connect(ctx.destination);
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(160, t);
-    osc.frequency.linearRampToValueAtTime(380, t + 0.22);
+      osc1.type = 'sawtooth'; osc1.frequency.value = 72;
+      osc2.type = 'sawtooth'; osc2.frequency.value = 75.4; // +3.4 Hz detune
+      sub.type  = 'sine';    sub.frequency.value  = 36;
 
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(0.042, t + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(280, now);
+      filter.Q.value = 3.5;
 
-    osc.start(t);
-    osc.stop(t + 0.32);
-  } catch (_) { /* silent fail */ }
+      masterGain.gain.setValueAtTime(0, now);
+      masterGain.gain.linearRampToValueAtTime(0.055, now + 0.12); // soft fade-in
+
+      osc1.start(); osc2.start(); sub.start();
+
+      // Slow filter sweep loop — creates organic warp movement
+      const sweepFilter = () => {
+        if (!_scrollEngine) return;
+        const n = ctx.currentTime;
+        filter.frequency.setValueAtTime(filter.frequency.value, n);
+        filter.frequency.linearRampToValueAtTime(180 + Math.random() * 520, n + 0.9);
+        setTimeout(sweepFilter, 900);
+      };
+      sweepFilter();
+
+      _scrollEngine = {
+        masterGain,
+        filterFreq: filter.frequency,
+        stop: () => {
+          try {
+            const n = ctx.currentTime;
+            masterGain.gain.setValueAtTime(masterGain.gain.value, n);
+            masterGain.gain.linearRampToValueAtTime(0, n + 0.28); // soft fade-out
+            setTimeout(() => {
+              try { osc1.stop(); osc2.stop(); sub.stop(); } catch (_) {}
+              _scrollEngine = null;
+            }, 350);
+          } catch (_) {}
+        },
+      };
+    } catch (_) { /* silent fail */ }
+  } else {
+    // Engine already running — keep gain from decaying
+    _scrollEngine.masterGain.gain.cancelScheduledValues(now);
+    _scrollEngine.masterGain.gain.setValueAtTime(_scrollEngine.masterGain.gain.value, now);
+    _scrollEngine.masterGain.gain.linearRampToValueAtTime(0.055, now + 0.05);
+  }
+
+  // ── Debounce scroll-end: stop engine 150 ms after last event ─────────────
+  if (_scrollEndTimer) clearTimeout(_scrollEndTimer);
+  _scrollEndTimer = setTimeout(() => {
+    _scrollEngine?.stop();
+    _scrollEndTimer = null;
+  }, 150);
+}
+
+function _teardownScrollEngine() {
+  if (_scrollEndTimer) { clearTimeout(_scrollEndTimer); _scrollEndTimer = null; }
+  _scrollEngine?.stop();
 }
 
 // ── Boot sequence — pentatonic ascending sine arpeggio ───────────────────
