@@ -2,18 +2,10 @@ import { useEffect, useState } from 'react';
 import { Github, Linkedin, Mail, Menu, X, Volume2, VolumeX } from 'lucide-react';
 import { setMuted } from '../hooks/use-audio';
 
-const THEMES = [
-  { id: 'void',     label: 'Void',     filter: 'none',                              accent: '#B0C8E0' },
-  { id: 'phosphor', label: 'Phosphor', filter: 'hue-rotate(270deg) saturate(2.2)',  accent: '#4ADE80' },
-  { id: 'amber',    label: 'Amber',    filter: 'hue-rotate(188deg) saturate(2)',    accent: '#FBBF24' },
-  { id: 'chalk',    label: 'Chalk',    filter: 'invert(1) hue-rotate(180deg)',      accent: '#2563EB' },
-] as const;
-
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
-  const [themeIdx, setThemeIdx] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 60);
@@ -21,20 +13,11 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const theme = THEMES[themeIdx];
-    document.documentElement.style.filter = theme.filter;
-    document.documentElement.style.transition = 'filter 0.5s ease';
-    document.documentElement.dataset.theme = theme.id;
-  }, [themeIdx]);
-
   const toggleAudio = () => {
     const next = !audioEnabled;
     setAudioEnabled(next);
     setMuted(!next);
   };
-
-  const cycleTheme = () => setThemeIdx(i => (i + 1) % THEMES.length);
 
   const navLinks = [
     { label: 'Overview', href: '#stats' },
@@ -101,18 +84,6 @@ const Navigation = () => {
 
             {/* Controls + Social links */}
             <div className="hidden md:flex items-center gap-0.5">
-              {/* Theme cycle — shows next theme's accent dot */}
-              <button
-                onClick={cycleTheme}
-                className="p-2 group relative"
-                title={`Theme → ${THEMES[(themeIdx + 1) % THEMES.length].label}`}
-              >
-                <div
-                  className="w-2.5 h-2.5 transition-all group-hover:scale-125"
-                  style={{ background: THEMES[(themeIdx + 1) % THEMES.length].accent, opacity: 0.7 }}
-                />
-              </button>
-
               {/* Audio toggle */}
               <button
                 onClick={toggleAudio}
@@ -203,17 +174,9 @@ const Navigation = () => {
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-3">
-              <button onClick={cycleTheme} className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5" style={{ background: THEMES[(themeIdx + 1) % THEMES.length].accent, opacity: 0.75 }} />
-                <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'rgba(240,240,240,0.4)' }}>
-                  {THEMES[(themeIdx + 1) % THEMES.length].label}
-                </span>
-              </button>
-              <button onClick={toggleAudio} style={{ color: 'rgba(240,240,240,0.4)' }}>
-                {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-              </button>
-            </div>
+            <button onClick={toggleAudio} style={{ color: 'rgba(240,240,240,0.4)' }}>
+              {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+            </button>
           </div>
         </div>
       </div>

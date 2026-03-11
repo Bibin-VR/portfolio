@@ -298,10 +298,3 @@
   outline-offset: 2px;
 }
 
-/* ── Chalk theme: re-invert media so images/iframes aren't colour-flipped ── */
-[data-theme="chalk"] img,
-[data-theme="chalk"] iframe,
-[data-theme="chalk"] canvas,
-[data-theme="chalk"] video {
-  filter: invert(1) hue-rotate(180deg);
-}
