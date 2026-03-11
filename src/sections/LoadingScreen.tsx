@@ -57,7 +57,7 @@ const LoadingScreen = () => {
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
       style={{ background: '#060608' }}
-      onPointerMove={unlockAudio}
+      onPointerDown={unlockAudio}
       onTouchStart={unlockAudio}
     >
       <div className="w-full max-w-xl px-8">

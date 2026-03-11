@@ -56,21 +56,43 @@ function _ensurePinkBuf(): void {
   _pinkBuf = buf;
 }
 
-// Unlock AudioContext on first user gesture.
+// Unlock AudioContext on first real user gesture.
 // Plays a silent 1-frame buffer (cross-browser unlock), then bakes the
 // shared noise buffer and starts the persistent background ambient.
+// Also polls every 150 ms for ~3 s — succeeds immediately on return
+// visits where Chrome's Media Engagement Index permits autoplay.
 export function unlockAudio(): void {
   try {
     const ctx = getCtx();
+    // Already running — just make sure buffers are ready
+    if (ctx.state === 'running') {
+      _ensurePinkBuf();
+      _startBgIfNeeded();
+      return;
+    }
+    // Silent 1-frame buffer — oldest cross-browser unlock trick
     const silentBuf = ctx.createBuffer(1, 1, ctx.sampleRate);
     const src = ctx.createBufferSource();
     src.buffer = silentBuf;
     src.connect(ctx.destination);
     src.start(0);
-    ctx.resume().then(() => {
-      _ensurePinkBuf();
-      _startBgIfNeeded();
-    }).catch(() => {});
+
+    const attempt = () => {
+      ctx.resume().then(() => {
+        _ensurePinkBuf();
+        _startBgIfNeeded();
+      }).catch(() => {});
+    };
+    attempt();
+
+    // Aggressive retry — resolves immediately for return visitors (Chrome MEI);
+    // for first-time visitors it fires the moment ctx transitions to 'running'
+    // after their first genuine gesture.
+    let n = 0;
+    const poll = setInterval(() => {
+      if (ctx.state === 'running' || n++ > 20) { clearInterval(poll); return; }
+      attempt();
+    }, 150);
   } catch (_) {}
 }
 
