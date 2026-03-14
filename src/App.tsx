@@ -103,10 +103,19 @@ function App() {
   // ── Scroll → sci-fi sweep sound (rAF-throttled) ────────────────────
   useEffect(() => {
     let rafPending = false;
+    let lastTick = 0;
     const handleScroll = () => {
       if (rafPending) return;
       rafPending = true;
-      requestAnimationFrame(() => { playScroll(); rafPending = false; });
+      requestAnimationFrame(() => {
+        const now = performance.now();
+        // Prevent high-frequency audio parameter churn while scrolling
+        if (now - lastTick > 120 && document.visibilityState === 'visible') {
+          playScroll();
+          lastTick = now;
+        }
+        rafPending = false;
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -125,12 +134,12 @@ function App() {
         <Dither
           waveColor={[0.04, 0.04, 0.06]}
           disableAnimation={false}
-          enableMouseInteraction
-          mouseRadius={0.25}
+          enableMouseInteraction={false}
+          mouseRadius={0.18}
           colorNum={4}
-          waveAmplitude={0.4}
+          waveAmplitude={0.32}
           waveFrequency={0}
-          waveSpeed={0.02}
+          waveSpeed={0.016}
         />
         {/* Soft dark overlay (keeps text contrast while preserving glass depth) */}
         <div className="absolute inset-0" style={{ background: 'rgba(9,9,9,0.45)' }} />

@@ -407,8 +407,8 @@
   ::-webkit-scrollbar-thumb { background: var(--ig-border-hover); }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
-  /* GPU-composited layers for smooth repaint */
-  .gh-card, .ig-card, .hover-lift { will-change: transform; }
+  /* GPU hint only where needed (too many will-change layers hurt performance) */
+  .hover-lift { will-change: transform; }
   main > section { contain: layout style; }
 
   /* Reduced motion — respect accessibility */
@@ -555,8 +555,8 @@
       to bottom,
       transparent,
       transparent 3px,
-      rgba(0,0,0,0.03) 3px,
-      rgba(0,0,0,0.03) 4px
+      rgba(0,0,0,0.02) 3px,
+      rgba(0,0,0,0.02) 4px
     );
     pointer-events: none;
     z-index: 9999;
@@ -573,17 +573,14 @@
   outline-offset: 2px;
 }
 
-/* ── Smooth section entry — override Tailwind's linear ease ─────────────── */
-/* Every section uses opacity/translate transitions for reveal.              */
-/* Replacing the implicit ease with our spring curve makes scrolling feel   */
-/* organic rather than robotic.                                              */
+/* Keep motion natural without forcing all transitions globally */
 [class*="transition-all"] {
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* Slightly longer duration for translate-y reveals */
-[class*="translate-y-8"], [class*="translate-x-8"],
-[class*="-translate-x-8"], [class*="translate-x-0"],
-[class*="translate-y-0"] {
-  transition-duration: 750ms !important;
+
+/* Mobile/perf guardrails */
+@media (max-width: 768px) {
+  .scanlines::after { display: none; }
+  html { scroll-behavior: auto; }
 }
 
