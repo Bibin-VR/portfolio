@@ -126,14 +126,11 @@ const Contact = () => {
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
             }`}
           >
-            <div
-              className="overflow-hidden"
-              style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}
-            >
+            <div className="overflow-hidden glass-card rounded-xl">
               {/* Form Header */}
               <div
                 className="flex items-center gap-3 px-6 py-4"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: '#13131A' }}
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}
               >
                 <AlertCircle className="w-4 h-4 text-[rgba(240,240,240,0.4)]" />
                 <span className="mono text-xs tracking-widest uppercase text-[rgba(240,240,240,0.5)]">New Message</span>
@@ -300,7 +297,7 @@ const Contact = () => {
             style={{ transitionDelay: '200ms' }}
           >
             {/* Contact Details */}
-            <div className="p-6" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
+            <div className="p-6 glass-card rounded-xl">
               <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-5">Contact</p>
               <div className="space-y-4">
                 {contactInfo.map((item) => (
@@ -320,7 +317,7 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="p-6" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
+            <div className="p-6 glass-card rounded-xl">
               <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-4">Connect</p>
               <div className="flex gap-3">
                 {socialLinks.map((social) => (
@@ -329,8 +326,8 @@ const Contact = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex flex-col items-center gap-2 py-4 transition-all group"
-                    style={{ border: '1px solid rgba(255,255,255,0.06)' }}
+                    className="flex-1 flex flex-col items-center gap-2 py-4 transition-all group rounded-lg"
+                    style={{ border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.04)' }}
                   >
                     <social.icon
                       className="w-5 h-5 text-[rgba(240,240,240,0.35)] group-hover:text-[#B0C8E0] transition-colors"
@@ -342,7 +339,7 @@ const Contact = () => {
             </div>
 
             {/* Availability */}
-            <div className="p-5" style={{ border: '1px solid rgba(255,255,255,0.07)', background: '#111114' }}>
+            <div className="p-5 glass-card rounded-xl">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
                 <div>

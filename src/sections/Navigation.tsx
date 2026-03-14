@@ -38,15 +38,15 @@ const Navigation = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
           isScrolled
-            ? 'border-b border-[rgba(255,255,255,0.06)]'
+            ? 'border-b border-[rgba(255,255,255,0.14)]'
             : ''
         }`}
         style={{
           background: isScrolled
-            ? 'rgba(9,9,9,0.92)'
-            : 'transparent',
-          backdropFilter: isScrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
+            ? 'linear-gradient(140deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04))'
+            : 'rgba(10,15,26,0.28)',
+          backdropFilter: 'blur(16px) saturate(145%)',
+          WebkitBackdropFilter: 'blur(16px) saturate(145%)',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -147,15 +147,19 @@ const Navigation = () => {
           className={`absolute top-14 left-0 right-0 border-b border-[rgba(255,255,255,0.06)] p-6 transition-transform duration-200 ${
             isMobileMenuOpen ? 'translate-y-0' : '-translate-y-2'
           }`}
-          style={{ background: 'rgba(9,9,9,0.97)' }}
+          style={{
+            background: 'linear-gradient(140deg, rgba(255,255,255,0.13), rgba(255,255,255,0.05))',
+            borderColor: 'rgba(255,255,255,0.14)',
+            backdropFilter: 'blur(18px) saturate(150%)',
+            WebkitBackdropFilter: 'blur(18px) saturate(150%)',
+          }}
         >
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
-                className="py-3 mono text-xs tracking-[0.15em] uppercase text-left border-b border-[rgba(255,255,255,0.04)] transition-colors"
-                style={{ color: 'rgba(240,240,240,0.5)' }}
+                className="py-3 mono text-xs tracking-[0.15em] uppercase text-left border-b border-[rgba(255,255,255,0.04)] transition-colors text-[rgba(240,240,240,0.5)]"
               >
                 {link.label}
               </button>
@@ -168,13 +172,19 @@ const Navigation = () => {
                 { href: 'https://www.linkedin.com/in/bibin-v-r-5a6762271/', icon: Linkedin },
                 { href: 'mailto:bibin.blp@gmail.com', icon: Mail },
               ].map(({ href, icon: Icon }) => (
-                <a key={href} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
-                  style={{ color: 'rgba(240,240,240,0.4)' }}>
+                <a
+                  key={href}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="text-[rgba(240,240,240,0.4)]"
+                  title={href.includes('github') ? 'GitHub' : href.includes('linkedin') ? 'LinkedIn' : 'Email'}
+                >
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
-            <button onClick={toggleAudio} style={{ color: 'rgba(240,240,240,0.4)' }}>
+            <button onClick={toggleAudio} className="text-[rgba(240,240,240,0.4)]" title={audioEnabled ? 'Mute audio' : 'Unmute audio'}>
               {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
             </button>
           </div>

@@ -170,17 +170,16 @@ Features:
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className={`overflow-hidden transition-all duration-700 ${
+              className={`overflow-hidden gh-card hover-lift transition-all duration-700 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
               style={{ 
                 transitionDelay: `${index * 150}ms`,
-                border: '1px solid rgba(255,255,255,0.07)',
-                background: '#111114',
+                borderColor: 'rgba(255,255,255,0.14)',
               }}
             >
               {/* Project Preview */}
-              <div className="relative h-48 overflow-hidden scanlines" style={{ background: '#0A0A0D' }}>
+              <div className="relative h-48 overflow-hidden scanlines" style={{ background: 'rgba(5,8,14,0.45)' }}>
                 {project.liveUrl && !iframeErrors[project.id] ? (
                   <>
                     <iframe
@@ -201,7 +200,7 @@ Features:
                     {/* Live badge */}
                     <div
                       className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1"
-                      style={{ background: 'rgba(9,9,9,0.85)', border: '1px solid rgba(176,200,224,0.2)' }}
+                      style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)' }}
                     >
                       <span className="w-1 h-1 rounded-full bg-[#B0C8E0]" />
                       <span className="mono text-[10px] text-[rgba(240,240,240,0.5)]">LIVE</span>
@@ -232,7 +231,7 @@ Features:
                   style={{ background: 'linear-gradient(to top, rgba(9,9,9,0.9), transparent 60%)' }}
                 />
                 <div className="absolute top-4 left-4">
-                  <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(9,9,9,0.7)' }}>
+                  <div className="p-2 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
                     <project.icon className="w-4 h-4 text-[rgba(240,240,240,0.45)]" />
                   </div>
                 </div>

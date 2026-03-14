@@ -132,8 +132,8 @@ function App() {
           waveFrequency={0}
           waveSpeed={0.02}
         />
-        {/* Near-black overlay */}
-        <div className="absolute inset-0" style={{ background: 'rgba(9,9,9,0.72)' }} />
+        {/* Soft dark overlay (keeps text contrast while preserving glass depth) */}
+        <div className="absolute inset-0" style={{ background: 'rgba(9,9,9,0.45)' }} />
       </div>
 
       <Navigation />

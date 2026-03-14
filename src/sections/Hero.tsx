@@ -132,8 +132,8 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
           {/* LEFT — Image */}
           <div className="flex-shrink-0 w-full max-w-[280px] sm:max-w-xs lg:max-w-sm order-1">
             <div
-              className="relative w-full overflow-hidden"
-              style={{ aspectRatio: '3/4', border: '1px solid rgba(255,255,255,0.07)' }}
+              className="relative w-full overflow-hidden glass-card rounded-2xl"
+              style={{ aspectRatio: '3/4' }}
             >
               <img
                 src="/profile-hero.png"
@@ -153,7 +153,7 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
             <div className="flex items-center gap-3 mt-4">
               <div className="w-1.5 h-1.5 rounded-full status-pulse bg-[#B0C8E0]" />
               <span
-                className="mono text-[10px] tracking-[0.2em] uppercase"
+                className="mono text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full"
                 style={{ color: sc(sysOnline, SYS_ON, 'rgba(240,240,240,0.35)') }}
               >
                 {sysOnline || SYS_ON}
@@ -228,8 +228,7 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
               {STATUS_ITEMS.map(({ label, status }, i) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2 px-3 py-1.5 mono text-[10px] tracking-[0.12em] uppercase"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="flex items-center gap-2 px-3 py-1.5 mono text-[10px] tracking-[0.12em] uppercase rounded-lg glass"
                 >
                   <span style={{ color: sc(sLabels[i], label, 'rgba(240,240,240,0.4)') }}>
                     {sLabels[i] || label}
@@ -253,8 +252,8 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
 
       {/* Bottom status bar */}
       <div
-        className="absolute bottom-0 left-0 right-0 border-t"
-        style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(9,9,9,0.6)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+        className="absolute bottom-0 left-0 right-0 border-t glass"
+        style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'linear-gradient(140deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03))' }}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <span

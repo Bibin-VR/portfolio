@@ -504,18 +504,20 @@
     text-transform: uppercase;
     border: 1px solid var(--ig-border-hover);
     color: var(--ig-text);
-    background: transparent;
+    background: linear-gradient(140deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04));
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s;
   }
   .ig-btn:hover {
-    background: rgba(255,255,255,0.05);
+    background: linear-gradient(140deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
     border-color: rgba(255,255,255,0.3);
   }
   .ig-btn-primary {
-    background: var(--ig-text);
-    color: var(--ig-bg);
-    border-color: var(--ig-text);
+    background: linear-gradient(135deg, rgba(176,200,224,0.82), rgba(176,200,224,0.62));
+    color: #0A0F1A;
+    border-color: rgba(176,200,224,0.9);
   }
   .ig-btn-primary:hover {
     background: var(--ig-accent);
@@ -525,18 +527,24 @@
   /* ── igloo input ─────────────────────────────────────────────────── */
   .ig-input {
     width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--ig-border-hover);
+    background: linear-gradient(140deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    border: 1px solid var(--ig-border);
+    border-radius: 0.75rem;
     color: var(--ig-text);
+    -webkit-backdrop-filter: blur(10px) saturate(135%);
+    backdrop-filter: blur(10px) saturate(135%);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
-    padding: 0.75rem 0;
+    padding: 0.75rem 0.9rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
   }
   .ig-input::placeholder { color: var(--ig-text-dim); }
-  .ig-input:focus { border-color: var(--ig-accent); }
+  .ig-input:focus {
+    border-color: rgba(176,200,224,0.55);
+    background: linear-gradient(140deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+    box-shadow: 0 0 0 3px rgba(176,200,224,0.14);
+  }
 
   /* ── Scanlines — very subtle CRT feel ───────────────────────────── */
   .scanlines::after {
