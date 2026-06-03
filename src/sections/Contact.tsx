@@ -111,10 +111,10 @@ const Contact = () => {
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
-            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">05 / Contact</span>
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(245,245,245,0.3)]">05 / Contact</span>
           </div>
-          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">Initiate Transmission</h2>
-          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+          <h2 className="text-3xl font-bold text-[#F5F5F5] mono mb-3">Initiate Transmission</h2>
+          <p className="mono text-sm text-[rgba(245,245,245,0.42)] max-w-2xl">
             Want to collaborate on a project or discuss an opportunity? Send a message.
           </p>
         </div>
@@ -132,12 +132,12 @@ const Contact = () => {
                 className="flex items-center gap-3 px-6 py-4"
                 style={{ borderBottom: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)' }}
               >
-                <AlertCircle className="w-4 h-4 text-[rgba(240,240,240,0.4)]" />
-                <span className="mono text-xs tracking-widest uppercase text-[rgba(240,240,240,0.5)]">New Message</span>
+                <AlertCircle className="w-4 h-4 text-[rgba(245,245,245,0.4)]" />
+                <span className="mono text-xs tracking-widest uppercase text-[rgba(245,245,245,0.5)]">New Message</span>
                 <div className="flex-1" />
                 <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
-                  <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">OPEN</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF]" />
+                  <span className="mono text-[10px] text-[rgba(245,245,245,0.35)]">OPEN</span>
                 </div>
               </div>
 
@@ -145,27 +145,27 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="p-6">
               {isSubmitted ? (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ border: '1px solid rgba(176,200,224,0.25)' }}>
-                      <CheckCircle className="w-6 h-6 text-[#B0C8E0]" />
+                    <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ border: '1px solid rgba(255,255,255,0.25)' }}>
+                      <CheckCircle className="w-6 h-6 text-[#FFFFFF]" />
                     </div>
-                    <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-2">
+                    <h3 className="text-lg font-semibold text-[#F5F5F5] mono mb-2">
                       Transmission Sent
                     </h3>
-                    <p className="text-[rgba(240,240,240,0.42)] text-sm mono text-center">
+                    <p className="text-[rgba(245,245,245,0.42)] text-sm mono text-center">
                       I'll get back to you shortly.
                     </p>
                   </div>
                 ) : isError ? (
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="w-12 h-12 flex items-center justify-center mb-4" style={{ border: '1px solid rgba(255,80,80,0.2)' }}>
-                      <AlertCircle className="w-6 h-6 text-[rgba(240,100,100,0.7)]" />
+                      <AlertCircle className="w-6 h-6 text-[rgba(245,245,245,0.7)]" />
                     </div>
-                    <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-2">
+                    <h3 className="text-lg font-semibold text-[#F5F5F5] mono mb-2">
                       Transmission Failed
                     </h3>
-                    <p className="text-[rgba(240,240,240,0.42)] text-sm mono text-center mb-6">
+                    <p className="text-[rgba(245,245,245,0.42)] text-sm mono text-center mb-6">
                       Try again or email{' '}
-                      <a href="mailto:bibin.blp@gmail.com" className="text-[#B0C8E0] hover:underline">bibin.blp@gmail.com</a>.
+                      <a href="mailto:bibin.blp@gmail.com" className="text-[#FFFFFF] hover:underline">bibin.blp@gmail.com</a>.
                     </p>
                     <button
                       onClick={() => setIsError(false)}
@@ -178,8 +178,8 @@ const Contact = () => {
                   <>
                     {/* Name Input */}
                     <div className="mb-6">
-                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
-                        Name <span className="text-[rgba(240,100,100,0.6)]">*</span>
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)] mb-2 mono">
+                        Name <span className="text-[rgba(245,245,245,0.6)]">*</span>
                       </label>
                       <input
                         type="text"
@@ -193,8 +193,8 @@ const Contact = () => {
 
                     {/* Email Input */}
                     <div className="mb-6">
-                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
-                        Email <span className="text-[rgba(240,100,100,0.6)]">*</span>
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)] mb-2 mono">
+                        Email <span className="text-[rgba(245,245,245,0.6)]">*</span>
                       </label>
                       <input
                         type="email"
@@ -208,7 +208,7 @@ const Contact = () => {
 
                     {/* Label Selection */}
                     <div className="mb-6">
-                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-3 mono">
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)] mb-3 mono">
                         Type
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -219,9 +219,9 @@ const Contact = () => {
                             onClick={() => setFormData({ ...formData, label: label.id })}
                             className="px-3 py-1.5 mono text-xs transition-all"
                             style={{
-                              border: `1px solid ${formData.label === label.id ? 'rgba(176,200,224,0.4)' : 'rgba(255,255,255,0.07)'}`,
-                              color: formData.label === label.id ? '#B0C8E0' : 'rgba(240,240,240,0.4)',
-                              background: formData.label === label.id ? 'rgba(176,200,224,0.05)' : 'transparent',
+                              border: `1px solid ${formData.label === label.id ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                              color: formData.label === label.id ? '#FFFFFF' : 'rgba(245,245,245,0.4)',
+                              background: formData.label === label.id ? 'rgba(255,255,255,0.05)' : 'transparent',
                             }}
                           >
                             {label.name}
@@ -232,7 +232,7 @@ const Contact = () => {
 
                     {/* Title Input */}
                     <div className="mb-6">
-                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)] mb-2 mono">
                         Subject
                       </label>
                       <input
@@ -247,7 +247,7 @@ const Contact = () => {
 
                     {/* Body Input */}
                     <div className="mb-6">
-                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)] mb-2 mono">
+                      <label className="block text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)] mb-2 mono">
                         Message
                       </label>
                       <textarea
@@ -262,8 +262,8 @@ const Contact = () => {
 
                     {/* Submit Button */}
                     <div className="flex items-center justify-between">
-                      <div className="text-[10px] text-[rgba(240,240,240,0.25)] mono">
-                        <span className="text-[rgba(240,100,100,0.5)]">*</span> Required
+                      <div className="text-[10px] text-[rgba(245,245,245,0.25)] mono">
+                        <span className="text-[rgba(245,245,245,0.5)]">*</span> Required
                       </div>
                       <button
                         type="submit"
@@ -272,7 +272,7 @@ const Contact = () => {
                       >
                         {isSubmitting ? (
                           <>
-                            <div className="w-3 h-3 border border-[#090909] border-t-transparent rounded-full animate-spin" />
+                            <div className="w-3 h-3 border border-[#000000] border-t-transparent rounded-full animate-spin" />
                             <span className="mono text-xs">Sending...</span>
                           </>
                         ) : (
@@ -298,7 +298,7 @@ const Contact = () => {
           >
             {/* Contact Details */}
             <div className="p-6 glass-card rounded-xl">
-              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-5">Contact</p>
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.25)] mb-5">Contact</p>
               <div className="space-y-4">
                 {contactInfo.map((item) => (
                   <a
@@ -306,10 +306,10 @@ const Contact = () => {
                     href={item.href}
                     className="flex items-center gap-3 py-2 group transition-colors"
                   >
-                    <item.icon className="w-4 h-4 text-[rgba(240,240,240,0.3)] group-hover:text-[#B0C8E0] transition-colors" />
+                    <item.icon className="w-4 h-4 text-[rgba(245,245,245,0.3)] group-hover:text-[#FFFFFF] transition-colors" />
                     <div>
-                      <p className="text-[10px] mono uppercase tracking-widest text-[rgba(240,240,240,0.25)]">{item.label}</p>
-                      <p className="text-xs text-[rgba(240,240,240,0.65)] mono">{item.value}</p>
+                      <p className="text-[10px] mono uppercase tracking-widest text-[rgba(245,245,245,0.25)]">{item.label}</p>
+                      <p className="text-xs text-[rgba(245,245,245,0.65)] mono">{item.value}</p>
                     </div>
                   </a>
                 ))}
@@ -318,7 +318,7 @@ const Contact = () => {
 
             {/* Social Links */}
             <div className="p-6 glass-card rounded-xl">
-              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-4">Connect</p>
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.25)] mb-4">Connect</p>
               <div className="flex gap-3">
                 {socialLinks.map((social) => (
                   <a
@@ -330,9 +330,9 @@ const Contact = () => {
                     style={{ border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.04)' }}
                   >
                     <social.icon
-                      className="w-5 h-5 text-[rgba(240,240,240,0.35)] group-hover:text-[#B0C8E0] transition-colors"
+                      className="w-5 h-5 text-[rgba(245,245,245,0.35)] group-hover:text-[#FFFFFF] transition-colors"
                     />
-                    <span className="text-[10px] mono uppercase tracking-widest text-[rgba(240,240,240,0.25)]">{social.label}</span>
+                    <span className="text-[10px] mono uppercase tracking-widest text-[rgba(245,245,245,0.25)]">{social.label}</span>
                   </a>
                 ))}
               </div>
@@ -341,10 +341,10 @@ const Contact = () => {
             {/* Availability */}
             <div className="p-5 glass-card rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF]" />
                 <div>
-                  <p className="text-xs mono text-[rgba(240,240,240,0.65)]">Available for work</p>
-                  <p className="text-[10px] mono text-[rgba(240,240,240,0.3)]">Open to collaborations</p>
+                  <p className="text-xs mono text-[rgba(245,245,245,0.65)]">Available for work</p>
+                  <p className="text-[10px] mono text-[rgba(245,245,245,0.3)]">Open to collaborations</p>
                 </div>
               </div>
             </div>
@@ -358,20 +358,20 @@ const Contact = () => {
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 flex items-center justify-center" style={{ border: '1px solid rgba(176,200,224,0.2)' }}>
-                <span className="text-[#B0C8E0] font-bold text-xs mono">B</span>
+              <div className="w-6 h-6 flex items-center justify-center" style={{ border: '1px solid rgba(255,255,255,0.2)' }}>
+                <span className="text-[#FFFFFF] font-bold text-xs mono">B</span>
               </div>
-              <span className="mono text-xs text-[rgba(240,240,240,0.35)]">
+              <span className="mono text-xs text-[rgba(245,245,245,0.35)]">
                 Bibin V R — 2026
               </span>
             </div>
             <div className="flex items-center gap-6">
-              <span className="mono text-[10px] text-[rgba(240,240,240,0.2)]">
+              <span className="mono text-[10px] text-[rgba(245,245,245,0.2)]">
                 React · TypeScript · Tailwind
               </span>
               <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#B0C8E0]" />
-                <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">System Operational</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF]" />
+                <span className="mono text-[10px] text-[rgba(245,245,245,0.35)]">System Operational</span>
               </div>
             </div>
           </div>

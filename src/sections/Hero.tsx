@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import Scene3D from '../components/Scene3D';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@!$%^&*+=<>?/|~_.:;{}[]\\';
 const NAME   = 'Bibin V R';
@@ -17,7 +18,7 @@ const STATUS_ITEMS = [
 
 /** color: transparent → accent (scrambling) → doneColor (settled) */
 const sc = (state: string, real: string, doneColor: string) =>
-  !state ? 'transparent' : state === real ? doneColor : '#B0C8E0';
+  !state ? 'transparent' : state === real ? doneColor : '#FFFFFF';
 
 const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
   const [displayText,  setDisplayText]  = useState('');
@@ -50,7 +51,7 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
         let it = 0;
         const iv = setInterval(() => {
           setter(text.split('').map((c, i) =>
-            /[\s·\-]/.test(c) ? c : i < it ? c : rc()
+            /[\s·-]/.test(c) ? c : i < it ? c : rc()
           ).join(''));
           if (it >= text.length) { clearInterval(iv); setter(text); onDone?.(); }
           it += step;
@@ -97,7 +98,6 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
         scrambleWord(1, 210);
         scrambleWord(2, 420, () => {
           setIsScrambling(false);
-          // cascade all remaining elements
           scramble(SEC_IDX,  setSecIdx,    0);
           scramble(SYS_ON,   setSysOnline, 120);
           STATUS_ITEMS.forEach(({ label }, i) =>
@@ -124,67 +124,35 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
       className="relative min-h-screen w-full flex items-center overflow-hidden"
     >
       {/* Faint grid */}
-      <div className="absolute inset-0 grid-pattern opacity-40" />
+      <div className="absolute inset-0 grid-pattern opacity-30" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 py-24 pt-32">
-        <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-20">
+        <div className="grid lg:grid-cols-2 items-center gap-12 lg:gap-16">
 
-          {/* LEFT — Image */}
-          <div className="flex-shrink-0 w-full max-w-[280px] sm:max-w-xs lg:max-w-sm order-1">
-            <div
-              className="relative w-full overflow-hidden glass-card rounded-2xl"
-              style={{ aspectRatio: '3/4' }}
-            >
-              <img
-                src="/profile-hero.png"
-                alt="Bibin V R"
-                className="w-full h-full object-cover object-top"
-                style={{ filter: 'grayscale(15%) contrast(1.05)' }}
-              />
-              <div
-                className="absolute inset-0"
-                style={{ background: 'linear-gradient(to top, rgba(9,9,9,0.5) 0%, transparent 60%)' }}
-              />
-              <div className="absolute top-3 left-3 w-4 h-4 border-t border-l border-[rgba(176,200,224,0.4)]" />
-              <div className="absolute bottom-3 right-3 w-4 h-4 border-b border-r border-[rgba(176,200,224,0.4)]" />
-            </div>
-
-            {/* Status row below image */}
-            <div className="flex items-center gap-3 mt-4">
-              <div className="w-1.5 h-1.5 rounded-full status-pulse bg-[#B0C8E0]" />
-              <span
-                className="mono text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full"
-                style={{ color: sc(sysOnline, SYS_ON, 'rgba(240,240,240,0.35)') }}
-              >
-                {sysOnline || SYS_ON}
-              </span>
-            </div>
-          </div>
-
-          {/* RIGHT — Text */}
-          <div className="flex-1 flex flex-col items-start order-2 pt-2">
+          {/* LEFT — Text */}
+          <div className="flex flex-col items-start order-2 lg:order-1">
 
             {/* Section index */}
             <div className="flex items-center gap-3 mb-8">
               <span
                 className="mono text-[10px] tracking-[0.25em] uppercase"
-                style={{ color: sc(secIdx, SEC_IDX, 'rgba(240,240,240,0.25)') }}
+                style={{ color: sc(secIdx, SEC_IDX, 'rgba(245,245,245,0.3)') }}
               >
                 {secIdx || SEC_IDX}
               </span>
-              <div className="h-px w-12" style={{ background: 'rgba(255,255,255,0.12)' }} />
+              <div className="h-px w-12" style={{ background: 'rgba(255,255,255,0.14)' }} />
             </div>
 
             {/* Name — huge */}
             <h1
               className="font-bold mb-4 leading-none"
-              style={{ fontSize: 'clamp(3.5rem, 9vw, 7rem)', letterSpacing: '-0.03em' }}
+              style={{ fontSize: 'clamp(3.5rem, 9vw, 7rem)', letterSpacing: '-0.04em' }}
             >
               <span
-                className="mono block"
-                style={{ color: isScrambling ? '#B0C8E0' : '#F0F0F0', transition: 'color 0.4s ease' }}
+                style={{ color: isScrambling ? '#FFFFFF' : '#F5F5F5', transition: 'color 0.4s ease' }}
+                className={isScrambling ? 'mono block' : 'block'}
               >
-                {displayText || '\u00A0'}
+                {displayText || ' '}
               </span>
             </h1>
 
@@ -194,8 +162,8 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
                 <span key={word}>
                   <span style={{
                     color: wordStates[i] === word
-                      ? 'rgba(240,240,240,0.45)'
-                      : wordStates[i] ? '#B0C8E0' : 'transparent',
+                      ? 'rgba(245,245,245,0.5)'
+                      : wordStates[i] ? '#FFFFFF' : 'transparent',
                     transition: 'color 0.35s ease',
                     display: 'inline-block',
                     minWidth: `${word.length}ch`,
@@ -203,7 +171,7 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
                     {wordStates[i] || word}
                   </span>
                   {i < WORDS.length - 1 && (
-                    <span style={{ color: 'rgba(240,240,240,0.2)', margin: '0 0.35em' }}>·</span>
+                    <span style={{ color: 'rgba(245,245,245,0.22)', margin: '0 0.35em' }}>·</span>
                   )}
                 </span>
               ))}
@@ -216,7 +184,7 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
             <p
               className="mono text-sm leading-relaxed mb-10 max-w-lg"
               style={{
-                color: !desc ? 'transparent' : desc === DESC ? 'rgba(240,240,240,0.5)' : '#B0C8E0',
+                color: !desc ? 'transparent' : desc === DESC ? 'rgba(245,245,245,0.55)' : '#FFFFFF',
                 lineHeight: '1.9',
               }}
             >
@@ -228,43 +196,70 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
               {STATUS_ITEMS.map(({ label, status }, i) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2 px-3 py-1.5 mono text-[10px] tracking-[0.12em] uppercase rounded-lg glass"
+                  className="flex items-center gap-2 px-3 py-1.5 mono text-[10px] tracking-[0.12em] uppercase glass"
                 >
-                  <span style={{ color: sc(sLabels[i], label, 'rgba(240,240,240,0.4)') }}>
+                  <span style={{ color: sc(sLabels[i], label, 'rgba(245,245,245,0.45)') }}>
                     {sLabels[i] || label}
                   </span>
-                  <span style={{ color: sc(sValues[i], status, '#B0C8E0') }}>
+                  <span style={{ color: sc(sValues[i], status, '#FFFFFF') }}>
                     {sValues[i] || status}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* CTA — not scrambled */}
+            {/* CTA */}
             <div className="flex flex-wrap gap-3">
               <a href="#projects" className="ig-btn ig-btn-primary">View Projects</a>
               <a href="#contact" className="ig-btn">Get in Touch</a>
             </div>
-
           </div>
+
+          {/* RIGHT — 3D centerpiece */}
+          <div className="order-1 lg:order-2 w-full">
+            <div
+              className="relative w-full mx-auto"
+              style={{ aspectRatio: '1 / 1', maxWidth: 'min(70vw, 520px)' }}
+            >
+              {/* corner brackets */}
+              <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-[rgba(255,255,255,0.25)] z-10" />
+              <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-[rgba(255,255,255,0.25)] z-10" />
+              <div className="absolute bottom-0 left-0 w-6 h-6 border-b border-l border-[rgba(255,255,255,0.25)] z-10" />
+              <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-[rgba(255,255,255,0.25)] z-10" />
+
+              <Scene3D className="absolute inset-0" />
+
+              {/* status row under object */}
+              <div className="absolute -bottom-9 left-0 right-0 flex items-center justify-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full status-pulse bg-white" />
+                <span
+                  className="mono text-[10px] tracking-[0.2em] uppercase"
+                  style={{ color: sc(sysOnline, SYS_ON, 'rgba(245,245,245,0.35)') }}
+                >
+                  {sysOnline || SYS_ON}
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
       {/* Bottom status bar */}
       <div
         className="absolute bottom-0 left-0 right-0 border-t glass"
-        style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'linear-gradient(140deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03))' }}
+        style={{ borderColor: 'rgba(255,255,255,0.10)' }}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <span
             className="mono text-[10px] tracking-[0.12em] uppercase"
-            style={{ color: sc(barL, BAR_L, 'rgba(240,240,240,0.3)') }}
+            style={{ color: sc(barL, BAR_L, 'rgba(245,245,245,0.3)') }}
           >
             {barL || BAR_L}
           </span>
           <span
             className="mono text-[10px] typing-cursor"
-            style={{ color: sc(barR, BAR_R, 'rgba(176,200,224,0.6)') }}
+            style={{ color: sc(barR, BAR_R, 'rgba(245,245,245,0.6)') }}
           >
             {barR || BAR_R}
           </span>
@@ -273,11 +268,10 @@ const Hero = ({ startAnim = false }: { startAnim?: boolean }) => {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-16 left-1/2 -translate-x-1/2 animate-bounce">
-        <ChevronDown className="w-5 h-5" style={{ color: 'rgba(240,240,240,0.2)' }} />
+        <ChevronDown className="w-5 h-5" style={{ color: 'rgba(245,245,245,0.2)' }} />
       </div>
     </section>
   );
 };
 
 export default Hero;
-

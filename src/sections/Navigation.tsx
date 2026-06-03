@@ -44,7 +44,7 @@ const Navigation = () => {
         style={{
           background: isScrolled
             ? 'linear-gradient(140deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04))'
-            : 'rgba(10,15,26,0.28)',
+            : 'rgba(0,0,0,0.28)',
           backdropFilter: 'blur(16px) saturate(145%)',
           WebkitBackdropFilter: 'blur(16px) saturate(145%)',
         }}
@@ -58,11 +58,11 @@ const Navigation = () => {
               className="flex items-center gap-2 group"
               onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             >
-              <div className="w-4 h-4 border border-[rgba(176,200,224,0.4)] flex items-center justify-center transition-colors group-hover:border-[rgba(176,200,224,0.8)]">
-                <div className="w-1.5 h-1.5 bg-[#B0C8E0] transition-all group-hover:scale-110" />
+              <div className="w-4 h-4 border border-[rgba(255,255,255,0.4)] flex items-center justify-center transition-colors group-hover:border-[rgba(255,255,255,0.8)]">
+                <div className="w-1.5 h-1.5 bg-[#FFFFFF] transition-all group-hover:scale-110" />
               </div>
-              <span className="mono text-xs tracking-[0.15em] uppercase" style={{ color: 'rgba(240,240,240,0.7)' }}>
-                bibin<span style={{ color: 'rgba(240,240,240,0.3)' }}>.vr</span>
+              <span className="mono text-xs tracking-[0.15em] uppercase" style={{ color: 'rgba(245,245,245,0.7)' }}>
+                bibin<span style={{ color: 'rgba(245,245,245,0.3)' }}>.vr</span>
               </span>
             </a>
 
@@ -73,9 +73,9 @@ const Navigation = () => {
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
                   className="px-4 py-2 mono text-[11px] tracking-[0.12em] uppercase transition-colors"
-                  style={{ color: 'rgba(240,240,240,0.4)' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.9)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.4)')}
+                  style={{ color: 'rgba(245,245,245,0.4)' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(245,245,245,0.9)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(245,245,245,0.4)')}
                 >
                   {link.label}
                 </button>
@@ -89,9 +89,9 @@ const Navigation = () => {
                 onClick={toggleAudio}
                 className="p-2 transition-colors"
                 title={audioEnabled ? 'Mute audio' : 'Unmute audio'}
-                style={{ color: audioEnabled ? 'rgba(240,240,240,0.4)' : 'rgba(240,240,240,0.18)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.85)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = audioEnabled ? 'rgba(240,240,240,0.4)' : 'rgba(240,240,240,0.18)')}
+                style={{ color: audioEnabled ? 'rgba(245,245,245,0.4)' : 'rgba(245,245,245,0.18)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(245,245,245,0.85)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = audioEnabled ? 'rgba(245,245,245,0.4)' : 'rgba(245,245,245,0.18)')}
               >
                 {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
               </button>
@@ -111,9 +111,9 @@ const Navigation = () => {
                   target={href.startsWith('http') ? '_blank' : undefined}
                   rel="noopener noreferrer"
                   className="p-2 transition-opacity"
-                  style={{ color: 'rgba(240,240,240,0.35)', opacity: 1 }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.85)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(240,240,240,0.35)')}
+                  style={{ color: 'rgba(245,245,245,0.35)', opacity: 1 }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(245,245,245,0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(245,245,245,0.35)')}
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -124,7 +124,7 @@ const Navigation = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 transition-opacity"
-              style={{ color: 'rgba(240,240,240,0.5)' }}
+              style={{ color: 'rgba(245,245,245,0.5)' }}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -159,7 +159,7 @@ const Navigation = () => {
               <button
                 key={link.href}
                 onClick={() => scrollToSection(link.href)}
-                className="py-3 mono text-xs tracking-[0.15em] uppercase text-left border-b border-[rgba(255,255,255,0.04)] transition-colors text-[rgba(240,240,240,0.5)]"
+                className="py-3 mono text-xs tracking-[0.15em] uppercase text-left border-b border-[rgba(255,255,255,0.04)] transition-colors text-[rgba(245,245,245,0.5)]"
               >
                 {link.label}
               </button>
@@ -177,14 +177,14 @@ const Navigation = () => {
                   href={href}
                   target={href.startsWith('http') ? '_blank' : undefined}
                   rel="noopener noreferrer"
-                  className="text-[rgba(240,240,240,0.4)]"
+                  className="text-[rgba(245,245,245,0.4)]"
                   title={href.includes('github') ? 'GitHub' : href.includes('linkedin') ? 'LinkedIn' : 'Email'}
                 >
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
-            <button onClick={toggleAudio} className="text-[rgba(240,240,240,0.4)]" title={audioEnabled ? 'Mute audio' : 'Unmute audio'}>
+            <button onClick={toggleAudio} className="text-[rgba(245,245,245,0.4)]" title={audioEnabled ? 'Mute audio' : 'Unmute audio'}>
               {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
             </button>
           </div>

@@ -63,16 +63,16 @@ const LoadingScreen = ({ onComplete }: Props) => {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: '#060608' }}
+      style={{ background: '#000000' }}
     >
       <div className="w-full max-w-xl px-8">
 
         {/* Logo mark */}
         <div className="mb-10 flex items-center gap-3">
-          <div className="w-5 h-5 border border-[rgba(176,200,224,0.5)] flex items-center justify-center">
-            <div className="w-2 h-2 bg-[#B0C8E0]" />
+          <div className="w-5 h-5 border border-[rgba(255,255,255,0.5)] flex items-center justify-center">
+            <div className="w-2 h-2 bg-[#FFFFFF]" />
           </div>
-          <span className="mono text-xs tracking-[0.2em] uppercase" style={{ color: 'rgba(240,240,240,0.4)' }}>
+          <span className="mono text-xs tracking-[0.2em] uppercase" style={{ color: 'rgba(245,245,245,0.4)' }}>
             bibin.vr — system boot
           </span>
         </div>
@@ -82,15 +82,15 @@ const LoadingScreen = ({ onComplete }: Props) => {
           <div className="terminal p-6 min-h-[280px] mb-6 flex flex-col items-center justify-center gap-10">
             <div className="flex flex-col items-center gap-5">
               <div className="relative w-12 h-12 flex items-center justify-center">
-                <div className="absolute inset-0 border border-[rgba(176,200,224,0.15)] animate-ping" style={{ animationDuration: '2s' }} />
-                <div className="absolute inset-2 border border-[rgba(176,200,224,0.25)]" />
-                <div className="w-2 h-2 bg-[#B0C8E0] animate-pulse" />
+                <div className="absolute inset-0 border border-[rgba(255,255,255,0.15)] animate-ping" style={{ animationDuration: '2s' }} />
+                <div className="absolute inset-2 border border-[rgba(255,255,255,0.25)]" />
+                <div className="w-2 h-2 bg-[#FFFFFF] animate-pulse" />
               </div>
               <div className="flex flex-col items-center gap-1">
-                <span className="mono text-[10px] tracking-[0.35em] uppercase text-[rgba(176,200,224,0.5)]">
+                <span className="mono text-[10px] tracking-[0.35em] uppercase text-[rgba(255,255,255,0.5)]">
                   portfolio system offline
                 </span>
-                <span className="mono text-[9px] tracking-[0.15em] uppercase text-[rgba(240,240,240,0.15)]">
+                <span className="mono text-[9px] tracking-[0.15em] uppercase text-[rgba(245,245,245,0.15)]">
                   bibin v r — robotics · ai · web
                 </span>
               </div>
@@ -98,17 +98,17 @@ const LoadingScreen = ({ onComplete }: Props) => {
             <button
               onClick={() => handleEnter()}
               className="group relative flex items-center gap-4 px-10 py-4 transition-all duration-300"
-              style={{ border: '1px solid rgba(176,200,224,0.3)', background: 'rgba(176,200,224,0.04)' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(176,200,224,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(176,200,224,0.6)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(176,200,224,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(176,200,224,0.3)'; }}
+              style={{ border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.04)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.6)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.3)'; }}
             >
               {/* Corner accents */}
-              <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[rgba(176,200,224,0.6)]" />
-              <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[rgba(176,200,224,0.6)]" />
-              <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[rgba(176,200,224,0.6)]" />
-              <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[rgba(176,200,224,0.6)]" />
-              <div className="w-1.5 h-1.5 bg-[#B0C8E0] animate-pulse" />
-              <span className="mono text-xs tracking-[0.3em] uppercase text-[rgba(240,240,240,0.8)] group-hover:text-[#F0F0F0] transition-colors">
+              <span className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[rgba(255,255,255,0.6)]" />
+              <span className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[rgba(255,255,255,0.6)]" />
+              <span className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[rgba(255,255,255,0.6)]" />
+              <span className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[rgba(255,255,255,0.6)]" />
+              <div className="w-1.5 h-1.5 bg-[#FFFFFF] animate-pulse" />
+              <span className="mono text-xs tracking-[0.3em] uppercase text-[rgba(245,245,245,0.8)] group-hover:text-[#F5F5F5] transition-colors">
                 Enter World
               </span>
             </button>
@@ -125,18 +125,18 @@ const LoadingScreen = ({ onComplete }: Props) => {
                   className="mono text-xs fade-in flex gap-3"
                   style={{ animationDelay: `${i * 30}ms` }}
                 >
-                  <span style={{ color: 'rgba(176,200,224,0.5)' }}>›</span>
+                  <span style={{ color: 'rgba(255,255,255,0.5)' }}>›</span>
                   <span style={{
                     color: i === bootLines.length - 1 && phase === 'ready'
-                      ? '#B0C8E0'
-                      : 'rgba(240,240,240,0.75)'
+                      ? '#FFFFFF'
+                      : 'rgba(245,245,245,0.75)'
                   }}>
                     {line}
                   </span>
                 </div>
               ))}
               {phase === 'boot' && (
-                <div className="mono text-xs" style={{ color: 'rgba(240,240,240,0.4)' }}>
+                <div className="mono text-xs" style={{ color: 'rgba(245,245,245,0.4)' }}>
                   <span className="typing-cursor" />
                 </div>
               )}
@@ -147,10 +147,10 @@ const LoadingScreen = ({ onComplete }: Props) => {
         {/* Progress bar */}
         <div>
           <div className="flex justify-between mb-2">
-            <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'rgba(240,240,240,0.3)' }}>
+            <span className="mono text-[10px] tracking-widest uppercase" style={{ color: 'rgba(245,245,245,0.3)' }}>
               {phase === 'init' ? 'Standby' : 'Boot Progress'}
             </span>
-            <span className="mono text-[10px]" style={{ color: '#B0C8E0' }}>
+            <span className="mono text-[10px]" style={{ color: '#FFFFFF' }}>
               {phase === 'init' ? '--' : `${Math.min(Math.round(progress), 100)}%`}
             </span>
           </div>
@@ -159,7 +159,7 @@ const LoadingScreen = ({ onComplete }: Props) => {
               className="h-px transition-all duration-100"
               style={{
                 width: phase === 'init' ? '0%' : `${Math.min(progress, 100)}%`,
-                background: 'linear-gradient(90deg, rgba(176,200,224,0.4), #B0C8E0)',
+                background: 'linear-gradient(90deg, rgba(255,255,255,0.4), #FFFFFF)',
               }}
             />
           </div>
@@ -169,8 +169,8 @@ const LoadingScreen = ({ onComplete }: Props) => {
         <div className="flex items-center gap-8 mt-8">
           {['ROBOTICS', 'AI / ML', 'WEB'].map((label) => (
             <div key={label} className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full status-pulse" style={{ background: '#B0C8E0' }} />
-              <span className="mono text-[10px] tracking-widest" style={{ color: 'rgba(240,240,240,0.3)' }}>
+              <div className="w-1.5 h-1.5 rounded-full status-pulse" style={{ background: '#FFFFFF' }} />
+              <span className="mono text-[10px] tracking-widest" style={{ color: 'rgba(245,245,245,0.3)' }}>
                 {label}
               </span>
             </div>

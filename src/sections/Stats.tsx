@@ -100,10 +100,10 @@ const Stats = () => {
   }, [isVisible, grid.length]);
 
   const statCards = [
-    { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#B0C8E0' },
-    { icon: GitCommit, label: 'Commits (this year)', value: counts.commits, suffix: '+', color: '#B0C8E0' },
-    { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#B0C8E0' },
-    { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#B0C8E0' },
+    { icon: FolderGit, label: 'Repositories', value: counts.repos, suffix: '', color: '#FFFFFF' },
+    { icon: GitCommit, label: 'Commits (this year)', value: counts.commits, suffix: '+', color: '#FFFFFF' },
+    { icon: TrendingUp, label: 'Contributions (this year)', value: counts.contributions, suffix: '+', color: '#FFFFFF' },
+    { icon: Users, label: 'Followers', value: counts.followers, suffix: '', color: '#FFFFFF' },
   ];
 
   return (
@@ -117,16 +117,16 @@ const Stats = () => {
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
-            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">01 / Metrics</span>
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(245,245,245,0.3)]">01 / Metrics</span>
           </div>
-          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">System Metrics</h2>
-          <p className="text-[rgba(240,240,240,0.42)] max-w-2xl mono text-sm">
+          <h2 className="text-3xl font-bold text-[#F5F5F5] mono mb-3">System Metrics</h2>
+          <p className="text-[rgba(245,245,245,0.42)] max-w-2xl mono text-sm">
             Live telemetry pulled directly from{' '}
             <a
               href="https://github.com/Bibin-VR"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#B0C8E0] hover:underline"
+              className="text-[#FFFFFF] hover:underline"
             >
               github.com/Bibin-VR
             </a>
@@ -146,16 +146,16 @@ const Stats = () => {
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <stat.icon className="w-4 h-4 text-[rgba(240,240,240,0.45)]" />
+                  <stat.icon className="w-4 h-4 text-[rgba(245,245,245,0.45)]" />
                 </div>
                 {loading && (
-                  <div className="w-2 h-2 rounded-full border border-t-transparent animate-spin border-[#B0C8E0]" />
+                  <div className="w-2 h-2 rounded-full border border-t-transparent animate-spin border-[#FFFFFF]" />
                 )}
               </div>
-              <div className="counter text-3xl font-bold text-[#F0F0F0] mb-1 mono">
+              <div className="counter text-3xl font-bold text-[#F5F5F5] mb-1 mono">
                 {loading ? '—' : `${stat.value}${stat.suffix}`}
               </div>
-              <div className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.35)]">{stat.label}</div>
+              <div className="mono text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.35)]">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -171,20 +171,20 @@ const Stats = () => {
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
               <div className="relative w-2 h-2">
-                <div className="w-2 h-2 rounded-full bg-[#B0C8E0] absolute animate-ping opacity-40" />
-                <div className="w-2 h-2 rounded-full bg-[#B0C8E0]" />
+                <div className="w-2 h-2 rounded-full bg-[#FFFFFF] absolute animate-ping opacity-40" />
+                <div className="w-2 h-2 rounded-full bg-[#FFFFFF]" />
               </div>
-              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Signal Waveform</h3>
+              <h3 className="mono text-sm tracking-widest uppercase text-[#FFFFFF]">Signal Waveform</h3>
             </div>
             <div className="flex items-center gap-2">
               {!loading && githubStats && (
-                <span className="mono text-[10px] px-2 py-0.5 text-[#B0C8E0] tracking-widest"
-                  style={{ border: '1px solid rgba(176,200,224,0.25)', background: 'rgba(176,200,224,0.05)' }}>
+                <span className="mono text-[10px] px-2 py-0.5 text-[#FFFFFF] tracking-widest"
+                  style={{ border: '1px solid rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.05)' }}>
                   {githubStats.totalContributions.toLocaleString()} SIGNALS / YEAR
                 </span>
               )}
               {apiError && (
-                <span className="mono text-[10px] px-2 py-0.5 text-[rgba(240,240,240,0.35)] tracking-widest"
+                <span className="mono text-[10px] px-2 py-0.5 text-[rgba(245,245,245,0.35)] tracking-widest"
                   style={{ border: '1px solid rgba(255,255,255,0.08)' }}>UPLINK LOST</span>
               )}
             </div>
@@ -225,18 +225,18 @@ const Stats = () => {
             {/* Month labels */}
             <div className="flex justify-between sm:justify-start sm:gap-6">
               {['JAN','FEB','MAR','APR','MAY','JUN'].map(month => (
-                <span key={month} className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">{month}</span>
+                <span key={month} className="mono text-[10px] tracking-widest text-[rgba(245,245,245,0.25)]">{month}</span>
               ))}
             </div>
             {/* Signal legend */}
             <div className="flex items-center gap-2">
-              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">BASELINE</span>
+              <span className="mono text-[10px] tracking-widest text-[rgba(245,245,245,0.25)]">BASELINE</span>
               <div className="flex items-end gap-[2px]" style={{ height: '16px' }}>
                 {[12, 25, 40, 62, 100].map((h, i) => (
                   <div key={i} className="contrib-legend-bar" style={{ height: `${h}%` }} />
                 ))}
               </div>
-              <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.25)]">PEAK</span>
+              <span className="mono text-[10px] tracking-widest text-[rgba(245,245,245,0.25)]">PEAK</span>
             </div>
           </div>
         </div>
@@ -258,13 +258,13 @@ const Stats = () => {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
               <div className="relative w-2 h-2">
-                <div className="w-2 h-2 bg-[#B0C8E0] absolute animate-ping opacity-40" />
-                <div className="w-2 h-2 bg-[#B0C8E0]" />
+                <div className="w-2 h-2 bg-[#FFFFFF] absolute animate-ping opacity-40" />
+                <div className="w-2 h-2 bg-[#FFFFFF]" />
               </div>
-              <h3 className="mono text-sm tracking-widest uppercase text-[#B0C8E0]">Capability Matrix</h3>
+              <h3 className="mono text-sm tracking-widest uppercase text-[#FFFFFF]">Capability Matrix</h3>
             </div>
-            <span className="mono text-[10px] tracking-widest text-[rgba(240,240,240,0.2)]">
-              SYS.STATUS: <span className="text-[#B0C8E0]">NOMINAL</span>
+            <span className="mono text-[10px] tracking-widest text-[rgba(245,245,245,0.2)]">
+              SYS.STATUS: <span className="text-[#FFFFFF]">NOMINAL</span>
             </span>
           </div>
 
@@ -286,9 +286,9 @@ const Stats = () => {
               return (
                 <div key={skill.name} className="hud-row">
                   {/* Row ID */}
-                  <span className="mono text-[9px] text-[rgba(176,200,224,0.3)] tracking-wider">[{skill.id}]</span>
+                  <span className="mono text-[9px] text-[rgba(255,255,255,0.3)] tracking-wider">[{skill.id}]</span>
                   {/* Skill name */}
-                  <span className="mono text-[11px] text-[rgba(240,240,240,0.42)] truncate tracking-wide">{skill.name}</span>
+                  <span className="mono text-[11px] text-[rgba(245,245,245,0.42)] truncate tracking-wide">{skill.name}</span>
                   {/* Segmented bar */}
                   <div className="hud-segments" style={{ width: 'clamp(100px,28vw,210px)' }}>
                     {Array.from({ length: SEGS }).map((_, s) => {
@@ -306,7 +306,7 @@ const Stats = () => {
                   {/* Percentage readout */}
                   <span
                     className="mono text-[10px] w-8 text-right"
-                    style={{ color: skill.level >= 85 ? '#B0C8E0' : 'rgba(176,200,224,0.45)' }}
+                    style={{ color: skill.level >= 85 ? '#FFFFFF' : 'rgba(255,255,255,0.45)' }}
                   >
                     {isVisible ? `${skill.level}%` : '--'}
                   </span>

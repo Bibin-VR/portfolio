@@ -45,7 +45,7 @@ const Skills = () => {
       id: 'robotics',
       name: 'Robotics & Embedded',
       icon: Cpu,
-      color: '#00F0FF',
+      color: '#FFFFFF',
       description: 'Autonomous systems, ROS/ROS2, sensor fusion, and real-time control.',
       skills: [
         { name: 'ROS / ROS2', level: 95 },
@@ -60,7 +60,7 @@ const Skills = () => {
       id: 'ai',
       name: 'AI / Machine Learning',
       icon: Brain,
-      color: '#BC13FE',
+      color: '#9A9A9A',
       description: 'Deep learning, computer vision, NLP, and large language models.',
       skills: [
         { name: 'TensorFlow / Keras', level: 90 },
@@ -75,7 +75,7 @@ const Skills = () => {
       id: 'programming',
       name: 'Programming',
       icon: Code,
-      color: '#00FF9D',
+      color: '#CFCFCF',
       description: 'Languages, frameworks, and development tools.',
       skills: [
         { name: 'Python', level: 95 },
@@ -90,7 +90,7 @@ const Skills = () => {
       id: 'hardware',
       name: 'Hardware & Sensors',
       icon: Microchip,
-      color: '#F85149',
+      color: '#777777',
       description: 'Embedded platforms, microcontrollers, and sensor integration.',
       skills: [
         { name: 'Raspberry Pi', level: 95 },
@@ -105,7 +105,7 @@ const Skills = () => {
       id: 'web',
       name: 'Web Development',
       icon: Globe,
-      color: '#FFA657',
+      color: '#BBBBBB',
       description: 'Frontend, UI frameworks, 3D graphics, and full-stack tooling.',
       skills: [
         { name: 'React / TypeScript', level: 88 },
@@ -131,10 +131,10 @@ const Skills = () => {
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
-            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">03 / Stack</span>
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(245,245,245,0.3)]">03 / Stack</span>
           </div>
-          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">System Architecture</h2>
-          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+          <h2 className="text-3xl font-bold text-[#F5F5F5] mono mb-3">System Architecture</h2>
+          <p className="mono text-sm text-[rgba(245,245,245,0.42)] max-w-2xl">
             Modular skill stack organized by domain.
           </p>
         </div>
@@ -152,22 +152,22 @@ const Skills = () => {
                 onClick={() => setActiveCategory(category.id)}
                 className={`w-full text-left p-4 transition-all duration-200 ${
                   activeCategory === category.id
-                    ? 'bg-[#18181C]'
-                    : 'bg-transparent hover:bg-[#13131620]'
+                    ? 'bg-[#171717]'
+                    : 'bg-transparent hover:bg-[#17171720]'
                 }`}
                 style={{
-                  border: `1px solid ${activeCategory === category.id ? 'rgba(176,200,224,0.2)' : 'rgba(255,255,255,0.05)'}`,
+                  border: `1px solid ${activeCategory === category.id ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)'}`,
                   transitionDelay: `${index * 60}ms`
                 }}
               >
                 <div className="flex items-center gap-4">
                   <category.icon
                     className="w-4 h-4 transition-colors"
-                    style={{ color: activeCategory === category.id ? '#B0C8E0' : 'rgba(240,240,240,0.3)' }}
+                    style={{ color: activeCategory === category.id ? '#FFFFFF' : 'rgba(245,245,245,0.3)' }}
                   />
                   <h3
                     className="font-medium text-sm mono transition-colors"
-                    style={{ color: activeCategory === category.id ? '#F0F0F0' : 'rgba(240,240,240,0.4)' }}
+                    style={{ color: activeCategory === category.id ? '#F5F5F5' : 'rgba(245,245,245,0.4)' }}
                   >
                     {category.name}
                   </h3>
@@ -188,14 +188,14 @@ const Skills = () => {
               <div className="p-2" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                 {(() => {
                   const Icon = categories.find(c => c.id === activeCategory)?.icon || Cpu;
-                  return <Icon className="w-5 h-5 text-[rgba(240,240,240,0.5)]" />;
+                  return <Icon className="w-5 h-5 text-[rgba(245,245,245,0.5)]" />;
                 })()}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-[#F0F0F0] mono">
+                <h3 className="text-lg font-semibold text-[#F5F5F5] mono">
                   {categories.find(c => c.id === activeCategory)?.name}
                 </h3>
-                <p className="text-xs text-[rgba(240,240,240,0.4)] mono">
+                <p className="text-xs text-[rgba(245,245,245,0.4)] mono">
                   {categories.find(c => c.id === activeCategory)?.description}
                 </p>
               </div>
@@ -211,10 +211,10 @@ const Skills = () => {
                   <div key={skill.name}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="mono text-[10px] text-[rgba(240,240,240,0.3)]">[{String(index + 1).padStart(2, '0')}]</span>
-                        <span className="mono text-xs text-[rgba(240,240,240,0.65)]">{skill.name}</span>
+                        <span className="mono text-[10px] text-[rgba(245,245,245,0.3)]">[{String(index + 1).padStart(2, '0')}]</span>
+                        <span className="mono text-xs text-[rgba(245,245,245,0.65)]">{skill.name}</span>
                       </div>
-                      <span className="mono text-[10px] text-[rgba(176,200,224,0.6)]">{skill.level}%</span>
+                      <span className="mono text-[10px] text-[rgba(255,255,255,0.6)]">{skill.level}%</span>
                     </div>
                     {/* 16-segment HUD bar */}
                     <div className="flex gap-px">
@@ -227,7 +227,7 @@ const Skills = () => {
                             className="h-1.5 flex-1 transition-all duration-300"
                             style={{
                               background: active
-                                ? isPeak ? '#B0C8E0' : 'rgba(176,200,224,0.32)'
+                                ? isPeak ? '#FFFFFF' : 'rgba(255,255,255,0.32)'
                                 : 'rgba(255,255,255,0.05)',
                               opacity: isVisible ? 1 : 0,
                               transitionDelay: `${300 + index * 50 + segIdx * 22}ms`,
@@ -243,15 +243,15 @@ const Skills = () => {
 
             {/* Certifications */}
             <div className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.05)]">
-              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(240,240,240,0.25)] mb-4">Certifications</p>
+              <p className="mono text-[10px] tracking-widest uppercase text-[rgba(245,245,245,0.25)] mb-4">Certifications</p>
               <div className="flex flex-wrap gap-2">
                 {['TensorFlow Dev', 'Google ML', 'AWS NLP', 'Advanced Python'].map((cert) => (
                   <span 
                     key={cert}
-                    className="px-3 py-1 text-[10px] mono text-[rgba(240,240,240,0.45)] flex items-center gap-1.5"
+                    className="px-3 py-1 text-[10px] mono text-[rgba(245,245,245,0.45)] flex items-center gap-1.5"
                     style={{ border: '1px solid rgba(255,255,255,0.07)' }}
                   >
-                    <div className="w-1 h-1 rounded-full bg-[#B0C8E0]" />
+                    <div className="w-1 h-1 rounded-full bg-[#FFFFFF]" />
                     {cert}
                   </span>
                 ))}
@@ -267,7 +267,7 @@ const Skills = () => {
           }`}
           style={{ transitionDelay: '400ms' }}
         >
-          <h3 className="text-lg font-semibold text-[#F0F0F0] mono mb-6">
+          <h3 className="text-lg font-semibold text-[#F5F5F5] mono mb-6">
             Technology Constellation
           </h3>
           
@@ -279,8 +279,8 @@ const Skills = () => {
             ].map((tech) => (
               <div
                 key={tech}
-                className="px-3 py-1.5 mono text-xs cursor-default transition-all hover:border-[rgba(176,200,224,0.25)]"
-                style={{ border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(240,240,240,0.5)' }}
+                className="px-3 py-1.5 mono text-xs cursor-default transition-all hover:border-[rgba(255,255,255,0.25)]"
+                style={{ border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(245,245,245,0.5)' }}
               >
                 {tech}
               </div>

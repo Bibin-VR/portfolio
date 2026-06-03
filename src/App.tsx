@@ -132,17 +132,17 @@ function App() {
       {/* Dither Background */}
       <div style={{ width: '100%', minHeight: '100%', position: 'fixed', top: 0, left: 0, bottom: 0, right: 0, zIndex: 0 }}>
         <Dither
-          waveColor={[0.04, 0.04, 0.06]}
+          waveColor={[0.07, 0.07, 0.07]}
           disableAnimation={false}
           enableMouseInteraction={false}
           mouseRadius={0.18}
-          colorNum={4}
-          waveAmplitude={0.32}
+          colorNum={3}
+          waveAmplitude={0.28}
           waveFrequency={0}
-          waveSpeed={0.016}
+          waveSpeed={0.014}
         />
-        {/* Soft dark overlay (keeps text contrast while preserving glass depth) */}
-        <div className="absolute inset-0" style={{ background: 'rgba(9,9,9,0.45)' }} />
+        {/* Dark overlay — keeps the dither a faint texture over true black */}
+        <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.55)' }} />
       </div>
 
       <Navigation />

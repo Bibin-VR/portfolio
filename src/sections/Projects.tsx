@@ -71,7 +71,7 @@ Features:
       tags: ['Web', 'E-Commerce', 'React'],
       techStack: ['React 19', 'Tailwind CSS', 'FastAPI', 'MongoDB', 'Razorpay'],
       stats: { stars: 0, forks: 0 },
-      color: '#FF6B9D',
+      color: '#DDDDDD',
       icon: ShoppingBag,
     },
     {
@@ -91,7 +91,7 @@ Highlights:
       tags: ['Web', 'Next.js', 'Firebase'],
       techStack: ['Next.js 14', 'React', 'Tailwind CSS', 'Firebase'],
       stats: { stars: 0, forks: 0 },
-      color: '#BC13FE',
+      color: '#9A9A9A',
       icon: Layers,
     },
     {
@@ -117,7 +117,7 @@ Supported Commands:
       tags: ['Robotics', 'Voice AI', 'C++'],
       techStack: ['C++', 'Python', 'Vosk', 'Gemini AI', 'Unitree SDK'],
       stats: { stars: 0, forks: 0 },
-      color: '#00FF9D',
+      color: '#CFCFCF',
       icon: Bot,
     },
     {
@@ -136,7 +136,7 @@ Features:
       tags: ['Embedded', 'Edge AI', 'Wearable'],
       techStack: ['C++', 'Edge Impulse', 'Firebase', 'Arduino'],
       stats: { stars: 29, forks: 6 },
-      color: '#00F0FF',
+      color: '#FFFFFF',
       icon: Watch,
       githubUrl: 'https://github.com/Bibin-VR/smart-band-athletics',
     },
@@ -157,10 +157,10 @@ Features:
         <div className={`mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-8 bg-[rgba(255,255,255,0.15)]" />
-            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(240,240,240,0.3)]">02 / Projects</span>
+            <span className="mono text-[10px] tracking-[0.2em] uppercase text-[rgba(245,245,245,0.3)]">02 / Projects</span>
           </div>
-          <h2 className="text-3xl font-bold text-[#F0F0F0] mono mb-3">Active Modules</h2>
-          <p className="mono text-sm text-[rgba(240,240,240,0.42)] max-w-2xl">
+          <h2 className="text-3xl font-bold text-[#F5F5F5] mono mb-3">Active Modules</h2>
+          <p className="mono text-sm text-[rgba(245,245,245,0.42)] max-w-2xl">
             Repository overview of active development projects. Each module is a complete system.
           </p>
         </div>
@@ -179,7 +179,7 @@ Features:
               }}
             >
               {/* Project Preview */}
-              <div className="relative h-48 overflow-hidden scanlines" style={{ background: 'rgba(5,8,14,0.45)' }}>
+              <div className="relative h-48 overflow-hidden scanlines" style={{ background: 'rgba(0,0,0,0.45)' }}>
                 {project.liveUrl && !iframeErrors[project.id] ? (
                   <>
                     <iframe
@@ -193,7 +193,7 @@ Features:
                         transformOrigin: 'top left',
                         border: 'none',
                         pointerEvents: 'none',
-                        filter: 'grayscale(30%) brightness(0.7)',
+                        filter: 'grayscale(100%) brightness(0.7) contrast(1.1)',
                       }}
                       onError={() => setIframeErrors(prev => ({ ...prev, [project.id]: true }))}
                     />
@@ -202,8 +202,8 @@ Features:
                       className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1"
                       style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.22)', backdropFilter: 'blur(8px)' }}
                     >
-                      <span className="w-1 h-1 rounded-full bg-[#B0C8E0]" />
-                      <span className="mono text-[10px] text-[rgba(240,240,240,0.5)]">LIVE</span>
+                      <span className="w-1 h-1 rounded-full bg-[#FFFFFF]" />
+                      <span className="mono text-[10px] text-[rgba(245,245,245,0.5)]">LIVE</span>
                     </div>
                   </>
                 ) : project.liveUrl && iframeErrors[project.id] ? (
@@ -215,24 +215,24 @@ Features:
                     className="absolute inset-0 flex flex-col items-center justify-center gap-3 transition-colors"
                     style={{ background: 'rgba(255,255,255,0.02)' }}
                   >
-                    <project.icon className="w-8 h-8 text-[rgba(240,240,240,0.3)]" />
-                    <span className="mono text-[10px] text-[rgba(240,240,240,0.35)]">Click to visit live site</span>
+                    <project.icon className="w-8 h-8 text-[rgba(245,245,245,0.3)]" />
+                    <span className="mono text-[10px] text-[rgba(245,245,245,0.35)]">Click to visit live site</span>
                   </a>
                 ) : (
                   <img
                     src={project.image}
                     alt={project.name}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    style={{ filter: 'grayscale(20%) brightness(0.75)' }}
+                    style={{ filter: 'grayscale(100%) brightness(0.8) contrast(1.1)' }}
                   />
                 )}
                 <div
                   className="absolute inset-0 opacity-40 pointer-events-none"
-                  style={{ background: 'linear-gradient(to top, rgba(9,9,9,0.9), transparent 60%)' }}
+                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%)' }}
                 />
                 <div className="absolute top-4 left-4">
                   <div className="p-2 rounded-lg" style={{ border: '1px solid rgba(255,255,255,0.18)', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
-                    <project.icon className="w-4 h-4 text-[rgba(240,240,240,0.45)]" />
+                    <project.icon className="w-4 h-4 text-[rgba(245,245,245,0.45)]" />
                   </div>
                 </div>
               </div>
@@ -241,13 +241,13 @@ Features:
               <div className="p-6">
                 {/* Header */}
                 <div className="mb-4">
-                  <span className="mono text-[10px] text-[rgba(240,240,240,0.25)] tracking-widest">
+                  <span className="mono text-[10px] text-[rgba(245,245,245,0.25)] tracking-widest">
                     ~/projects/{project.id}
                   </span>
-                  <h3 className="text-base font-semibold text-[#F0F0F0] mono mt-0.5 mb-1">
+                  <h3 className="text-base font-semibold text-[#F5F5F5] mono mt-0.5 mb-1">
                     {project.name}
                   </h3>
-                  <p className="text-xs text-[rgba(240,240,240,0.42)] mono">{project.description}</p>
+                  <p className="text-xs text-[rgba(245,245,245,0.42)] mono">{project.description}</p>
                 </div>
 
                 {/* Tags */}
@@ -255,7 +255,7 @@ Features:
                   {project.tags.map((tag) => (
                     <span 
                       key={tag}
-                      className="px-2 py-0.5 text-[10px] mono text-[rgba(240,240,240,0.45)]"
+                      className="px-2 py-0.5 text-[10px] mono text-[rgba(245,245,245,0.45)]"
                       style={{ border: '1px solid rgba(255,255,255,0.07)' }}
                     >
                       {tag}
@@ -268,7 +268,7 @@ Features:
                   {project.techStack.map((tech, i) => (
                     <span 
                       key={tech}
-                      className="text-[10px] mono text-[rgba(240,240,240,0.35)]"
+                      className="text-[10px] mono text-[rgba(245,245,245,0.35)]"
                     >
                       {tech}{i < project.techStack.length - 1 && <span className="mx-1 opacity-30">·</span>}
                     </span>
@@ -277,11 +277,11 @@ Features:
 
                 {/* Stats */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center gap-1 text-[rgba(240,240,240,0.3)]">
+                  <div className="flex items-center gap-1 text-[rgba(245,245,245,0.3)]">
                     <Star className="w-3 h-3" />
                     <span className="mono text-[10px]">{project.stats.stars}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[rgba(240,240,240,0.3)]">
+                  <div className="flex items-center gap-1 text-[rgba(245,245,245,0.3)]">
                     <GitFork className="w-3 h-3" />
                     <span className="mono text-[10px]">{project.stats.forks}</span>
                   </div>
@@ -294,7 +294,7 @@ Features:
                   }`}
                 >
                   <div className="pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <pre className="text-xs text-[rgba(240,240,240,0.45)] whitespace-pre-wrap font-mono leading-relaxed">
+                    <pre className="text-xs text-[rgba(245,245,245,0.45)] whitespace-pre-wrap font-mono leading-relaxed">
                       {project.fullDescription}
                     </pre>
                   </div>
@@ -307,7 +307,7 @@ Features:
                 >
                   <button
                     onClick={() => toggleExpand(project.id)}
-                    className="flex items-center gap-1 text-[10px] mono text-[rgba(240,240,240,0.35)] hover:text-[rgba(240,240,240,0.7)] transition-colors uppercase tracking-widest"
+                    className="flex items-center gap-1 text-[10px] mono text-[rgba(245,245,245,0.35)] hover:text-[rgba(245,245,245,0.7)] transition-colors uppercase tracking-widest"
                   >
                     {expandedProject === project.id ? (
                       <><ChevronUp className="w-3 h-3" /><span>Collapse</span></>
