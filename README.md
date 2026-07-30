@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Bibin V R — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Personal portfolio site for a Robotics & AI Engineer.**
 
-Currently, two official plugins are available:
+[Live site](https://app-seven-ebon.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A single-page React portfolio with a WebGL dithered background, a Three.js scene, and a
+sound-reactive UI — built with performance and accessibility fallbacks in mind rather
+than effects for their own sake.
 
-## React Compiler
+## Sections
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Loading screen → Hero → Stats → Projects → Skills → Experience → Contact, with a
+persistent navigation bar. Each section triggers a chime on scroll-in, and background
+ambience follows tab visibility (muted when the tab is hidden or the page is left).
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Layer | Technology |
+|---|---|
+| Core | React 19 · TypeScript · Vite |
+| 3D / shaders | Three.js · @react-three/fiber · @react-three/drei · @react-three/postprocessing |
+| UI | Tailwind CSS · shadcn/ui (Radix primitives) |
+| Forms | React Hook Form + resolvers |
+| Contact backend | Express (`server.mjs`) + Nodemailer, deployable as a Vercel serverless function |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev          # Vite dev server only, http://localhost:5174
+npm run dev-full      # Vite dev server + local email server together
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Frontend only |
+| `npm run server` | Email server only (`node server.mjs`) |
+| `npm run dev-full` | Both, concurrently |
+| `npm run build` | Type-check (`tsc -b`) and build for production |
+| `npm run lint` | Lint with ESLint |
+| `npm run preview` | Preview the production build |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Contact form email setup
+
+The contact form sends mail through Gmail via an app password. See
+[`EMAIL_SETUP.md`](EMAIL_SETUP.md) for the full walkthrough; in short:
+
+1. Enable 2-Step Verification on the sending Gmail account and generate an
+   [App Password](https://myaccount.google.com/security).
+2. Set `EMAIL_USER` and `EMAIL_PASSWORD` in `.env`.
+3. Run `npm run dev-full` — the frontend serves on `:5174`, the email server on `:3001`.
+
+## Deployment
+
+Deployed on Vercel. `api/send-email.mjs` and `api/github-stats.mjs` run as serverless
+functions; the Vite build serves the static frontend.
